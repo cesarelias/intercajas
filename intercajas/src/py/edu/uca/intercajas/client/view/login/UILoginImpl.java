@@ -16,7 +16,7 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 
 
-public class LoginImpl extends Login{	
+public class UILoginImpl extends UILogin{	
 	
 	private static  EventBus EVENTBUS = new SimpleEventBus();
 	private static  FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);

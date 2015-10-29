@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 
 
-public class Login extends Composite implements ClickHandler {	
+public class UILogin extends Composite implements ClickHandler {	
 
 	
 //	public Login(UIHome uiHome){
@@ -30,7 +30,7 @@ public class Login extends Composite implements ClickHandler {
 	protected PasswordTextBox txtPassword;
 	
 	
-	public Login() {
+	public UILogin() {
 		initComponents();
 		widgetListener();
 	}
