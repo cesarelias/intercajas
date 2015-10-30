@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.server.entity;
 
 
 import py.edu.uca.intercajas.server.ejb.BeanLocator;
+import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.ejb.GestionCosto;
 import py.edu.uca.intercajas.server.ejb.GestionUsuario;
 
@@ -35,6 +36,9 @@ public class EntityLocator extends Locator<EntityBase, Long> {
         if (clazz.equals(Usuario.class)) {
 			return BeanLocator.lookupBean(GestionUsuario.class).find(id);
         }
+        if (clazz.equals(Beneficiario.class)) {
+			return BeanLocator.lookupBean(GestionBeneficiario.class).find(id);
+        }
         
         
         return null;
@@ -42,7 +46,7 @@ public class EntityLocator extends Locator<EntityBase, Long> {
 
     @Override
     public Class<EntityBase> getDomainType() {
-        // TODO wtf? ez minek?
+        // TODO que diablos es esto?
         return EntityBase.class;
     }
 

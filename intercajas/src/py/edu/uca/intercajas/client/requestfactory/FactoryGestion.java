@@ -6,4 +6,5 @@ public interface FactoryGestion extends RequestFactory{
 	ContextGestionUsuario contextGestionUsuario();
 	ContextGestionCosto contextGestionCosto();
 	ContextGestionProyecto contextGestionProyecto();
+	ContextGestionBeneficiario contextGestionBeneficiario();
 }
