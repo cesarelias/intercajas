@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -23,6 +24,7 @@ public class UILogin extends Composite implements ClickHandler {
 	
 	
 	private FlowPanel panel;
+	private Grid grid;
 	private Button btnLogin;
 	private Label lblNombre;
 	protected TextBox txtUsuario;
@@ -49,14 +51,18 @@ public class UILogin extends Composite implements ClickHandler {
 		btnLogin = new Button("Iniciar Sesion");
 		txtPassword = new PasswordTextBox();
 		txtUsuario = new TextBox();
+		grid = new Grid(3,2);
 		
-		panel = new FlowPanel();
-		panel.add(lblNombre);
-		panel.add(txtUsuario);
-		panel.add(lblPassword);
-		panel.add(txtPassword);
-		panel.add(btnLogin);
-		initWidget(panel);
+		try {
+		grid.setWidget(0, 0, lblNombre);
+		grid.setWidget(0, 1, txtUsuario);
+		grid.setWidget(1, 0, lblPassword);
+		grid.setWidget(1, 1, txtPassword);
+		grid.setWidget(2, 1, btnLogin);
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
+		initWidget(grid);
 
 	}
 	

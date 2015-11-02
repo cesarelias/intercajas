@@ -7,6 +7,7 @@ import py.edu.uca.intercajas.client.view.menu.UIMenuImpl;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -28,7 +29,6 @@ public class UILoginImpl extends UILogin{
 
 	@Override
 	public void login() {
-		
 		
 		FACTORY.initialize(EVENTBUS);
 		ContextGestionUsuario context = FACTORY.contextGestionUsuario();
@@ -61,9 +61,10 @@ public class UILoginImpl extends UILogin{
 //			this.uiHome.getUiSesion().getUiAdminCosto().getUiCosto().cargarTabla();
 //			this.uiHome.getPnlViews().showWidget(2);
 			UIMenuImpl uiMenu = new UIMenuImpl();
-			uiMenu.getLblBienvenido().setText("Bienvenido! " + usuario.getNombre());
+			uiMenu.getLblBienvenido().setText("Bienvenido!! " + usuario.getNombre());
 			RootPanel.get().remove(0);
 			RootPanel.get().add(uiMenu);
+			
 			
 		}
 	}
