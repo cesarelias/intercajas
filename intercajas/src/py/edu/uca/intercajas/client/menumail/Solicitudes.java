@@ -15,6 +15,10 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import org.apache.tools.mail.MailMessage;
+
+import py.edu.uca.intercajas.client.view.solicitud.UISolicitudTitular;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,7 +30,9 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -35,39 +41,19 @@ import com.google.gwt.user.client.ui.Widget;
 public class Solicitudes extends Composite {
 
   /**
-   * Simple data structure representing a contact.
+   * Simple data structure representing a itemMenu.
    */
-  private static class Contact {
-    public String email;
-    public String name;
+  private static class ItemMenu {
+    public String nombre;
+    public String titulo;
 
-    public Contact(String name, String email) {
-      this.name = name;
-      this.email = email;
+    public ItemMenu(String nombre, String titulo) {
+      this.nombre = nombre;
+      this.titulo = titulo;
     }
   }
 
-  /**
-   * A simple popup that displays a contact's information.
-   */
-  static class ContactPopup extends PopupPanel {
-    @UiTemplate("ContactPopup.ui.xml")
-    interface Binder extends UiBinder<Widget, ContactPopup> { }
-    private static final Binder binder = GWT.create(Binder.class);
-
-    @UiField Element nameDiv;
-    @UiField Element emailDiv;
-
-    public ContactPopup(Contact contact) {
-      // The popup's constructor's argument is a boolean specifying that it
-      // auto-close itself when the user clicks outside of it.
-      super(true);
-      add(binder.createAndBindUi(this));
-
-      nameDiv.setInnerText(contact.name);
-      emailDiv.setInnerText(contact.email);
-    }
-  }
+ 
 
   interface Binder extends UiBinder<Widget, Solicitudes> { }
   interface Style extends CssResource {
@@ -76,42 +62,32 @@ public class Solicitudes extends Composite {
 
   private static final Binder binder = GWT.create(Binder.class);
 
-  private Contact[] contacts = new Contact[] {
-      new Contact("Benoit Mandelbrot", "benoit@example.com"),
-      new Contact("Albert Einstein", "albert@example.com"),
-      new Contact("Rene Descartes", "rene@example.com"),
-      new Contact("Bob Saget", "bob@example.com"),
-      new Contact("Ludwig von Beethoven", "ludwig@example.com"),
-      new Contact("Richard Feynman", "richard@example.com"),
-      new Contact("Alan Turing", "alan@example.com"),
-      new Contact("John von Neumann", "john@example.com")};
 
-  @UiField ComplexPanel panel;
+
+  @UiField FlowPanel panel;
   @UiField Style style;
 
   public Solicitudes() {
     initWidget(binder.createAndBindUi(this));
-
-    // Add all the contacts to the list.
-    for (int i = 0; i < contacts.length; ++i) {
-      addContact(contacts[i]);
-    }
+    addItem(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
+    addItem(new ItemMenu("Solicitud Derechohabiente", "Solicitud DErechohabiente"));
+    
   }
 
-  private void addContact(final Contact contact) {
-    final Anchor link = new Anchor(contact.name);
-    link.setStyleName(style.item());
-    panel.add(link);
+  
+  private void addItem(final ItemMenu itemMenu) {
+	    final Anchor link = new Anchor(itemMenu.nombre);
+	    link.setStyleName(style.item());
+	    
+	    panel.add(link);
 
-    // Add a click handler that displays a ContactPopup when it is clicked.
-    link.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        ContactPopup popup = new ContactPopup(contact);
-        int left = link.getAbsoluteLeft() + 14;
-        int top = link.getAbsoluteTop() + 14;
-        popup.setPopupPosition(left, top);
-        popup.show();
-      }
-    });
-  }
+	    // Add a click handler that displays a ContactPopup when it is clicked.
+	    link.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	    	  MenuMail.getMain().setWidget(new UISolicitudTitular());
+	      }
+	    });
+	    
+	    
+	  }  
 }

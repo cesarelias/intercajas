@@ -100,5 +100,10 @@ public class Mail extends Composite {
 //    root.add(outer);
     
 
+
+  }
+  
+  public void mostrar() {
+  	MenuMail.getMain().setWidget(this);
   }
 }
