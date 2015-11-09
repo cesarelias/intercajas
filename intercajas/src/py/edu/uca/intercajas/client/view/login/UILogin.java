@@ -62,6 +62,14 @@ public class UILogin extends Composite implements ClickHandler {
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
 		}
+		grid = new Grid(3,2);
+		
+		grid.setWidget(0, 0, lblNombre);
+		grid.setWidget(0, 1, txtUsuario);
+		grid.setWidget(1, 0, lblPassword);
+		grid.setWidget(1, 1, txtPassword);
+		grid.setWidget(2, 1, btnLogin);
+		
 		initWidget(grid);
 
 	}

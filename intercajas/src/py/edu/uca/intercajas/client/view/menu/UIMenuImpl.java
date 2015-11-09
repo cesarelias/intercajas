@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -36,7 +37,7 @@ public class UIMenuImpl extends UIMenu {
 		
 		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
 		
-		context.find(1L).with("direccion").fire(new Receiver<BeneficiarioProxy>() {
+		context.find(1L).with("direccion","documento").fire(new Receiver<BeneficiarioProxy>() {
 
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {
@@ -45,6 +46,9 @@ public class UIMenuImpl extends UIMenu {
 				HTML details = new HTML(response.getNombres() + " vive en la calle " + response.getDireccion().getCallePrincipal() + " numero: " + response.getDireccion().getNumeroCasa());
 
 				new UIDialog("Titulo del mensaje", details);
+				Window.alert(response.getNombres());
+				Window.alert(response.getDireccion().getCallePrincipal());
+				Window.alert(response.getDocumento().getNumeroDocuemnto());
 				
 //			    final DialogBox dialogBox = new DialogBox();
 ////			    dialogBox.setText(constants.cwDialogBoxCaption());
@@ -71,6 +75,19 @@ public class UIMenuImpl extends UIMenu {
 			}
 		});
 		
+		
+		Grid grid = new Grid(2,2);
+
+		grid.setWidget(0, 0, new Label("Beneficiario"));
+		grid.setWidget(0, 1, new Label("___aqui seleccionamos el beneficiario"));
+		grid.setWidget(1, 0, new Label("Fecha"));
+		grid.setWidget(1, 1	, new Label("__aqui seleccionamos la fecha"));
+		
+		VerticalPanel vp = new VerticalPanel();
+		
+		vp.add(grid);
+		
+		RootPanel.get().add(vp);
 		
 //		VerticalPanel vp = new VerticalPanel();
 //		
