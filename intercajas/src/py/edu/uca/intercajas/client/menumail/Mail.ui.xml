@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:mail='urn:import:py.edu.uca.intercajas.client.menumail'>
+
+    <g:DockLayoutPanel unit='EM' >
+        <g:north size='100'>
+			<g:SplitLayoutPanel>
+				<g:north size='200'>
+					<mail:MailList ui:field='mailList' />
+				</g:north>
+	
+				<g:center>
+					<mail:MailDetail ui:field='mailDetail' />
+				</g:center>
+			</g:SplitLayoutPanel>
+		</g:north>
+	</g:DockLayoutPanel>
+</ui:UiBinder>

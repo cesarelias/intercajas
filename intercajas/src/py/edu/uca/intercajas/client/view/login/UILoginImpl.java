@@ -1,5 +1,6 @@
 package py.edu.uca.intercajas.client.view.login;
 
+import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionUsuario;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.client.requestfactory.UsuarioProxy;
@@ -63,7 +64,8 @@ public class UILoginImpl extends UILogin{
 			UIMenuImpl uiMenu = new UIMenuImpl();
 			uiMenu.getLblBienvenido().setText("Bienvenido!! " + usuario.getNombre());
 			RootPanel.get().remove(0);
-			RootPanel.get().add(uiMenu);
+//			RootPanel.get().add(uiMenu);
+			new MenuMail();
 			
 			
 		}
