@@ -13,6 +13,8 @@
 
   .item {
   	display: block;
+	color: red;
+    padding: 0.2em;
  	}
   </ui:style>
 

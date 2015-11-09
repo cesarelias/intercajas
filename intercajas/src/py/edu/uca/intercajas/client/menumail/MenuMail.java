@@ -53,7 +53,7 @@ public class MenuMail  {
 //  @UiField MailList mailList;
 //  @UiField MailDetail mailDetail;
   @UiField Shortcuts shortcuts;
-  @UiField SimplePanel main;
+  @UiField static SimplePanel main;
 
   public MenuMail() {
 	init();
@@ -106,5 +106,9 @@ public class MenuMail  {
     
     RootLayoutPanel root = RootLayoutPanel.get();
     root.add(outer);
+  }
+  
+  public static SimplePanel getMain() {
+	  return main;
   }
 }
