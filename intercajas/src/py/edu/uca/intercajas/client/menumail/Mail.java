@@ -16,6 +16,8 @@
 package py.edu.uca.intercajas.client.menumail;
 
 
+import sun.security.jca.GetInstance;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -25,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.thirdparty.javascript.jscomp.parsing.parser.trees.ThisExpressionTree;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -33,6 +36,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -99,11 +103,11 @@ public class Mail extends Composite {
 //    RootLayoutPanel root = RootLayoutPanel.get();
 //    root.add(outer);
     
-
-
   }
   
   public void mostrar() {
-  	MenuMail.getMain().setWidget(this);
+    if (MenuMail.getMain().getWidget() == null || !(MenuMail.getMain().getWidget() instanceof Mail )) {
+    	MenuMail.getMain().setWidget(this);
+    }
   }
 }

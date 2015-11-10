@@ -91,21 +91,12 @@ public class MenuMail  {
     // Add the outer panel to the RootLayoutPanel, so that it will be
     // displayed.
     
-    Button b = new Button("Click me");
+    //MenuMain PRINCIPAL
+    RootLayoutPanel.get().add(outer);
     
-    b.addClickHandler(new ClickHandler() {
-		
-		@Override
-		public void onClick(ClickEvent event) {
-			Mail m = new Mail();
-			main.setWidget(m);
-		}
-	});
+    //Opcion 1 mail
+    new Mail().mostrar();
     
-    main.add(b);
-    
-    RootLayoutPanel root = RootLayoutPanel.get();
-    root.add(outer);
   }
   
   public static SimplePanel getMain() {

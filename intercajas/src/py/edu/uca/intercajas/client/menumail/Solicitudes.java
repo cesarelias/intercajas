@@ -40,54 +40,54 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Solicitudes extends Composite {
 
-  /**
-   * Simple data structure representing a itemMenu.
-   */
-  private static class ItemMenu {
-    public String nombre;
-    public String titulo;
+	/**
+	 * Simple data structure representing a itemMenu.
+	 */
+	private static class ItemMenu {
+		public String nombre;
+		public String titulo;
 
-    public ItemMenu(String nombre, String titulo) {
-      this.nombre = nombre;
-      this.titulo = titulo;
-    }
-  }
+		public ItemMenu(String nombre, String titulo) {
+			this.nombre = nombre;
+			this.titulo = titulo;
+		}
+	}
 
- 
+	interface Binder extends UiBinder<Widget, Solicitudes> {
+	}
 
-  interface Binder extends UiBinder<Widget, Solicitudes> { }
-  interface Style extends CssResource {
-    String item();
-  }
+	interface Style extends CssResource {
+		String item();
+	}
 
-  private static final Binder binder = GWT.create(Binder.class);
+	private static final Binder binder = GWT.create(Binder.class);
 
+	@UiField
+	FlowPanel panel;
+	@UiField
+	Style style;
 
+	public Solicitudes() {
+		initWidget(binder.createAndBindUi(this));
+		addItem(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
+		addItem(new ItemMenu("Solicitud Derechohabiente",
+				"Solicitud Derechohabiente"));
 
-  @UiField FlowPanel panel;
-  @UiField Style style;
+	}
 
-  public Solicitudes() {
-    initWidget(binder.createAndBindUi(this));
-    addItem(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
-    addItem(new ItemMenu("Solicitud Derechohabiente", "Solicitud DErechohabiente"));
-    
-  }
+	private void addItem(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
 
-  
-  private void addItem(final ItemMenu itemMenu) {
-	    final Anchor link = new Anchor(itemMenu.nombre);
-	    link.setStyleName(style.item());
-	    
-	    panel.add(link);
+		panel.add(link);
 
-	    // Add a click handler that displays a ContactPopup when it is clicked.
-	    link.addClickHandler(new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	    	  MenuMail.getMain().setWidget(new UISolicitudTitular());
-	      }
-	    });
-	    
-	    
-	  }  
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new UISolicitudTitular().mostrar();
+			}
+		});
+
+	}
+
 }

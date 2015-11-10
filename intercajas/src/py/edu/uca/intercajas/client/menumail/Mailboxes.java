@@ -16,9 +16,12 @@
 package py.edu.uca.intercajas.client.menumail;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
@@ -63,6 +66,17 @@ public class Mailboxes extends Composite {
     TreeItem root = new TreeItem(
         imageItemHTML(images.home(), "foo@example.com"));
     tree.addItem(root);
+    
+    tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+  	  @Override
+  	  public void onSelection(SelectionEvent<TreeItem> event) {
+//  	    TreeItem item = event.getSelectedItem();
+  		
+  	    if (event.getSelectedItem().getText().trim().equals("Inbox")) {
+  	    	new Mail().mostrar();
+  	    }
+  	  }
+  	});
 
     addImageItem(root, "Inbox", images.inbox());
     addImageItem(root, "Drafts", images.drafts());
@@ -84,6 +98,9 @@ public class Mailboxes extends Composite {
   private TreeItem addImageItem(TreeItem root, String title,
       ImageResource imageProto) {
     TreeItem item = new TreeItem(imageItemHTML(imageProto, title));
+    
+
+    
     root.addItem(item);
     return item;
   }

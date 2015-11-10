@@ -3,7 +3,7 @@ package py.edu.uca.intercajas.client.view.menu;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.client.view.login.UIDialog;
+import py.edu.uca.intercajas.shared.UIDialog;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dev.shell.remoteui.RemoteMessageProto.Message.Request;

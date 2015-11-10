@@ -43,6 +43,14 @@ public class UISolicitudTitular extends Composite {
 	}
 	
 	
+	public void mostrar() {
+
+		if (MenuMail.getMain().getWidget() == null || !(MenuMail.getMain().getWidget() instanceof UISolicitudTitular)) {
+			MenuMail.getMain().setWidget(this);
+		}
+		
+	}
+
 	 
 	
 }
