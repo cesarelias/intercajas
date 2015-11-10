@@ -1,10 +1,13 @@
 package py.edu.uca.intercajas.server.entity;
 
 import java.util.Date;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.validation.constraints.Past;
+
+import py.edu.uca.intercajas.server.entity.enums.Sexo;
 
 @Entity
 public class Beneficiario extends EntityBase {
@@ -12,7 +15,7 @@ public class Beneficiario extends EntityBase {
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-	public enum Sexo {MASCULINO,FEMENINO}
+//	public enum Sexo {MASCULINO,FEMENINO}
 	
 	private String nombres;
 	private String apellidos;

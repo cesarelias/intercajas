@@ -17,7 +17,9 @@ package py.edu.uca.intercajas.client.menumail;
 
 import org.apache.tools.mail.MailMessage;
 
+import py.edu.uca.intercajas.client.view.solicitud.UIBeneficiario;
 import py.edu.uca.intercajas.client.view.solicitud.UISolicitudTitular;
+import py.edu.uca.intercajas.shared.UIBase;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -69,13 +71,19 @@ public class Solicitudes extends Composite {
 
 	public Solicitudes() {
 		initWidget(binder.createAndBindUi(this));
-		addItem(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
-		addItem(new ItemMenu("Solicitud Derechohabiente",
-				"Solicitud Derechohabiente"));
+		
+		
+		
+		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
+		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
+		
+		
+//		addItem(new ItemMenu("Solicitud Derechohabiente",
+//				"Solicitud Derechohabiente"));
 
 	}
 
-	private void addItem(final ItemMenu itemMenu) {
+	private void addItemSolicitudTitular(final ItemMenu itemMenu) {
 		final Anchor link = new Anchor(itemMenu.nombre);
 		link.setStyleName(style.item());
 
@@ -87,7 +95,21 @@ public class Solicitudes extends Composite {
 				new UISolicitudTitular().mostrar();
 			}
 		});
-
 	}
+	
+	private void addItemBeneficiario(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new UIBeneficiario().mostrar();
+			}
+		});
+
+	}	
 
 }
