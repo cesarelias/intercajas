@@ -1,5 +1,6 @@
 package py.edu.uca.intercajas.client;
 
+import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.view.login.UILoginImpl;
 import py.edu.uca.intercajas.client.view.solicitud.UIBeneficiario;
@@ -22,7 +23,7 @@ public class Intercajas implements EntryPoint {
 		//Para iniciar en esta ventana - desarrollo
 		RootPanel.get().remove(0);
 		new MenuMail();
-		new UIBeneficiario().mostrar();
+		new UIBeneficiario().mostrar(new Mail());
 		
 	}
 }

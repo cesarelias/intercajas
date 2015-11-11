@@ -2,21 +2,16 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
 	<ui:style>
-	.important {
+		.important {
 		font-weight: bold;
-	}
-	
-	<!--
-	.detailValue {--><!--dd /MM/yyyy --><!--
-		
-	}
-	-->
+		}
 	</ui:style>
 
 
 	<g:HTMLPanel>
 
 		<div align="left">
+		    <h2>Registro de Beneficiario</h2>
 			<g:VerticalPanel>
 
 				<g:Grid ui:field='mygrid' cellSpacing='5'>
@@ -104,7 +99,8 @@
 		</div>
 
 
+		<g:Button ui:field="volver">Volver</g:Button>
 		<g:Button ui:field="guardar">Guardar</g:Button>
-
+		
 	</g:HTMLPanel>
 </ui:UiBinder> 

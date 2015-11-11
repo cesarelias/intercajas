@@ -20,6 +20,7 @@
   <!-- Other module inherits                                      -->
 <inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
 <inherits name='com.google.gwt.validation.Validation' />
+
   <!-- Specify the app entry point class.                         -->
   <entry-point class='py.edu.uca.intercajas.client.Intercajas'/>
 
@@ -28,6 +29,7 @@
   <source path='shared'/>
   <source path='server/entity/enums'/>
 
+  <extend-property name="locale" values="es" />
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>
 </module>

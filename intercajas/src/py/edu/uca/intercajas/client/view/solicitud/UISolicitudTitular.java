@@ -39,11 +39,11 @@ public class UISolicitudTitular extends UIBase {
 
 	private void init() {
 		
-		Button cancelar = new Button("cancelar");
-		cancelar.addClickHandler(new ClickHandler() {
+		Button volver = new Button("Volver");
+		volver.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				new Mail().mostrar();
+				volver();
 			}
 		});
 		
@@ -60,7 +60,7 @@ public class UISolicitudTitular extends UIBase {
 		grid.setWidget(0, 1, new TextBox());
 		grid.setWidget(1, 0, new Label("Nombre"));
 		grid.setWidget(1, 1, new TextBox());
-		grid.setWidget(2, 0, cancelar);
+		grid.setWidget(2, 0, volver);
 		grid.setWidget(2, 1, enviar);
 		
 		initWidget(grid);
@@ -90,5 +90,7 @@ public class UISolicitudTitular extends UIBase {
 			}
 		});
 	}
+	
+	
 	
 }

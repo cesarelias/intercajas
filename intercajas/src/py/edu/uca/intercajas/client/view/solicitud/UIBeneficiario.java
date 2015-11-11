@@ -1,12 +1,9 @@
 package py.edu.uca.intercajas.client.view.solicitud;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ValidationException;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
+import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
@@ -20,21 +17,19 @@ import py.edu.uca.intercajas.shared.UIDialog;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DefaultDateTimeFormatInfo;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl_es;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.validation.client.impl.Validation;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -53,6 +48,7 @@ public class UIBeneficiario extends UIBase  {
 
 
 	@UiField Button guardar;
+	@UiField Button volver;
 	@UiField RadioButton tipoDocumento0;
 	@UiField RadioButton tipoDocumento1;
 	@UiField TextBox numeroDocumento;
@@ -72,12 +68,17 @@ public class UIBeneficiario extends UIBase  {
 
 		initWidget(uiBinder.createAndBindUi(this));
 		//TODO la fecha trae con hora, falta sacar la hora!
-		DateTimeFormat dateFormat=DateTimeFormat.getFormat("dd/MM/yyyy");
+	    DateTimeFormat dateFormat=DateTimeFormat.getFormat("dd/MM/yyyy");
 		fechaNacimiento.setFormat(new DateBox.DefaultFormat(dateFormat));
 	}
 
+	@UiHandler("volver")
+	void volver(ClickEvent e) {
+		volver();
+	}
+	
 	@UiHandler("guardar")
-	void onClick(ClickEvent e) {
+	void guardar(ClickEvent e) {
 		
 		FACTORY.initialize(EVENTBUS);
 		
@@ -138,4 +139,9 @@ public class UIBeneficiario extends UIBase  {
 	}
 
 
+	public static final native String getLanguage() /*-{
+    	return navigator.language;
+	}-*/;
+	
+	
 }

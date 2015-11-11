@@ -92,7 +92,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UISolicitudTitular().mostrar();
+				new UISolicitudTitular().mostrar(MenuMail.getMain().getWidget());
 			}
 		});
 	}
@@ -106,7 +106,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UIBeneficiario().mostrar();
+				new UIBeneficiario().mostrar(MenuMail.getMain().getWidget());
 			}
 		});
 
