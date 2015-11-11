@@ -85,11 +85,8 @@ public class UISolicitudTitular extends UIBase {
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {
 			    // Create a dialog box and set the caption text
-
-				HTML details = new HTML(response.getNombres() + " vive en la calle " + response.getDireccion().getCallePrincipal() + " numero: " + response.getDireccion().getNumeroCasa() + " con sexo:" + response.getSexo());
-
+				HTML details = new HTML(response.getNombres() + " vive en la calle " + response.getDireccion().getCallePrincipal() + " numero: " + response.getDireccion().getNumeroCasa() + " de sexo:" + response.getSexo());
 				new UIDialog("Titulo del mensaje", details);
-
 			}
 		});
 	}

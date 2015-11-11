@@ -10,6 +10,6 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(value=GestionBeneficiario.class, locator=BeanLocator.class)
 
 public interface ContextGestionBeneficiario extends RequestContext{
-	Request<Boolean> insertarBeneficiario(BeneficiarioProxy beneficiario);
+	Request<Void> insertarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<BeneficiarioProxy> find (Long id);
 }

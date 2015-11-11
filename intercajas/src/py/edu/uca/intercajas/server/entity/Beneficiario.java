@@ -4,25 +4,30 @@ import java.util.Date;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import py.edu.uca.intercajas.server.entity.enums.Sexo;
 
 @Entity
+@Table(uniqueConstraints=
+	@UniqueConstraint(columnNames = {"numeroDocumento", "tipoDocumento"})) 
 public class Beneficiario extends EntityBase {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-//	public enum Sexo {MASCULINO,FEMENINO}
-	
+	@Size(min = 4, message = "El nombre debe contener al menos 4 catacteres")
 	private String nombres;
 	private String apellidos;
 	@Past
 	private Date fechaNacimiento;
 	private Sexo sexo;
 	@Embedded
+
 	private DocumentoIdentidad documento;
 	@Embedded
 	private Direccion direccion;

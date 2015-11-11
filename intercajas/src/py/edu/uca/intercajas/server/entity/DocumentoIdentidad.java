@@ -2,20 +2,14 @@ package py.edu.uca.intercajas.server.entity;
 
 import javax.persistence.Embeddable;
 
+import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+
 @Embeddable
 public class DocumentoIdentidad   {
 
-	private String numeroDocuemnto;
+	private String numeroDocumento;
 
 	private TipoDocumentoIdentidad tipoDocumento;
-
-	public String getNumeroDocuemnto() {
-		return numeroDocuemnto;
-	}
-
-	public void setNumeroDocuemnto(String numeroDocuemnto) {
-		this.numeroDocuemnto = numeroDocuemnto;
-	}
 
 	public TipoDocumentoIdentidad getTipoDocumento() {
 		return tipoDocumento;
@@ -23,6 +17,14 @@ public class DocumentoIdentidad   {
 
 	public void setTipoDocumento(TipoDocumentoIdentidad tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getNumeroDocumento() {
+		return numeroDocumento;
+	}
+
+	public void setNumeroDocumento(String numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
 	}
 
 

@@ -48,7 +48,7 @@ public class UIMenuImpl extends UIMenu {
 				new UIDialog("Titulo del mensaje", details);
 				Window.alert(response.getNombres());
 				Window.alert(response.getDireccion().getCallePrincipal());
-				Window.alert(response.getDocumento().getNumeroDocuemnto());
+				Window.alert(response.getDocumento().getNumeroDocumento());
 				
 //			    final DialogBox dialogBox = new DialogBox();
 ////			    dialogBox.setText(constants.cwDialogBoxCaption());

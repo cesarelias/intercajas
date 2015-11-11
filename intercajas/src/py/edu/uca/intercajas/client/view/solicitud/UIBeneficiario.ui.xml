@@ -1,13 +1,110 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
 	<ui:style>
 	.important {
 		font-weight: bold;
 	}
+	
+	<!--
+	.detailValue {--><!--dd /MM/yyyy --><!--
+		
+	}
+	-->
 	</ui:style>
+
+
 	<g:HTMLPanel>
-		Hello,
-		<g:Button styleName="{style.important}" ui:field="button" />
+
+		<div align="left">
+			<g:VerticalPanel>
+
+				<g:Grid ui:field='mygrid' cellSpacing='5'>
+					<g:row>
+						<g:cell>Tipo Documento</g:cell>
+						<g:customCell>
+							<g:HorizontalPanel>
+								<g:RadioButton ui:field="tipoDocumento0" name="tipoDocumento"
+									checked="true">Cedula</g:RadioButton>
+								<g:RadioButton ui:field="tipoDocumento1" name="tipoDocumento">Pasaporte</g:RadioButton>
+							</g:HorizontalPanel>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>N° Documento</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="numeroDocumento"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Nombres</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="nombres"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Apellidos</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="apellidos"></g:TextBox>
+						</g:customCell>
+
+					</g:row>
+					<g:row>
+						<g:cell>Fecha Nacimiento</g:cell>
+						<g:customCell>
+							<dp:DateBox ui:field="fechaNacimiento" />
+						</g:customCell>
+
+					</g:row>
+					<g:row>
+						<g:cell>Sexo</g:cell>
+						<g:customCell>
+							<g:HorizontalPanel>
+								<g:RadioButton ui:field="sexo0" name="sexo"
+									checked="true">Masculino</g:RadioButton>
+								<g:RadioButton ui:field="sexo1" name="sexo">Femenino</g:RadioButton>
+							</g:HorizontalPanel>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Calle Principal</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="callePrincipal"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Numero de Casa</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="numeroCasa"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Barrio</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="barrio"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Ciudad</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="ciudad"></g:TextBox>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:cell>Departamento</g:cell>
+						<g:customCell>
+							<g:TextBox ui:field="departamento"></g:TextBox>
+						</g:customCell>
+					</g:row>
+
+				</g:Grid>
+
+
+			</g:VerticalPanel>
+		</div>
+
+
+		<g:Button ui:field="guardar">Guardar</g:Button>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -24,7 +24,7 @@ public class GestionBeneficiario {
 		return em.find(Beneficiario.class, id);
 	}
 	
-	public Boolean insertarBeneficiario(Beneficiario beneficiario)
+	public void insertarBeneficiario(Beneficiario beneficiario)
 			throws UnknownException {
 		
 		try {
@@ -35,7 +35,6 @@ public class GestionBeneficiario {
 			LOG.info("Beneficiario no pesisted: " + e.getMessage());
 			throw new UnknownException(e.getMessage());
 		}
-		return true;
 	}
 
 }
