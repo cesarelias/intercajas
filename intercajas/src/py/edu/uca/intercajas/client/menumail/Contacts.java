@@ -80,7 +80,7 @@ public class Contacts extends Composite {
       new Contact("Dina Miglio", "dina@example.com"),
       new Contact("Cesar Sanabria", "cesar@example.com"),
       new Contact("Graciela Perez", "graciela@example.com"),
-      new Contact("Lia Benel", "lia@example.com"),
+      new Contact("Lia Belen", "lia@example.com"),
       new Contact("Elias Mateo", "elias@example.com")};
 
   @UiField ComplexPanel panel;

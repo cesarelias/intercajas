@@ -26,73 +26,21 @@ public class MailItems {
   private static final int FRAGMENTS_PER_EMAIL = 10;
 
   private static final String[] senders = new String[] {
-      "markboland05", "Hollie Voss", "boticario", "Emerson Milton",
-      "Healy Colette", "Brigitte Cobb", "Elba Lockhart", "Claudio Engle",
-      "Dena Pacheco", "Brasil s.p", "Parker", "derbvktqsr", "qetlyxxogg",
-      "antenas.sul", "Christina Blake", "Gail Horton", "Orville Daniel",
-      "PostMaster", "Rae Childers", "Buster misjenou", "user31065",
-      "ftsgeolbx", "aqlovikigd", "user18411", "Mildred Starnes",
-      "Candice Carson", "Louise Kelchner", "Emilio Hutchinson",
-      "Geneva Underwood", "Residence Oper?", "fpnztbwag", "tiger",
-      "Heriberto Rush", "bulrush Bouchard", "Abigail Louis", "Chad Andrews",
-      "bjjycpaa", "Terry English", "Bell Snedden", "huang", "hhh",
-      "(unknown sender)", "Kent", "Dirk Newman", "Equipe Virtual Cards",
-      "wishesundmore", "Benito Meeks"};
+      "FISCAL", "ANDE", "ITAUPU",
+      "BANCARIA", "FERRICARRIL", "MINICIPAL", "PARLAMENTARIA"};
 
   private static final String[] emails = new String[] {
-      "mark@example.com", "hollie@example.com", "boticario@example.com",
-      "emerson@example.com", "healy@example.com", "brigitte@example.com",
-      "elba@example.com", "claudio@example.com", "dena@example.com",
-      "brasilsp@example.com", "parker@example.com", "derbvktqsr@example.com",
-      "qetlyxxogg@example.com", "antenas_sul@example.com",
-      "cblake@example.com", "gailh@example.com", "orville@example.com",
-      "post_master@example.com", "rchilders@example.com", "buster@example.com",
-      "user31065@example.com", "ftsgeolbx@example.com",
-      "aqlovikigd@example.com", "user18411@example.com", "mildred@example.com",
-      "candice@example.com", "louise_kelchner@example.com",
-      "emilio@example.com", "geneva@example.com", "residence_oper@example.com",
-      "fpnztbwag@example.com", "tiger@example.com", "heriberto@example.com",
-      "bulrush@example.com", "abigail_louis@example.com", "chada@example.com",
-      "bjjycpaa@example.com", "terry@example.com", "bell@example.com",
-      "huang@example.com", "hhh@example.com", "kent@example.com",
-      "newman@example.com", "equipe_virtual@example.com",
-      "wishesundmore@example.com", "benito@example.com"};
+      "Solicitud", "Antiguedad", "Liquidacion",
+      "Aclaracion", "Finiquito"};
 
   private static final String[] subjects = new String[] {
-      "URGENT -[Mon, 24 Apr 2006 02:17:27 +0000]",
-      "URGENT TRANSACTION -[Sun, 23 Apr 2006 13:10:03 +0000]",
-      "fw: Here it comes", "voce ganho um vale presente Boticario",
-      "Read this ASAP", "Hot Stock Talk", "New Breed of Equity Trader",
-      "FWD: TopWeeks the wire special pr news release", "[fwd] Read this ASAP",
-      "Renda Extra R$1.000,00-R$2.000,00/m?s",
-      "re: Make sure your special pr news released",
-      "Forbidden Knowledge Conference", "decodificadores os menores pre?os",
-      "re: Our Pick", "RE: The hottest pick Watcher",
-      "RE: St0kkMarrkett Picks Trade watch special pr news release",
-      "St0kkMarrkett Picks Watch special pr news release news",
-      "You are a Winner oskoxmshco", "Encrypted E-mail System (VIRUS REMOVED)",
-      "Fw: Malcolm", "Secure Message System (VIRUS REMOVED)",
-      "fwd: St0kkMarrkett Picks Watch special pr news releaser",
-      "FWD: Financial Market Traderr special pr news release",
-      "? s? uma dica r?pida !!!!! leia !!!", "re: You have to heard this",
-      "fwd: Watcher TopNews", "VACANZE alle Mauritius", "funny",
-      "re: You need to review this", "[re:] Our Pick",
-      "RE: Before the be11 special pr news release",
-      "[re:] Market TradePicks Trade watch news", "No prescription needed",
-      "Seu novo site", "[fwd] Financial Market Trader Picker",
-      "FWD: Top Financial Market Specialists Trader interest increases",
-      "Os cart?es mais animados da web!!", "We will sale 4 you cebtdbwtcv",
-      "RE: Best Top Financial Market Specialists Trader Picks"};
+      "EXP 203/2015 Juan Perez, En tramite",
+      "EXP 323/2015 Pedro Cano, Proseguir tramite",
+      "EXP 123/2015 Carlos Cabral, para liquidacion"};
 
   private static final String[] fragments = new String[] {
-      "Dear Friend,<br><br>I am Mr. Mark Boland the Bank Manager of ABN AMRO "
-          + "BANK 101 Moorgate, London, EC2M 6SB.<br><br>",
-      "I have an urgent and very confidential business proposition for you. On "
-          + "July 20, 2001; Mr. Zemenu Gente, a National of France, who used to be a "
-          + "private contractor with the Shell Petroleum Development Company in Saudi "
-          + "Arabia. Mr. Zemenu Gente Made a Numbered time (Fixed deposit) for 36 "
-          + "calendar months, valued at GBP?30, 000,000.00 (Thirty Million Pounds "
-          + "only) in my Branch.",
+      "Señores Caja XXXX<br>",
+      "Tengo el agrado de dirigirme a ustedes, a fin de solicitar proseguir tramite ",
       "I have all necessary legal documents that can be used to back up any "
           + "claim we may make. All I require is your honest Co-operation, "
           + "Confidentiality and A trust to enable us sees this transaction through. "

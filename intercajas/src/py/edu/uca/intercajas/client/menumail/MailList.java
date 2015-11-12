@@ -122,9 +122,9 @@ public class MailList extends ResizeComposite {
     header.getColumnFormatter().setWidth(1, "192px");
     header.getColumnFormatter().setWidth(3, "256px");
 
-    header.setText(0, 0, "Sender");
-    header.setText(0, 1, "Email");
-    header.setText(0, 2, "Subject");
+    header.setText(0, 0, "De");
+    header.setText(0, 1, "Tipo");
+    header.setText(0, 2, "Referencia");
     header.setWidget(0, 3, navBar);
     header.getCellFormatter().setHorizontalAlignment(0, 3, HasHorizontalAlignment.ALIGN_RIGHT);
 

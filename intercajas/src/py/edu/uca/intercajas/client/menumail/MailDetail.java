@@ -43,7 +43,7 @@ public class MailDetail extends ResizeComposite {
   public void setItem(MailItem item) {
     subject.setInnerText(item.subject);
     sender.setInnerText(item.sender);
-    recipient.setInnerHTML("foo@example.com");
+    recipient.setInnerHTML("IPS");
 
     // WARNING: For the purposes of this demo, we're using HTML directly, on
     // the assumption that the "server" would have appropriately scrubbed the
