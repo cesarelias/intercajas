@@ -1,82 +1,52 @@
 package py.edu.uca.intercajas.client.view.solicitud;
 
-import org.apache.bcel.classfile.Field;
-
-import py.edu.uca.intercajas.client.menumail.Mail;
-import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 
-import com.google.gwt.core.shared.GWT;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
 public class UISolicitudTitular extends UIBase {
+
+	private static UISolicitudTitularUiBinder uiBinder = GWT
+			.create(UISolicitudTitularUiBinder.class);
+
+	interface UISolicitudTitularUiBinder extends
+			UiBinder<Widget, UISolicitudTitular> {
+	}
 	
 	private static  EventBus EVENTBUS = new SimpleEventBus();
 	private static  FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);
 	
-	
-	Grid grid = new Grid(3,2);
-	
-	
+	@UiField Button guardar;
+	@UiField Button volver;
+
 	public UISolicitudTitular() {
-		init();
+		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	private void init() {
-		
-		Button volver = new Button("Volver");
-		volver.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				volver();
-			}
-		});
-		
-		Button enviar = new Button("enviar");
-		enviar.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				opcion1();
-			}
-		});
-		
-		
-		grid.setWidget(0, 0, new Label("Numero Solicitud"));
-		grid.setWidget(0, 1, new TextBox());
-		grid.setWidget(1, 0, new Label("Nombre"));
-		grid.setWidget(1, 1, new TextBox());
-		grid.setWidget(2, 0, volver);
-		grid.setWidget(2, 1, enviar);
-		
-		initWidget(grid);
+	
+	@UiHandler("volver")
+	void volver(ClickEvent e) {
+		volver();
 	}
 	
-	
-//	public void mostrar() {
-//
-//		if (MenuMail.getMain().getWidget() == null || !(MenuMail.getMain().getWidget() instanceof UISolicitudTitular)) {
-//			MenuMail.getMain().setWidget(this);
-//		}
-//		
-//	}
-
-	public void opcion1()  {
-		
+	@UiHandler("guardar")
+	void guardar(ClickEvent e) {
 		FACTORY.initialize(EVENTBUS);
 		
 		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
@@ -85,12 +55,9 @@ public class UISolicitudTitular extends UIBase {
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {
 			    // Create a dialog box and set the caption text
-				HTML details = new HTML(response.getNombres() + " vive en la calle " + response.getDireccion().getCallePrincipal() + " numero: " + response.getDireccion().getNumeroCasa() + " de sexo:" + response.getSexo());
-				new UIDialog("Titulo del mensaje", details);
+				HTML details = new HTML(response.getNombres() + " vive sobre la calle " + response.getDireccion().getCallePrincipal() + " numero: " + response.getDireccion().getNumeroCasa() + " de sexo:" + response.getSexo());
+				new UIDialog("Aviso!", details);
 			}
 		});
 	}
-	
-	
-	
 }

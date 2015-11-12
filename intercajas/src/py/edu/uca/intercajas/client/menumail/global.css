@@ -17,11 +17,17 @@ a:link, a:visited, a:hover, a:active {
 }
 .gwt-DialogBox {
   background-color: white;
-  border: 1px solid #666;
+  border: 1px solid #3c4ab9;
   z-index: 2;
 }
 .gwt-DialogBox .Caption {
-  background: #d3d6dd url(gradient_bg_th.png) repeat-x bottom left;
+  
+  background: #1e5799; /* Old browsers */
+  background: -moz-linear-gradient(45deg,  #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(45deg,  #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(45deg,  #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  
   font-weight: bold;
   text-shadow: #fff 0 2px 2px;
   cursor: default;

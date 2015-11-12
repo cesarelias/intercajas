@@ -43,13 +43,13 @@
 
     <div class="{style.statusDiv}">
       <div>
-        <b>Welcome back, foo@example.com</b>
+        <b>Bienvenido, Cesar Sanabria</b>
       </div>
 
       <div class='{style.linksDiv}'>
-        <g:Anchor href='javascript:;' ui:field='signOutLink'>Sign Out</g:Anchor>
+        <g:Anchor href='javascript:;' ui:field='signOutLink'>Cerrar Sesion</g:Anchor>
         &nbsp;
-        <g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
+        <g:Anchor href='javascript:;' ui:field='aboutLink'>Acerca de</g:Anchor>
       </div>
     </div>
   </g:HTMLPanel>

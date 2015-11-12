@@ -77,14 +77,11 @@ public class Contacts extends Composite {
   private static final Binder binder = GWT.create(Binder.class);
 
   private Contact[] contacts = new Contact[] {
-      new Contact("Benoit Mandelbrot", "benoit@example.com"),
-      new Contact("Albert Einstein", "albert@example.com"),
-      new Contact("Rene Descartes", "rene@example.com"),
-      new Contact("Bob Saget", "bob@example.com"),
-      new Contact("Ludwig von Beethoven", "ludwig@example.com"),
-      new Contact("Richard Feynman", "richard@example.com"),
-      new Contact("Alan Turing", "alan@example.com"),
-      new Contact("John von Neumann", "john@example.com")};
+      new Contact("Dina Miglio", "dina@example.com"),
+      new Contact("Cesar Sanabria", "cesar@example.com"),
+      new Contact("Graciela Perez", "graciela@example.com"),
+      new Contact("Lia Benel", "lia@example.com"),
+      new Contact("Elias Mateo", "elias@example.com")};
 
   @UiField ComplexPanel panel;
   @UiField Style style;

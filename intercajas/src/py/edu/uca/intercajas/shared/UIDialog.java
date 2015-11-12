@@ -1,10 +1,14 @@
 package py.edu.uca.intercajas.shared;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UIDialog extends DialogBox {
@@ -13,6 +17,8 @@ public class UIDialog extends DialogBox {
 //	HTML details;
 	
 	public UIDialog(String titulo, HTML mensaje) {
+		
+		
 		
 		setGlassEnabled(true);
 		setAnimationEnabled(true);
@@ -28,6 +34,7 @@ public class UIDialog extends DialogBox {
 	          }
 	        });
 	    
+	    dialogContents.setWidth("400px");
 	    dialogContents.add(mensaje);
 	    dialogContents.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 	    dialogContents.add(closeButton);

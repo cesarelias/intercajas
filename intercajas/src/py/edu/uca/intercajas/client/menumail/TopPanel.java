@@ -52,6 +52,6 @@ public class TopPanel extends Composite {
 
   @UiHandler("signOutLink")
   void onSignOutClicked(ClickEvent event) {
-    Window.alert("If this were implemented, you would be signed out now.");
+    Window.alert("Aqui deberia de cerrar la sesion, pero no hace nada aun :-)");
   }
 }

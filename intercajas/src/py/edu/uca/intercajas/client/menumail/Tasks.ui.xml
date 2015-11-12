@@ -15,13 +15,11 @@
   </ui:style>
 
   <g:FlowPanel styleName='{style.tasks}'>
-    <g:CheckBox styleName='{style.item}'>Get groceries</g:CheckBox>
-    <g:CheckBox styleName='{style.item}'>Walk the dog</g:CheckBox>
-    <g:CheckBox styleName='{style.item}'>Start Web 2.0 company</g:CheckBox>
-    <g:CheckBox styleName='{style.item}'>Write cool app in GWT</g:CheckBox>
-    <g:CheckBox styleName='{style.item}'>Get funding</g:CheckBox>
-    <g:CheckBox styleName='{style.item}'>Take a vacation</g:CheckBox>
-    <g:RadioButton name="r1">Radio 1</g:RadioButton>
-    <g:RadioButton name="r1">Radio 2</g:RadioButton>
+    <g:CheckBox styleName='{style.item}'>Comprar golosinas</g:CheckBox>
+    <g:CheckBox styleName='{style.item}'>Caminar al perro</g:CheckBox>
+    <g:CheckBox styleName='{style.item}'>Empezar tesis</g:CheckBox>
+    <g:CheckBox styleName='{style.item}'>Terminar tesis</g:CheckBox>
+    <g:CheckBox styleName='{style.item}'>Defender tesis</g:CheckBox>
+    <g:CheckBox styleName='{style.item}'>Tomar vacaciones</g:CheckBox>
   </g:FlowPanel>
 </ui:UiBinder>

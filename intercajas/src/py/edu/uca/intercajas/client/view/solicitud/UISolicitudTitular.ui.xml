@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+	    
+	    <g:Grid cellSpacing='5'>
+	        <g:row>
+	            <g:cell>Texto Casilla uno</g:cell>
+	            <g:customCell>
+	                <g:TextBox></g:TextBox>
+	            </g:customCell>
+	        </g:row>
+	        <g:row>
+	            <g:cell>Texto Casilla dos</g:cell>
+	            <g:customCell>
+					<g:TextBox></g:TextBox>
+	            </g:customCell>
+	        </g:row>
+	    </g:Grid>
+	    
+	    <g:Button ui:field="volver">Volver</g:Button>
+	    <g:Button ui:field="guardar">Guardar</g:Button>
+	    
+	</g:HTMLPanel>
+</ui:UiBinder> 

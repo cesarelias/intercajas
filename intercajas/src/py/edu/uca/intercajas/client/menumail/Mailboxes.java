@@ -64,7 +64,7 @@ public class Mailboxes extends Composite {
 
     tree = new Tree(images);
     TreeItem root = new TreeItem(
-        imageItemHTML(images.home(), "foo@example.com"));
+        imageItemHTML(images.home(), "Cesar Sanabria"));
     tree.addItem(root);
     
     tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
@@ -72,17 +72,17 @@ public class Mailboxes extends Composite {
   	  public void onSelection(SelectionEvent<TreeItem> event) {
 //  	    TreeItem item = event.getSelectedItem();
   		
-  	    if (event.getSelectedItem().getText().trim().equals("Inbox")) {
+  	    if (event.getSelectedItem().getText().trim().equals("Entrada")) {
   	    	new Mail().mostrar();
   	    }
   	  }
   	});
 
-    addImageItem(root, "Inbox", images.inbox());
-    addImageItem(root, "Drafts", images.drafts());
-    addImageItem(root, "Templates", images.templates());
-    addImageItem(root, "Sent", images.sent());
-    addImageItem(root, "Trash", images.trash());
+    addImageItem(root, "Entrada", images.inbox());
+    addImageItem(root, "Salida", images.sent());
+    addImageItem(root, "Borrador", images.drafts());
+    addImageItem(root, "Plantilla", images.templates());
+    addImageItem(root, "Papelera", images.trash());
 
     root.setState(true);
     initWidget(tree);
