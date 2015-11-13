@@ -21,9 +21,9 @@ public class Intercajas implements EntryPoint {
 
 		
 		//Para iniciar en esta ventana - desarrollo
-		RootPanel.get().remove(0);
-		new MenuMail();
-		new UIBeneficiario().mostrar(new Mail());
+//		RootPanel.get().remove(0);
+//		new MenuMail();
+//		new UIBeneficiario().mostrar(new Mail());
 		
 	}
 }
