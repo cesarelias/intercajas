@@ -139,9 +139,9 @@ public class UIBeneficiario extends UIBase  {
 	}
 
 
-	public static final native String getLanguage() /*-{
-    	return navigator.language;
-	}-*/;
+//	public static final native String getLanguage() /*-{
+//    	return navigator.language;
+//	}-*/;
 	
 	
 }

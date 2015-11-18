@@ -2,7 +2,7 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:mail='urn:import:py.edu.uca.intercajas.client.menumail'>
 
-  <ui:image field='logo' src='gwt-logo.png'/>
+  <ui:image field='logo' src='logo.png'/>
 
   <ui:style>
   .panel {
@@ -28,10 +28,8 @@
     <div class='{style.logo}'/>
 
     <div class='{style.aboutText}'>
-    This sample application demonstrates the
-    construction of a complex user interface using GWT's built-in
-    widgets. Have a look at the code to see how easy it is to build
-    your own apps!
+    Sistema Intercajas
+    <br/>Version 0.1
     </div>
 
     <div class='{style.buttons}'>

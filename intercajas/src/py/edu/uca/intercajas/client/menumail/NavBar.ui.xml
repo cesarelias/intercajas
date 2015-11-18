@@ -12,12 +12,12 @@
   <g:HTMLPanel>
     <g:Anchor styleName='{style.anchor}' ui:field='newerButton'
         href='javascript:;'>
-      &lt; newer
+      &lt; reciente
     </g:Anchor>
     <span ui:field='countLabel'/>
     <g:Anchor styleName='{style.anchor}' ui:field='olderButton'
         href='javascript:;'>
-      older &gt;
+      anterior &gt;
     </g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder>

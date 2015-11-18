@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.client.view.solicitud;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
+import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
@@ -34,6 +36,7 @@ public class UISolicitudTitular extends UIBase {
 	
 	@UiField Button guardar;
 	@UiField Button volver;
+	@UiField TextBox numeroDocumento;
 
 	public UISolicitudTitular() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -50,7 +53,8 @@ public class UISolicitudTitular extends UIBase {
 		FACTORY.initialize(EVENTBUS);
 		
 		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
-		context.find(1L).with("direccion","documento").fire(new Receiver<BeneficiarioProxy>() {
+		
+		context.findByDocumento(numeroDocumento.getValue(), TipoDocumentoIdentidad.CEDULA).with("direccion","documento").fire(new Receiver<BeneficiarioProxy>() {
 			
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {

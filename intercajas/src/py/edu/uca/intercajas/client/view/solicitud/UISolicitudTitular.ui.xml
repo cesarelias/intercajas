@@ -8,9 +8,9 @@
 	    
 	    <g:Grid cellSpacing='5'>
 	        <g:row>
-	            <g:cell>Texto Casilla uno</g:cell>
+	            <g:cell>Nro Documento</g:cell>
 	            <g:customCell>
-	                <g:TextBox></g:TextBox>
+	                <g:TextBox ui:field="numeroDocumento"></g:TextBox>
 	            </g:customCell>
 	        </g:row>
 	        <g:row>

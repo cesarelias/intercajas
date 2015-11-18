@@ -36,7 +36,9 @@ public class MailItems {
   private static final String[] subjects = new String[] {
       "EXP 203/2015 Juan Perez, En tramite",
       "EXP 323/2015 Pedro Cano, Proseguir tramite",
-      "EXP 123/2015 Carlos Cabral, para liquidacion"};
+      "EXP 123/2015 Carlos Cabral, para liquidacion",
+      "EXP 327/2015 Juan Carlos Frutos, para liquidacion",
+      "EXP 127/2015 Lourdes Drews, para liquidacion"};
 
   private static final String[] fragments = new String[] {
       "Señores Caja XXXX<br>",
