@@ -55,7 +55,7 @@ public class UISolicitudTitular extends UIBase {
 		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
 		
 		context.findByDocumento(numeroDocumento.getValue(), TipoDocumentoIdentidad.CEDULA).with("direccion","documento").fire(new Receiver<BeneficiarioProxy>() {
-			
+		
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {
 			    // Create a dialog box and set the caption text

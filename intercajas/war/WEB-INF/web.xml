@@ -25,6 +25,17 @@
 	<url-pattern>/gwtRequest</url-pattern>
   </servlet-mapping>  
   
+  
+  <filter>
+    <filter-name>TransactionContext</filter-name>
+    <filter-class>py.edu.uca.intercajas.dynatablerf.server.SchoolCalendarService</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>TransactionContext</filter-name>
+    <url-pattern>/gwtRequest</url-pattern>
+  </filter-mapping>  
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Intercajas.html</welcome-file>

@@ -5,6 +5,7 @@ import py.edu.uca.intercajas.client.requestfactory.ContextGestionUsuario;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.client.requestfactory.UsuarioProxy;
 import py.edu.uca.intercajas.client.view.menu.UIMenuImpl;
+import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
