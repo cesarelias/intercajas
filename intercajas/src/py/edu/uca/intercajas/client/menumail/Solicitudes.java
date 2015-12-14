@@ -19,6 +19,7 @@ import org.apache.tools.mail.MailMessage;
 
 import py.edu.uca.intercajas.client.view.solicitud.UIBeneficiario;
 import py.edu.uca.intercajas.client.view.solicitud.UISolicitudTitular;
+import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
 import py.edu.uca.intercajas.shared.UIBase;
 
 import com.google.gwt.core.client.GWT;
@@ -76,7 +77,7 @@ public class Solicitudes extends Composite {
 		
 		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
 		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
-		
+		addItemDynaTable(new ItemMenu("DynaTable","DynnaTable Test"));
 		
 //		addItem(new ItemMenu("Solicitud Derechohabiente",
 //				"Solicitud Derechohabiente"));
@@ -111,5 +112,20 @@ public class Solicitudes extends Composite {
 		});
 
 	}	
+	
+	private void addItemDynaTable(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new DynaTableRf().mostrar(MenuMail.getMain().getWidget());
+			}
+		});
+
+	}		
 
 }

@@ -65,6 +65,10 @@ public class SchoolCalendarService implements Filter {
   }
 
   public static void persist(Person person) {
+	  System.out.println("persist person llamado");
+	  if ("a".equals("a")) {
+		  throw new IllegalStateException("TEST DE ERROR DE LADO DEL SERVIDOR");
+	  }
     checkPersonSource();
     PERSON_SOURCE.get().persist(person);
   }

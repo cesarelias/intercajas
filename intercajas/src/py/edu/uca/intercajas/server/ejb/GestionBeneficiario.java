@@ -39,17 +39,9 @@ public class GestionBeneficiario {
 		
 	}
 	
-	public void insertarBeneficiario(Beneficiario beneficiario)
-			throws UnknownException {
-		
-		try {
+	public void insertarBeneficiario(Beneficiario beneficiario)  {
 			em.persist(beneficiario);
 			LOG.info("Beneficiario persisted");
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.info("Beneficiario no pesisted: " + e.getMessage());
-			throw new UnknownException(e.getMessage());
-		}
 	}
 
 }

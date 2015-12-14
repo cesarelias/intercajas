@@ -30,9 +30,6 @@ public class EntityLocator extends Locator<EntityBase, Long> {
 
     @Override
     public EntityBase find(Class<? extends EntityBase> clazz, Long id) {
-        if (clazz.equals(Costo.class)) {
-			return BeanLocator.lookupBean(GestionCosto.class).find(id);
-        }
         if (clazz.equals(Usuario.class)) {
 			return BeanLocator.lookupBean(GestionUsuario.class).find(id);
         }

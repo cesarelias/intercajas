@@ -26,7 +26,7 @@ public class MailItems {
   private static final int FRAGMENTS_PER_EMAIL = 10;
 
   private static final String[] senders = new String[] {
-      "FISCAL", "ANDE", "ITAUPU",
+      "FISCAL", "ANDE", "ITAIPU",
       "BANCARIA", "FERRICARRIL", "MINICIPAL", "PARLAMENTARIA"};
 
   private static final String[] emails = new String[] {

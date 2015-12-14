@@ -19,7 +19,6 @@
 
   <!-- Other module inherits                                      -->
 <inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
-<inherits name='com.google.gwt.validation.Validation' />
 <inherits name='com.google.gwt.editor.Editor' />
 <inherits name='com.google.gwt.logging.Logging'/>
 <set-configuration-property name="CssResource.obfuscationPrefix" value="empty" />

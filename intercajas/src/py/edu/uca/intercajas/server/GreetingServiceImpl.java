@@ -12,6 +12,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 	public String greetServer(String input) throws IllegalArgumentException {
+		if ("a".equals("a")) {
+			throw new IllegalArgumentException("error message test");
+		}
+		if ("a".equals("a")) {
+			return "puto";
+		}
 		// Verify that the input is valid. 
 		if (!FieldVerifier.isValidName(input)) {
 			// If the input is not valid, throw an IllegalArgumentException back to

@@ -73,35 +73,35 @@ public class DynaTableRf extends UIBase {
   
   
   public DynaTableRf() {
+	  
 	  init();
-	  LayoutPanel lp = new LayoutPanel();
-	  lp.add(uiBinder.createAndBindUi(this));
-	  lp.setSize("80em", "40em");
-	  initWidget(lp);
+	  initWidget(uiBinder.createAndBindUi(this));
 //	  RootPanel.get().add(uiBinder.createAndBindUi(this));
   }
   
   public void init() {
 	  
-    GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-      public void onUncaughtException(Throwable e) {
-        log.log(Level.SEVERE, e.getMessage(), e);
-      }
-    });
+	
+//    GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+//      public void onUncaughtException(Throwable e) {
+//        log.log(Level.SEVERE, e.getMessage(), e);
+//        Window.alert("uncaught: " + e.getMessage());
+//      }
+//    });
 
     final DynaTableRequestFactory requests = GWT.create(DynaTableRequestFactory.class);
     requests.initialize(eventBus);
 
     // Add remote logging handler
-    RequestFactoryLogHandler.LoggingRequestProvider provider = new RequestFactoryLogHandler.LoggingRequestProvider() {
-      public LoggingRequest getLoggingRequest() {
-        return requests.loggingRequest();
-      }
-    };
-    Logger.getLogger("").addHandler(new ErrorDialog().getHandler());
-    Logger.getLogger("").addHandler(
-        new RequestFactoryLogHandler(provider, Level.WARNING,
-            new ArrayList<String>()));
+//    RequestFactoryLogHandler.LoggingRequestProvider provider = new RequestFactoryLogHandler.LoggingRequestProvider() {
+//      public LoggingRequest getLoggingRequest() {
+//        return requests.loggingRequest();
+//      }
+//    };
+//    Logger.getLogger("").addHandler(new ErrorDialog().getHandler());
+//    Logger.getLogger("").addHandler(
+//        new RequestFactoryLogHandler(provider, Level.WARNING,
+//            new ArrayList<String>()));
     FavoritesManager manager = new FavoritesManager(requests);
     PersonEditorWorkflow.register(eventBus, requests, manager);
 
@@ -109,15 +109,13 @@ public class DynaTableRf extends UIBase {
     favorites = new FavoritesWidget(eventBus, requests, manager);
     filter = new DayFilterWidget(eventBus);
 
-//    initWidget(uiBinder.createAndBindUi(this));
-   
     // Fast test to see if the sample is not being run from devmode
-    if (GWT.getHostPageBaseURL().startsWith("file:")) {
-      log.log(Level.SEVERE, "The DynaTableRf sample cannot be run without its"
-          + " server component.  If you are running the sample from a"
-          + " GWT distribution, use the 'ant devmode' target to launch"
-          + " the DTRF server.");
-    }
+//    if (GWT.getHostPageBaseURL().startsWith("file:")) {
+//      log.log(Level.SEVERE, "The DynaTableRf sample cannot be run without its"
+//          + " server component.  If you are running the sample from a"
+//          + " GWT distribution, use the 'ant devmode' target to launch"
+//          + " the DTRF server.");
+//    }
     
     
   }

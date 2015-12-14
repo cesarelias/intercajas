@@ -33,7 +33,7 @@
     	cursor: row-resize;
     }
   </ui:style>
-  <g:DockLayoutPanel unit="EX" stylePrimaryName="{style.main}">
+  <g:DockLayoutPanel  unit="EX" stylePrimaryName="{style.main}" width="100%" height="100%">
     <g:north size="5">
       <g:HTML styleName="{style.header}">Beneficiarios / Tramites / Estados
       </g:HTML>

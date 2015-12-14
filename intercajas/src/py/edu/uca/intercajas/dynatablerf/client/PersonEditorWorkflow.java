@@ -27,11 +27,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriver;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import java.util.Set;
 
@@ -45,6 +47,7 @@ import py.edu.uca.intercajas.dynatablerf.client.widgets.TimeSlotListWidget;
 import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory;
 import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
+import py.edu.uca.intercajas.shared.UIDialog;
 
 /**
  * This class shows how the UI for editing a person is wired up to the
@@ -147,7 +150,12 @@ public class PersonEditorWorkflow {
         // If everything went as planned, just dismiss the dialog box
         dialog.hide();
       }
-    });
+      
+		public void onFailure(ServerFailure error) {
+			new UIDialog("Error!", new HTML(error.getMessage()));				
+		}
+    }); 
+    
   }
 
   /**
@@ -200,4 +208,9 @@ public class PersonEditorWorkflow {
       }
     }).fire();
   }
+  
+  public void close() {
+	  dialog.hide();
+  }
+  
 }
