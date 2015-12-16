@@ -17,8 +17,8 @@ package py.edu.uca.intercajas.client.menumail;
 
 import org.apache.tools.mail.MailMessage;
 
-import py.edu.uca.intercajas.client.view.solicitud.UIBeneficiario;
-import py.edu.uca.intercajas.client.view.solicitud.UISolicitudTitular;
+import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
+import py.edu.uca.intercajas.client.solicitud.UISolicitudTitular;
 import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
 import py.edu.uca.intercajas.shared.UIBase;
 

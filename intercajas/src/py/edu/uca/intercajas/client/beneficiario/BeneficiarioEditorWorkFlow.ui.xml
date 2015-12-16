@@ -1,14 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:s="urn:import:py.edu.uca.intercajas.client.view.solicitud">
+	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario">
 	<ui:style>
 	
 	</ui:style>
 	<g:DialogBox ui:field="dialog" modal="true">
 		<g:HTMLPanel>
- 			<s:BeneficiarioEditor ui:field="beneficiarioEditor" /> 
-			<g:Button ui:field="canclear">Cancelar</g:Button>
+ 			<gt:BeneficiarioEditor ui:field="beneficiarioEditor" /> 
+			<g:Button ui:field="cancelar">Cancelar</g:Button>
 			<g:Button ui:field="guardar">Guardar</g:Button>
 		</g:HTMLPanel>
 	</g:DialogBox>

@@ -7,13 +7,15 @@ import java.util.logging.Logger;
 
 import org.eclipse.jetty.server.Response;
 
+import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
+import py.edu.uca.intercajas.client.beneficiario.EditBeneficiarioEvent;
+import py.edu.uca.intercajas.client.beneficiario.TipoDocumentoEditor;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionCosto;
 import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.client.view.solicitud.events.EditBeneficiarioEvent;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UnknownException;
@@ -82,6 +84,8 @@ public class Intercajas implements EntryPoint {
 //		new UIBeneficiario().mostrar(new Mail());
 		
 		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
+		
+		
 		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
 		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
 
@@ -105,8 +109,15 @@ public class Intercajas implements EntryPoint {
 			}
 		});
 	    
+	    
+	    try {
 	    EVENTBUS.fireEvent(new EditBeneficiarioEvent(beneficiario, context));
 //	    new UIDialog("titulo", new HTML("detalle del mensaje"));
+	    } catch (Exception e) {
+	    	Window.alert(e.getMessage());
+	    }
+	    
+	    
 	    
 	}
 	

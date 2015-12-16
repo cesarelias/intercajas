@@ -5,10 +5,10 @@ import com.google.gwt.user.client.Window;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
+import py.edu.uca.intercajas.client.beneficiario.EditBeneficiarioEvent;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
-import py.edu.uca.intercajas.client.view.solicitud.events.EditBeneficiarioEvent;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 
 public class Test {

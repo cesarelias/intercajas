@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.client;
+package py.edu.uca.intercajas.client.beneficiario;
 
 import java.util.Set;
 
@@ -6,8 +6,6 @@ import javax.validation.ConstraintViolation;
 
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.client.view.solicitud.BeneficiarioEditor;
-import py.edu.uca.intercajas.client.view.solicitud.events.EditBeneficiarioEvent;
 import py.edu.uca.intercajas.shared.UIDialog;
 
 import com.google.gwt.core.client.GWT;
@@ -85,7 +83,7 @@ public class BeneficiarioEditorWorkFlow {
 
 	}
 
-	static void register(EventBus eventBus, final FactoryGestion requestFactory) {
+	public static void register(EventBus eventBus, final FactoryGestion requestFactory) {
 		eventBus.addHandler(EditBeneficiarioEvent.TYPE,
 				new EditBeneficiarioEvent.Handler() {
 					public void startEdit(BeneficiarioProxy beneficiario,
@@ -113,5 +111,10 @@ public class BeneficiarioEditorWorkFlow {
 		Window.alert("requestContext nulo, que diablos se hace aqui?");
 		// TODO Auto-generated method stub
 	}
+	
+	@UiHandler("cancelar")
+	void onCancel(ClickEvent event) {
+		dialog.hide();
+	}	
 
 }

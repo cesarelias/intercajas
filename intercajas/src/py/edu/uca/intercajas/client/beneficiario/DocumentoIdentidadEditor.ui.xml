@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:e="urn:import:com.google.gwt.editor.ui.client"
+	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		Numero Documento
+		<e:ValueBoxEditorDecorator ui:field="numeroDocumento">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+		Tipo Documento
+
+		<gt:TipoDocumentoEditor ui:field="tipoDocumento"/>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

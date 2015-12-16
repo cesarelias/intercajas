@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:e="urn:import:com.google.gwt.editor.ui.client"
+	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario"
+	 xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel ui:field="panel">
+		Nombre
+		<e:ValueBoxEditorDecorator ui:field="nombres">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+		Apellidos
+		<e:ValueBoxEditorDecorator ui:field="apellidos">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+		Fecha Nacimineto
+				<dp:DateBox ui:field="fechaNacimiento"/>
+
+
+		<gt:DocumentoIdentidadEditor ui:field="documento" />
+
+
+
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

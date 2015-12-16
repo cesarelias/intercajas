@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.client.view.solicitud;
+package py.edu.uca.intercajas.client.solicitud;
 
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;

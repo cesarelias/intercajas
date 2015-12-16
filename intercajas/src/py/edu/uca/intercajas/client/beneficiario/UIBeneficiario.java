@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.client.view.solicitud;
+package py.edu.uca.intercajas.client.beneficiario;
 
 import java.util.HashMap;
 import java.util.Map;
