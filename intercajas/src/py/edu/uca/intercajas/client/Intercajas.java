@@ -1,6 +1,7 @@
 package py.edu.uca.intercajas.client;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,7 @@ import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.google.web.bindery.requestfactory.shared.Violation;
 
 public class Intercajas implements EntryPoint {
 
@@ -46,7 +48,7 @@ public class Intercajas implements EntryPoint {
 		
 	    GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 	        public void onUncaughtException(Throwable e) {
-	          log.log(Level.SEVERE, e.getMessage(), e);
+	          //log.log(Level.SEVERE, e.getMessage(), e);
 	        }
 	      });
 	    
@@ -90,6 +92,10 @@ public class Intercajas implements EntryPoint {
 		beneficiario.setApellidos("sanabrita");
 
 	    context.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
+			@Override
+			public void onViolation(@SuppressWarnings("deprecation") Set<Violation> errors) {
+				//no hacemos nada, esto evita que se ejecute el serverFailure, ante un violation-Validation
+			}
 			@Override
 			public void onFailure(ServerFailure error) {
 				Window.alert("Error al grabar" + error.getMessage());
