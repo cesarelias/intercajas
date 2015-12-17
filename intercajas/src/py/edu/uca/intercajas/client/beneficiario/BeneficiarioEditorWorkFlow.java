@@ -70,6 +70,9 @@ public class BeneficiarioEditorWorkFlow {
 			public void onConstraintViolation(Set<ConstraintViolation<?>> errors) {
 				// Otherwise, show ConstraintViolations in the UI
 				dialog.setText("Se encontraron errores");
+				for (ConstraintViolation<?>  e : errors) {
+					Window.alert(e.getMessage());
+				}
 				editorDriver.setConstraintViolations(errors);
 			}
 

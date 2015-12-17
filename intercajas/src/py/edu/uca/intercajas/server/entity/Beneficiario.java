@@ -23,7 +23,7 @@ public class Beneficiario extends EntityBase {
 	@Size(min = 4, message = "El nombre debe contener al menos 4 catacteres")
 	private String nombres;
 	private String apellidos;
-	@Past
+	@Past(message="la fecha de nacimiento debe ser una fecha pasada")
 	private Date fechaNacimiento;
 	private Sexo sexo;
 	@Embedded

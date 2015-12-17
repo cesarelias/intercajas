@@ -11,6 +11,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class BeneficiarioEditor extends Composite implements
 		Editor<BeneficiarioProxy> {
@@ -24,6 +26,12 @@ public class BeneficiarioEditor extends Composite implements
 
 	@UiField
 	ValueBoxEditorDecorator<String> nombres;
+
+	@UiField
+	ValueBoxEditorDecorator<String> apellidos;
+
+	@UiField
+	DatePicker fechaNacimiento;
 
 	@UiField(provided = false)
 	DocumentoIdentidadEditor documento;
