@@ -36,6 +36,8 @@ public class BeneficiarioEditor extends Composite implements
 	@UiField(provided = false)
 	DocumentoIdentidadEditor documento;
 
+	@UiField(provided = false)
+	DireccionEditor direccion;
 	
 	public BeneficiarioEditor() {
 		initWidget(uiBinder.createAndBindUi(this));

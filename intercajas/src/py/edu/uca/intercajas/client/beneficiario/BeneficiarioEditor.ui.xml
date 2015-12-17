@@ -19,12 +19,14 @@
 				<g:TextBox />
 			</e:valuebox>
 		</e:ValueBoxEditorDecorator>
-		Fecha Nacimineto
 
+
+		Fecha Nacimineto
 		<dp:DatePicker ui:field="fechaNacimiento"
 			yearArrowsVisible="true" yearAndMonthDropdownVisible="true"
 			visibleYearCount="100" />
 		<gt:DocumentoIdentidadEditor ui:field="documento" />
+		<gt:DireccionEditor ui:field="direccion" />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -14,6 +14,7 @@ import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionCosto;
+import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
@@ -87,13 +88,15 @@ public class Intercajas implements EntryPoint {
 		
 		
 		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
-		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+//		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+//		DireccionProxy dirProxy = context.create(DireccionProxy.class);
 
-		docProxy.setNumeroDocumento("123322");
-		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-		beneficiario.setDocumento(docProxy);
-		beneficiario.setNombres("cesarito");
-		beneficiario.setApellidos("sanabrita");
+//		dirProxy.setCallePrincipal("san mateo");
+		
+//		docProxy.setNumeroDocumento("123322");
+//		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+//		beneficiario.setDocumento(docProxy);
+//		beneficiario.setDireccion(dirProxy);
 
 	    context.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
 			@Override

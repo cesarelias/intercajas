@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:e="urn:import:com.google.gwt.editor.ui.client">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+	    Calle Principal
+		<e:ValueBoxEditorDecorator ui:field="callePrincipal">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+	</g:HTMLPanel>
+</ui:UiBinder> 
