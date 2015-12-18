@@ -88,15 +88,15 @@ public class Intercajas implements EntryPoint {
 		
 		
 		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
-//		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
-//		DireccionProxy dirProxy = context.create(DireccionProxy.class);
+		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+		DireccionProxy dirProxy = context.create(DireccionProxy.class);
 
 //		dirProxy.setCallePrincipal("san mateo");
 		
 //		docProxy.setNumeroDocumento("123322");
-//		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-//		beneficiario.setDocumento(docProxy);
-//		beneficiario.setDireccion(dirProxy);
+		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+		beneficiario.setDocumento(docProxy);
+		beneficiario.setDireccion(dirProxy);
 
 	    context.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
 			@Override

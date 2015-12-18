@@ -12,8 +12,6 @@
 				<g:TextBox />
 			</e:valuebox>
 		</e:ValueBoxEditorDecorator>
-		Tipo Documento
-
 		<gt:TipoDocumentoEditor ui:field="tipoDocumento"/>
 
 	</g:HTMLPanel>

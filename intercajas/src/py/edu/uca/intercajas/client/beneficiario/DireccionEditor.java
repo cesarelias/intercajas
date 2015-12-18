@@ -21,6 +21,14 @@ public class DireccionEditor extends Composite implements Editor<DireccionProxy>
 	
 	@UiField
 	ValueBoxEditorDecorator<String> callePrincipal;
+	@UiField
+	ValueBoxEditorDecorator<String> numeroCasa;
+	@UiField
+	ValueBoxEditorDecorator<String> barrio;
+	@UiField
+	ValueBoxEditorDecorator<String> ciudad;
+	@UiField
+	ValueBoxEditorDecorator<String> departamento;
 	
 	
 	public DireccionEditor() {

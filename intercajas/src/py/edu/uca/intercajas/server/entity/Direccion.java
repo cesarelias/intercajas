@@ -5,15 +5,15 @@ import javax.persistence.*;
 @Embeddable
 public class Direccion {
 	
-	@Column(length = 30) 
+	@Column(length = 70) 
 	private String callePrincipal;
 	@Column(length = 7)
 	private String numeroCasa;
-	@Column(length = 20)
+	@Column(length = 70)
 	private String barrio;
-	@Column(length = 30)
+	@Column(length = 70)
 	private String ciudad;
-	@Column(length = 30)
+	@Column(length = 70)
 	private String departamento;
 	public String getCallePrincipal() {
 		return callePrincipal;

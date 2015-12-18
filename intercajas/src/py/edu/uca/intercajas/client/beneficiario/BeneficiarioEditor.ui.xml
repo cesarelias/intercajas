@@ -7,6 +7,7 @@
 	
 	</ui:style>
 	<g:HTMLPanel ui:field="panel">
+		<gt:DocumentoIdentidadEditor ui:field="documento" />
 		Nombre
 		<e:ValueBoxEditorDecorator ui:field="nombres">
 			<e:valuebox>
@@ -25,7 +26,6 @@
 		<dp:DatePicker ui:field="fechaNacimiento"
 			yearArrowsVisible="true" yearAndMonthDropdownVisible="true"
 			visibleYearCount="100" />
-		<gt:DocumentoIdentidadEditor ui:field="documento" />
 		<gt:DireccionEditor ui:field="direccion" />
 
 	</g:HTMLPanel>

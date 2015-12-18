@@ -12,5 +12,31 @@
 				<g:TextBox />
 			</e:valuebox>
 		</e:ValueBoxEditorDecorator>
+	    Numero de casa
+		<e:ValueBoxEditorDecorator ui:field="numeroCasa">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+	    Barrio
+		<e:ValueBoxEditorDecorator ui:field="barrio">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+	    Ciudad
+		<e:ValueBoxEditorDecorator ui:field="ciudad">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+	    Departamento
+		<e:ValueBoxEditorDecorator ui:field="departamento">
+			<e:valuebox>
+				<g:TextBox />
+			</e:valuebox>
+		</e:ValueBoxEditorDecorator>
+								
+				
 	</g:HTMLPanel>
 </ui:UiBinder> 

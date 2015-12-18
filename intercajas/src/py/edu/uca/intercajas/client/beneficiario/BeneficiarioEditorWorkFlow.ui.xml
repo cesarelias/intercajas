@@ -5,7 +5,7 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:DialogBox ui:field="dialog" modal="true">
+	<g:DialogBox ui:field="dialog" modal="true" text="Beneficiario">
 		<g:HTMLPanel>
  			<gt:BeneficiarioEditor ui:field="beneficiarioEditor" /> 
 			<g:Button ui:field="cancelar">Cancelar</g:Button>
