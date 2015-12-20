@@ -12,6 +12,7 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 @ProxyFor(value=Beneficiario.class,locator=EntityLocator.class)
 public interface BeneficiarioProxy extends EntityProxy {
 
+	public Long getId();
 	public String getNombres();
 	public void setNombres(String nombres);
 	public String getApellidos();

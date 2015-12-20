@@ -12,6 +12,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 
 public interface ContextGestionBeneficiario extends RequestContext{
 	Request<Void> insertarBeneficiario(BeneficiarioProxy beneficiario);
+	Request<Void> actualizarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<BeneficiarioProxy> find (Long id);
 	Request<BeneficiarioProxy> findByDocumento(String numeroDocumento, TipoDocumentoIdentidad tipoDocumento);
 }

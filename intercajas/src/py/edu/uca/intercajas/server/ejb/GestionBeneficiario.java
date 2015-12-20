@@ -43,5 +43,11 @@ public class GestionBeneficiario {
 			em.persist(beneficiario);
 			LOG.info("Beneficiario persisted");
 	}
-
+	            
+	public void actualizarBeneficiario(Beneficiario beneficiario)  {
+		em.merge(beneficiario);
+		LOG.info("Beneficiario merged");
+}
+	
+	
 }

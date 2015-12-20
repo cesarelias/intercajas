@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.eclipse.jetty.server.Response;
 
 import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
-import py.edu.uca.intercajas.client.beneficiario.EditBeneficiarioEvent;
 import py.edu.uca.intercajas.client.beneficiario.TipoDocumentoEditor;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
@@ -38,6 +37,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler;
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.web.bindery.requestfactory.shared.Violation;
 
@@ -46,9 +46,11 @@ public class Intercajas implements EntryPoint {
 	private static final EventBus EVENTBUS = new SimpleEventBus();
 	private static final Logger log = Logger.getLogger(Intercajas.class.getName());
 	private static final FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);
+
+	private BeneficiarioProxy beneficiario;
 	
 	public void onModuleLoad() {
-		
+
 	    GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 	        public void onUncaughtException(Throwable e) {
 	          //log.log(Level.SEVERE, e.getMessage(), e);
@@ -65,12 +67,10 @@ public class Intercajas implements EntryPoint {
 	    Logger.getLogger("").addHandler(
 	        new RequestFactoryLogHandler(provider, Level.WARNING,
 	            new ArrayList<String>()));
-			
-	    
-	    
-	    FACTORY.initialize(EVENTBUS);
-	    BeneficiarioEditorWorkFlow.register(EVENTBUS, FACTORY);
-	    
+
+
+
+
 //		DecoratorPanel panel = new DecoratorPanel();
 //		UILoginImpl login = new UILoginImpl();
 //		panel.add(login);
@@ -84,44 +84,28 @@ public class Intercajas implements EntryPoint {
 //		new DynaTableRf().mostrar(new Mail());
 //		new UIBeneficiario().mostrar(new Mail());
 		
-		ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
+		final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
+		FACTORY.initialize(EVENTBUS);
 		
+	    //Este es el INSERT
+//		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
+//		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+//		DireccionProxy dirProxy = context.create(DireccionProxy.class);
+//
+//		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+//		beneficiario.setDocumento(docProxy);
+//		beneficiario.setDireccion(dirProxy);
+//	    
+//		new BeneficiarioEditorWorkFlow().create(beneficiario, context, FACTORY);
 		
-		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
-		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
-		DireccionProxy dirProxy = context.create(DireccionProxy.class);
-
-//		dirProxy.setCallePrincipal("san mateo");
-		
-//		docProxy.setNumeroDocumento("123322");
-		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-		beneficiario.setDocumento(docProxy);
-		beneficiario.setDireccion(dirProxy);
-
-	    context.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
+	    //Este es el update
+	    context.find(212L).fire(new Receiver<BeneficiarioProxy>() {
 			@Override
-			public void onViolation(@SuppressWarnings("deprecation") Set<Violation> errors) {
-				//no hacemos nada, esto evita que se ejecute el serverFailure, ante un violation-Validation
-			}
-			@Override
-			public void onFailure(ServerFailure error) {
-				Window.alert("Error al grabar" + error.getMessage());
-			}
-			@Override
-			public void onSuccess(Void response) {
+			public void onSuccess(BeneficiarioProxy response) {
+				new BeneficiarioEditorWorkFlow().edit(response, context, FACTORY);
 			}
 		});
-	    
-	    
-	    try {
-	    EVENTBUS.fireEvent(new EditBeneficiarioEvent(beneficiario, context));
-//	    new UIDialog("titulo", new HTML("detalle del mensaje"));
-	    } catch (Exception e) {
-	    	Window.alert(e.getMessage());
-	    }
-	    
-	    
-	    
+		
 	}
-	
+
 }

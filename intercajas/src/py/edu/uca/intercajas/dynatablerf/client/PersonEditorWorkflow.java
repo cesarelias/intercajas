@@ -64,9 +64,7 @@ public class PersonEditorWorkflow {
       RequestFactoryEditorDriver<PersonProxy, PersonEditor> {
   }
 
-  static void register(EventBus eventBus,
-      final DynaTableRequestFactory requestFactory,
-      final FavoritesManager manager) {
+  static void register(EventBus eventBus,  final DynaTableRequestFactory requestFactory,  final FavoritesManager manager) {
     eventBus.addHandler(EditPersonEvent.TYPE, new EditPersonEvent.Handler() {
       public void startEdit(PersonProxy person, RequestContext requestContext) {
         new PersonEditorWorkflow(requestFactory, manager, person).edit(requestContext);
@@ -208,9 +206,9 @@ public class PersonEditorWorkflow {
       }
     }).fire();
   }
-  
+
   public void close() {
 	  dialog.hide();
   }
-  
+
 }
