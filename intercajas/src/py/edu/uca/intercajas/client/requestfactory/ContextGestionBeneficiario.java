@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.client.requestfactory;
 
+import java.util.List;
+
 import py.edu.uca.intercajas.server.ejb.BeanLocator;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
@@ -14,5 +16,6 @@ public interface ContextGestionBeneficiario extends RequestContext{
 	Request<Void> insertarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<Void> actualizarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<BeneficiarioProxy> find (Long id);
+	Request<List<BeneficiarioProxy>> findAll ();
 	Request<BeneficiarioProxy> findByDocumento(String numeroDocumento, TipoDocumentoIdentidad tipoDocumento);
 }

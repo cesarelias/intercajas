@@ -34,6 +34,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RangeChangeEvent;
@@ -44,11 +45,17 @@ import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.web.bindery.requestfactory.shared.WriteOperation;
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
+import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
+import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
+import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
+import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.dynatablerf.client.events.EditPersonEvent;
 import py.edu.uca.intercajas.dynatablerf.client.events.FilterChangeEvent;
 import py.edu.uca.intercajas.dynatablerf.shared.AddressProxy;
@@ -57,6 +64,7 @@ import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.ScheduleProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.TimeSlotProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
+import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 
 /**
  * A paging table with summaries of all known people.
@@ -75,82 +83,75 @@ public class ListaBeneficiarios extends Composite {
     DataGrid.Style dataGridStyle();
   }
 
-  private class DescriptionColumn extends Column<PersonProxy, String> {
-    public DescriptionColumn() {
+  private class ColNombres extends Column<BeneficiarioProxy, String> {
+    public ColNombres() {
       super(new TextCell());
     }
 
     @Override
-    public String getValue(PersonProxy object) {
-      return object.getDescription();
+    public String getValue(BeneficiarioProxy object) {
+      return object.getNombres();
     }
   }
 
-  private class NameColumn extends Column<PersonProxy, String> {
-    public NameColumn() {
-      super(new TextCell());
-    }
-
-    @Override
-    public String getValue(PersonProxy object) {
-      return object.getName();
-    }
+  private class ColApellidos extends Column<BeneficiarioProxy, String> {
+	    public ColApellidos() {
+	      super(new TextCell());
+	    }
+	    @Override
+	    public String getValue(BeneficiarioProxy object) {
+	      return object.getApellidos();
+	    }
   }
+  
+  
 
-  private class ScheduleColumn extends Column<PersonProxy, String> {
-    public ScheduleColumn() {
-      super(new TextCell());
-    }
-
-    @Override
-    public String getValue(PersonProxy object) {
-      return object.getScheduleDescription();
-    }
-  }
-
-  @UiField
-  DockLayoutPanel dock;
+//  @UiField
+//  DockLayoutPanel dock;
 
   @UiField(provided = true)
   SimplePager pager = new SimplePager();
 
   @UiField(provided = true)
-  DataGrid<PersonProxy> table;
+  DataGrid<BeneficiarioProxy> table;
 
   private final EventBus eventBus;
   private List<Boolean> filter = new ArrayList<Boolean>(ALL_DAYS);
   private int lastFetch;
   private final int numRows;
   private boolean pending;
-  private final DynaTableRequestFactory requestFactory;
-  private final SingleSelectionModel<PersonProxy> selectionModel = new SingleSelectionModel<PersonProxy>();
+  private final FactoryGestion requestFactory;
+  private final SingleSelectionModel<BeneficiarioProxy> selectionModel = new SingleSelectionModel<BeneficiarioProxy>();
 
   public ListaBeneficiarios(EventBus eventBus,
-      DynaTableRequestFactory requestFactory, int numRows) {
+		  FactoryGestion requestFactory, int numRows) {
     this.eventBus = eventBus;
     this.requestFactory = requestFactory;
     this.numRows = numRows;
-
-    table = new DataGrid<PersonProxy>(numRows,
+    table = new DataGrid<BeneficiarioProxy>(numRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
+    
 
-    Column<PersonProxy, String> nameColumn = new NameColumn();
-    table.addColumn(nameColumn, "Nombre");
-    table.setColumnWidth(nameColumn, "25ex");
-    Column<PersonProxy, String> descriptionColumn = new DescriptionColumn();
-    table.addColumn(descriptionColumn, "Descripcion");
-    table.setColumnWidth(descriptionColumn, "40ex");
-    table.addColumn(new ScheduleColumn(), "Calendario");
-    table.setRowCount(numRows, false);
+    Column<BeneficiarioProxy, String> colNombres = new ColNombres();
+    table.addColumn(colNombres, "Nombres");
+    table.setColumnWidth(colNombres, "25ex");
+
+    Column<BeneficiarioProxy, String> colApellidos = new ColApellidos();
+    table.addColumn(colApellidos, "Nombres");
+    table.setColumnWidth(colApellidos, "25ex");
+    
     table.setSelectionModel(selectionModel);
     table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
-    EntityProxyChange.registerForProxyType(eventBus, PersonProxy.class,
-        new EntityProxyChange.Handler<PersonProxy>() {
+    table.setEmptyTableWidget(new Label("Vacio"));
+    
+    
+    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
+        new EntityProxyChange.Handler<BeneficiarioProxy>() {
           @Override
-          public void onProxyChange(EntityProxyChange<PersonProxy> event) {
-            ListaBeneficiarios.this.onPersonChanged(event);
+          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
+            ListaBeneficiarios.this.onBeneficiarioChanged(event);
           }
         });
 
@@ -171,30 +172,49 @@ public class ListaBeneficiarios extends Composite {
       }
     });
 
+    
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
       @Override
       public void onSelectionChange(SelectionChangeEvent event) {
         ListaBeneficiarios.this.refreshSelection();
       }
     });
-
+    
     fetch(0);
+    
   }
 
   @UiHandler("create")
   void onCreate(ClickEvent event) {
-    PersonRequest context = requestFactory.personRequest();
-    AddressProxy address = context.create(AddressProxy.class);
-    ScheduleProxy schedule = context.create(ScheduleProxy.class);
-    schedule.setTimeSlots(new ArrayList<TimeSlotProxy>());
-    PersonProxy person = context.edit(context.create(PersonProxy.class));
-    person.setAddress(address);
-    person.setClassSchedule(schedule);
-    context.persist().using(person);
-    eventBus.fireEvent(new EditPersonEvent(person, context));
+//    PersonRequest context = requestFactory.personRequest();
+//    AddressProxy address = context.create(AddressProxy.class);
+//    ScheduleProxy schedule = context.create(ScheduleProxy.class);
+//    schedule.setTimeSlots(new ArrayList<TimeSlotProxy>());
+//    PersonProxy person = context.edit(context.create(PersonProxy.class));
+//    person.setAddress(address);
+//    person.setClassSchedule(schedule);
+//    context.persist().using(person);
+//    eventBus.fireEvent(new EditPersonEvent(person, context));
+	  
+	  final ContextGestionBeneficiario context =  requestFactory.contextGestionBeneficiario();
+		requestFactory.initialize(eventBus);
+	  
+		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
+		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+		DireccionProxy dirProxy = context.create(DireccionProxy.class);
+
+		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+		beneficiario.setDocumento(docProxy);
+		beneficiario.setDireccion(dirProxy);
+	    
+		new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
+	  
+	  
   }
 
-  void onPersonChanged(EntityProxyChange<PersonProxy> event) {
+  void onBeneficiarioChanged(EntityProxyChange<BeneficiarioProxy> event) {
+	  Window.alert("onBeneficiarioChanged: " + event.getProxyId());
+	/*
     if (WriteOperation.PERSIST.equals(event.getWriteOperation())) {
       // Re-fetch if we're already displaying the last page
       if (table.isRowCountExact()) {
@@ -221,8 +241,10 @@ public class ListaBeneficiarios extends Composite {
         });
       }
     }
+	 */
   }
 
+  /*
   @UiHandler("table")
   void onRangeChange(RangeChangeEvent event) {
     Range r = event.getNewRange();
@@ -230,18 +252,38 @@ public class ListaBeneficiarios extends Composite {
 
     fetch(start);
   }
+  */
 
   void refreshSelection() {
-    PersonProxy person = selectionModel.getSelectedObject();
-    if (person == null) {
+    BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+    if (beneficiario == null) {
       return;
     }
-    eventBus.fireEvent(new EditPersonEvent(person));
-    selectionModel.setSelected(person, false);
+    new BeneficiarioEditorWorkFlow().edit(beneficiario, null, requestFactory);
+    //eventBus.fireEvent(new EditPersonEvent(person));
+    selectionModel.setSelected(beneficiario, false);
   }
 
   private void fetch(final int start) {
 	  
+	  try {
+		  
+		  requestFactory.contextGestionBeneficiario().findAll().fire(new Receiver<List<BeneficiarioProxy>>() {
+
+			@Override
+			public void onSuccess(List<BeneficiarioProxy> response) {
+				table.setRowCount(response.size(),true);
+				  table.setRowData(0,response);
+				  table.redraw();
+				
+			}
+		});
+		  
+	  
+	  } catch (Exception e) {
+		  Window.alert(e.getMessage());
+	  }
+	/*  
     lastFetch = start;
     requestFactory.schoolCalendarRequest().getPeople(start, numRows, filter).fire(
         new Receiver<List<PersonProxy>>() {
@@ -266,12 +308,15 @@ public class ListaBeneficiarios extends Composite {
         	  Window.alert("aqui esta el error: " + error.getMessage());
           }
         });
+      */
+
   }
 
-  private int offsetOf(EntityProxyId<PersonProxy> personId) {
-    List<PersonProxy> displayedItems = table.getVisibleItems();
+  //TODO nosotros no tenemos EntityProxyId
+  private int offsetOf(EntityProxyId<BeneficiarioProxy> beneficiarioId) {
+    List<BeneficiarioProxy> displayedItems = table.getVisibleItems();
     for (int offset = 0, j = displayedItems.size(); offset < j; offset++) {
-      if (personId.equals(displayedItems.get(offset).stableId())) {
+      if (beneficiarioId.equals(displayedItems.get(offset).stableId())) {
         return offset;
       }
     }

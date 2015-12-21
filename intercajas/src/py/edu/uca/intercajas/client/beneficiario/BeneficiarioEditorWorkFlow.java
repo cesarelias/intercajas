@@ -6,7 +6,9 @@ import javax.validation.ConstraintViolation;
 
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
+import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
+import py.edu.uca.intercajas.server.entity.Direccion;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

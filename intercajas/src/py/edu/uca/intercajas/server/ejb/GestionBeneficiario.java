@@ -38,6 +38,11 @@ public class GestionBeneficiario {
 		return beneficiarios.get(0);
 		
 	}
+
+	public List<Beneficiario> findAll() {
+		return em.createQuery("select b from Beneficiario b",Beneficiario.class).getResultList();
+	}
+	
 	
 	public void insertarBeneficiario(Beneficiario beneficiario)  {
 			em.persist(beneficiario);

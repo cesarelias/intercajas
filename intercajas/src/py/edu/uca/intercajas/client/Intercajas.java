@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import org.eclipse.jetty.server.Response;
 
 import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
+import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
+import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios2;
 import py.edu.uca.intercajas.client.beneficiario.TipoDocumentoEditor;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
@@ -20,6 +22,7 @@ import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UnknownException;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
@@ -31,6 +34,10 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -68,9 +75,6 @@ public class Intercajas implements EntryPoint {
 	        new RequestFactoryLogHandler(provider, Level.WARNING,
 	            new ArrayList<String>()));
 
-
-
-
 //		DecoratorPanel panel = new DecoratorPanel();
 //		UILoginImpl login = new UILoginImpl();
 //		panel.add(login);
@@ -80,13 +84,15 @@ public class Intercajas implements EntryPoint {
 		
 //		Para iniciar en esta ventana - desarrollo
 //		RootPanel.get().remove(0);
-		new MenuMail();
+//		new MenuMail();
 //		new DynaTableRf().mostrar(new Mail());
 //		new UIBeneficiario().mostrar(new Mail());
 		
 		final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
 		FACTORY.initialize(EVENTBUS);
+
 		
+		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
 	    //Este es el INSERT
 //		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
 //		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
@@ -99,12 +105,12 @@ public class Intercajas implements EntryPoint {
 //		new BeneficiarioEditorWorkFlow().create(beneficiario, context, FACTORY);
 		
 	    //Este es el update
-	    context.find(212L).fire(new Receiver<BeneficiarioProxy>() {
-			@Override
-			public void onSuccess(BeneficiarioProxy response) {
-				new BeneficiarioEditorWorkFlow().edit(response, context, FACTORY);
-			}
-		});
+//	    context.find(2L).fire(new Receiver<BeneficiarioProxy>() {
+//			@Override
+//			public void onSuccess(BeneficiarioProxy response) {
+//				new BeneficiarioEditorWorkFlow().edit(response, context, FACTORY);
+//			}
+//		});
 		
 	}
 
