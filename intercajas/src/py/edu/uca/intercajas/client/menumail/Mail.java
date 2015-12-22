@@ -17,6 +17,8 @@ package py.edu.uca.intercajas.client.menumail;
 
 
 
+import py.edu.uca.intercajas.shared.UIBase;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -32,7 +34,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
  * interface, similar to many common email readers. It has no back-end,
  * populating its components with hard-coded data.
  */
-public class Mail extends Composite {
+public class Mail extends UIBase {
 
   interface Binder extends UiBinder<DockLayoutPanel, Mail> { }
 
@@ -93,9 +95,4 @@ public class Mail extends Composite {
     
   }
   
-  public void mostrar() {
-    if (MenuMail.getMain().getWidget() == null || !(MenuMail.getMain().getWidget() instanceof Mail )) {
-    	MenuMail.getMain().setWidget(this);
-    }
-  }
 }

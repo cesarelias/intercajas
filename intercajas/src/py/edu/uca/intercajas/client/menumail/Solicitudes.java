@@ -15,9 +15,15 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import java.util.logging.Logger;
+
 import org.apache.tools.mail.MailMessage;
 
+import py.edu.uca.intercajas.client.Intercajas;
+import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
+import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
+import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.client.solicitud.UISolicitudTitular;
 import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -26,6 +32,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -43,6 +51,12 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Solicitudes extends Composite {
 
+	
+	private static final EventBus EVENTBUS = new SimpleEventBus();
+	private static final Logger log = Logger.getLogger(Intercajas.class.getName());
+	private static final FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);
+	final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
+	
 	/**
 	 * Simple data structure representing a itemMenu.
 	 */
@@ -71,6 +85,12 @@ public class Solicitudes extends Composite {
 	Style style;
 
 	public Solicitudes() {
+		
+		
+		FACTORY.initialize(EVENTBUS);
+		
+		
+		
 		initWidget(binder.createAndBindUi(this));
 		
 		
@@ -93,7 +113,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UISolicitudTitular().mostrar(MenuMail.getMain().getWidget());
+				new UISolicitudTitular().mostrar(MenuMail.getMain().getWidget(0));
 			}
 		});
 	}
@@ -107,7 +127,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UIBeneficiario().mostrar(MenuMail.getMain().getWidget());
+				new UIBeneficiario().mostrar(MenuMail.getMain().getWidget(0));
 			}
 		});
 
@@ -122,10 +142,23 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new DynaTableRf().mostrar(MenuMail.getMain().getWidget());
+				new DynaTableRf().mostrar(MenuMail.getMain().getWidget(0));
 			}
 		});
+	}	
+	
+	private void addItemListaBeneficiarios(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
 
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new ListaBeneficiarios(EVENTBUS, null,10).mostrar(MenuMail.getMain().getWidget(0));
+			}
+		});
 	}		
-
+	
 }

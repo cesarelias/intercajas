@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * This application demonstrates how to construct a relatively complex user
@@ -53,7 +54,8 @@ public class MenuMail  {
 //  @UiField MailList mailList;
 //  @UiField MailDetail mailDetail;
   @UiField Shortcuts shortcuts;
-  @UiField static SimplePanel main;
+  @UiField
+static DockLayoutPanel main;
 
   public MenuMail() {
 	init();
@@ -94,12 +96,11 @@ public class MenuMail  {
     //MenuMain PRINCIPAL
     RootLayoutPanel.get().add(outer);
     
-    //Opcion 1 mail
-    new Mail().mostrar();
-    
+//    Opcion 1 mail
+    new Mail().mostrar(null);
   }
   
-  public static SimplePanel getMain() {
+  public static DockLayoutPanel getMain() {
 	  return main;
   }
 }

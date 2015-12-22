@@ -11,6 +11,7 @@
 			table-layout: fixed;
 		}
 		</ui:style>
+
 	<g:DockLayoutPanel ui:field="dock" unit="EX">
 		<g:north size="6">
 			<g:DockLayoutPanel unit="PCT">
@@ -31,4 +32,5 @@
 			<cv:DataGrid ui:field="table" stylePrimaryName="{style.table}" />
 		</g:center>
 	</g:DockLayoutPanel>
+
 </ui:UiBinder>

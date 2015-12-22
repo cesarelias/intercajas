@@ -65,11 +65,12 @@ import py.edu.uca.intercajas.dynatablerf.shared.ScheduleProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.TimeSlotProxy;
 import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.UIBase;
 
 /**
  * A paging table with summaries of all known people.
  */
-public class ListaBeneficiarios extends Composite {
+public class ListaBeneficiarios extends UIBase {
 
   interface Binder extends UiBinder<Widget, ListaBeneficiarios> {
   }
@@ -213,7 +214,7 @@ public class ListaBeneficiarios extends Composite {
   }
 
   void onBeneficiarioChanged(EntityProxyChange<BeneficiarioProxy> event) {
-	  Window.alert("onBeneficiarioChanged: " + event.getProxyId());
+
 	/*
     if (WriteOperation.PERSIST.equals(event.getWriteOperation())) {
       // Re-fetch if we're already displaying the last page
@@ -266,23 +267,16 @@ public class ListaBeneficiarios extends Composite {
 
   private void fetch(final int start) {
 	  
-	  try {
 		  
-		  requestFactory.contextGestionBeneficiario().findAll().fire(new Receiver<List<BeneficiarioProxy>>() {
-
-			@Override
-			public void onSuccess(List<BeneficiarioProxy> response) {
-				table.setRowCount(response.size(),true);
-				  table.setRowData(0,response);
-				  table.redraw();
-				
-			}
-		});
-		  
+	  requestFactory.contextGestionBeneficiario().findAll().fire(new Receiver<List<BeneficiarioProxy>>() {
+		@Override
+		public void onSuccess(List<BeneficiarioProxy> response) {
+			table.setRowCount(response.size(),true);
+			  table.setRowData(0,response);
+			  table.redraw();
+		}
+	});
 	  
-	  } catch (Exception e) {
-		  Window.alert(e.getMessage());
-	  }
 	/*  
     lastFetch = start;
     requestFactory.schoolCalendarRequest().getPeople(start, numRows, filter).fire(

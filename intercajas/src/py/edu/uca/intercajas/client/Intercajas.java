@@ -9,8 +9,8 @@ import org.eclipse.jetty.server.Response;
 
 import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
-import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios2;
 import py.edu.uca.intercajas.client.beneficiario.TipoDocumentoEditor;
+import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
@@ -18,6 +18,7 @@ import py.edu.uca.intercajas.client.requestfactory.ContextGestionCosto;
 import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
+import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UnknownException;
@@ -84,15 +85,20 @@ public class Intercajas implements EntryPoint {
 		
 //		Para iniciar en esta ventana - desarrollo
 //		RootPanel.get().remove(0);
-//		new MenuMail();
+		new MenuMail();
 //		new DynaTableRf().mostrar(new Mail());
 //		new UIBeneficiario().mostrar(new Mail());
 		
 		final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
 		FACTORY.initialize(EVENTBUS);
 
+//		new UIBeneficiario().mostrar(MenuMail.getMain().getWidget(0));
+		ListaBeneficiarios l = new ListaBeneficiarios(EVENTBUS, FACTORY,10);
+		l.mostrar(MenuMail.getMain().getWidget(0));
 		
-		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
+//		new MenuMail().getMain().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
+		
+//		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
 	    //Este es el INSERT
 //		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
 //		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);

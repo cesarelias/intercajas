@@ -18,16 +18,18 @@ public class UIBase  extends Composite {
 	public void mostrar(Widget origen) {
 		
 		String nombre1 =this.getClass().getName();
-		String nombre2 = MenuMail.getMain().getWidget().getClass().getName();
+		String nombre2 = MenuMail.getMain().getWidget(0).getClass().getName();
 		if (!nombre1.equals(nombre2)) {
-			this.origen = MenuMail.getMain().getWidget();
-			MenuMail.getMain().setWidget(this);
+			this.origen = MenuMail.getMain().getWidget(0);
+			MenuMail.getMain().remove(0);
+			MenuMail.getMain().add(this);
 		}
 
 	};
 	
 	public void volver() {
-		MenuMail.getMain().setWidget(this.origen);
+		MenuMail.getMain().remove(0);
+		MenuMail.getMain().add(this.origen);
 	}
 	
 }
