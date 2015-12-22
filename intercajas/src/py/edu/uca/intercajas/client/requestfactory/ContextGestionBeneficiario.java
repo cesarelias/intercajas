@@ -17,5 +17,6 @@ public interface ContextGestionBeneficiario extends RequestContext{
 	Request<Void> actualizarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<BeneficiarioProxy> find (Long id);
 	Request<List<BeneficiarioProxy>> findAll ();
+	Request<List<BeneficiarioProxy>> findByParam(String nombres, String apellidos, int startRow, int maxResults);
 	Request<BeneficiarioProxy> findByDocumento(String numeroDocumento, TipoDocumentoIdentidad tipoDocumento);
 }

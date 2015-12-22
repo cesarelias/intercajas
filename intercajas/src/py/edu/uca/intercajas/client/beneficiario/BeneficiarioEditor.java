@@ -50,6 +50,8 @@ public class BeneficiarioEditor extends Composite implements
 		initWidget(uiBinder.createAndBindUi(this));
 		DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 		fechaNacimiento.setFormat(new DateBox.DefaultFormat(dateFormat));
+		fechaNacimiento.getDatePicker().setYearAndMonthDropdownVisible(true);
+		fechaNacimiento.getDatePicker().setVisibleYearCount(99);
 	}
 
 }

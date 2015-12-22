@@ -42,7 +42,16 @@ public class GestionBeneficiario {
 	public List<Beneficiario> findAll() {
 		return em.createQuery("select b from Beneficiario b",Beneficiario.class).getResultList();
 	}
-	
+
+	public List<Beneficiario> findByParam(String nombres, String apellidos, int startRow, int maxResults) {
+		return em.createQuery("select b from Beneficiario b where b.nombres like :nombres and apellidos like :apellidos",Beneficiario.class)
+				.setParameter("apellidos", apellidos)
+				.setParameter("nombres", nombres)
+				.setFirstResult(startRow)
+				.setMaxResults(maxResults)
+				.getResultList();
+	}
+
 	
 	public void insertarBeneficiario(Beneficiario beneficiario)  {
 			em.persist(beneficiario);

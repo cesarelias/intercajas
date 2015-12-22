@@ -72,6 +72,8 @@ import py.edu.uca.intercajas.shared.UIBase;
  */
 public class ListaBeneficiarios extends UIBase {
 
+	
+
   interface Binder extends UiBinder<Widget, ListaBeneficiarios> {
   }
 
@@ -119,20 +121,19 @@ public class ListaBeneficiarios extends UIBase {
   private final EventBus eventBus;
   private List<Boolean> filter = new ArrayList<Boolean>(ALL_DAYS);
   private int lastFetch;
-  private final int numRows;
+  private final int maxRows;
   private boolean pending;
   private final FactoryGestion requestFactory;
   private final SingleSelectionModel<BeneficiarioProxy> selectionModel = new SingleSelectionModel<BeneficiarioProxy>();
 
   public ListaBeneficiarios(EventBus eventBus,
-		  FactoryGestion requestFactory, int numRows) {
+		  FactoryGestion requestFactory, int maxRows) {
     this.eventBus = eventBus;
     this.requestFactory = requestFactory;
-    this.numRows = numRows;
-    table = new DataGrid<BeneficiarioProxy>(numRows,
+    this.maxRows = maxRows;
+    table = new DataGrid<BeneficiarioProxy>(maxRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
-    
 
     Column<BeneficiarioProxy, String> colNombres = new ColNombres();
     table.addColumn(colNombres, "Nombres");
@@ -148,30 +149,30 @@ public class ListaBeneficiarios extends UIBase {
     table.setEmptyTableWidget(new Label("Vacio"));
     
     
-    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
-        new EntityProxyChange.Handler<BeneficiarioProxy>() {
-          @Override
-          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
-            ListaBeneficiarios.this.onBeneficiarioChanged(event);
-          }
-        });
+//    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
+//        new EntityProxyChange.Handler<BeneficiarioProxy>() {
+//          @Override
+//          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
+//            ListaBeneficiarios.this.onBeneficiarioChanged(event);
+//          }
+//        });
 
-    FilterChangeEvent.register(eventBus, new FilterChangeEvent.Handler() {
-      @Override
-      public void onFilterChanged(FilterChangeEvent e) {
-        filter.set(e.getDay(), e.isSelected());
-        if (!pending) {
-          pending = true;
-          Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-              pending = false;
-              fetch(0);
-            }
-          });
-        }
-      }
-    });
+//    FilterChangeEvent.register(eventBus, new FilterChangeEvent.Handler() {
+//      @Override
+//      public void onFilterChanged(FilterChangeEvent e) {
+//        filter.set(e.getDay(), e.isSelected());
+//        if (!pending) {
+//          pending = true;
+//          Scheduler.get().scheduleFinally(new ScheduledCommand() {
+//            @Override
+//            public void execute() {
+//              pending = false;
+//              fetch(0);
+//            }
+//          });
+//        }
+//      }
+//    });
 
     
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -180,7 +181,7 @@ public class ListaBeneficiarios extends UIBase {
         ListaBeneficiarios.this.refreshSelection();
       }
     });
-    
+
     fetch(0);
     
   }
@@ -245,15 +246,14 @@ public class ListaBeneficiarios extends UIBase {
 	 */
   }
 
-  /*
+  
   @UiHandler("table")
   void onRangeChange(RangeChangeEvent event) {
     Range r = event.getNewRange();
     int start = r.getStart();
-
     fetch(start);
   }
-  */
+  
 
   void refreshSelection() {
     BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
@@ -267,43 +267,25 @@ public class ListaBeneficiarios extends UIBase {
 
   private void fetch(final int start) {
 	  
-		  
-	  requestFactory.contextGestionBeneficiario().findAll().fire(new Receiver<List<BeneficiarioProxy>>() {
+	  lastFetch = start;
+	  requestFactory.contextGestionBeneficiario().findByParam("%", "%", start, maxRows).fire(new Receiver<List<BeneficiarioProxy>>() {
 		@Override
 		public void onSuccess(List<BeneficiarioProxy> response) {
-			table.setRowCount(response.size(),true);
-			  table.setRowData(0,response);
-			  table.redraw();
-		}
-	});
-	  
-	/*  
-    lastFetch = start;
-    requestFactory.schoolCalendarRequest().getPeople(start, numRows, filter).fire(
-        new Receiver<List<PersonProxy>>() {
-          @Override
-          public void onSuccess(List<PersonProxy> response) {
-        	  
-        	  
-        	  
+
             if (lastFetch != start) {
-              return;
-            }
+                return;
+              }
 
             int responses = response.size();
             table.setRowData(start, response);
             pager.setPageStart(start);
             if (start == 0 || !table.isRowCountExact()) {
-              table.setRowCount(start + responses, responses < numRows);
+              table.setRowCount(start + responses, responses < maxRows);
             }
-          }
-          @Override
-          public void onFailure(ServerFailure error) {
-        	  Window.alert("aqui esta el error: " + error.getMessage());
-          }
-        });
-      */
-
+			
+		}
+	});
+	  
   }
 
   //TODO nosotros no tenemos EntityProxyId

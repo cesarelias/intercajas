@@ -35,6 +35,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -42,6 +43,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler;
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -93,9 +95,30 @@ public class Intercajas implements EntryPoint {
 		FACTORY.initialize(EVENTBUS);
 
 //		new UIBeneficiario().mostrar(MenuMail.getMain().getWidget(0));
-		ListaBeneficiarios l = new ListaBeneficiarios(EVENTBUS, FACTORY,10);
-		l.mostrar(MenuMail.getMain().getWidget(0));
+//		ListaBeneficiarios l = new ListaBeneficiarios(EVENTBUS, FACTORY,2);
+//		l.mostrar(MenuMail.getMain().getWidget(0));
 		
+		
+		try {
+		final DialogBox d = new DialogBox();
+			DockLayoutPanel dp = new DockLayoutPanel(Unit.PX);
+			d.setText("Beneficiarios");
+			dp.setSize("600px", "600px");
+			Button close = new Button("Cerrar");
+			close.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					d.hide();
+				}
+			});
+			dp.addSouth(close,40);
+			dp.add(new ListaBeneficiarios(EVENTBUS, FACTORY,3));
+			d.add(dp);
+			d.center();
+			d.show();
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
 //		new MenuMail().getMain().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
 		
 //		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
