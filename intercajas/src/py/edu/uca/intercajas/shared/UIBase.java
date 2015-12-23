@@ -32,4 +32,7 @@ public class UIBase  extends Composite {
 		MenuMail.getMain().add(this.origen);
 	}
 	
+	public void refresh(String campo) {
+		
+	}
 }

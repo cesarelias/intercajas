@@ -18,7 +18,7 @@ a:link, a:visited, a:hover, a:active {
 .gwt-DialogBox {
   background-color: white;
   border: 1px solid #3c4ab9;
-  --z-index: 2;
+  --z-index: 0;
 }
 .gwt-DialogBox .Caption {
   
@@ -44,7 +44,7 @@ a:link, a:visited, a:hover, a:active {
   background-color: #000;
   opacity: 0.3;
   filter: literal("alpha(opacity=30)");
-  z-index: 2;
+  --z-index: 3;
 }
 
 /* GWT Tree */

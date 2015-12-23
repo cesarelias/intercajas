@@ -71,6 +71,15 @@ public class UIBeneficiario extends UIBase  {
 	    DateTimeFormat dateFormat=DateTimeFormat.getFormat("dd/MM/yyyy");
 		fechaNacimiento.setFormat(new DateBox.DefaultFormat(dateFormat));
 	}
+	
+	public UIBeneficiario(EventBus eventBus) {
+
+		this.EVENTBUS = eventBus;
+		initWidget(uiBinder.createAndBindUi(this));
+		//TODO la fecha trae con hora, falta sacar la hora!
+	    DateTimeFormat dateFormat=DateTimeFormat.getFormat("dd/MM/yyyy");
+		fechaNacimiento.setFormat(new DateBox.DefaultFormat(dateFormat));
+	}
 
 	@UiHandler("volver")
 	void volver(ClickEvent e) {
@@ -117,12 +126,14 @@ public class UIBeneficiario extends UIBase  {
 
 			@Override
 			public void onSuccess(Void response) {
-				new UIDialog("Aviso!", new HTML("Grabado con exito"));			
+//				new UIDialog("Aviso!", new HTML("Grabado con exito"));
+				Window.alert("guardado");
 			}
 			
 			public void onFailure(ServerFailure error) {
 //				error.getMessage().
-				new UIDialog("Error!", new HTML(error.getMessage()));				
+				new UIDialog("Error!", new HTML(error.getMessage()));
+//				Window.alert("guardado");
 			}
 			
 		});

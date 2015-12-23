@@ -9,6 +9,7 @@ import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.server.entity.Direccion;
+import py.edu.uca.intercajas.shared.UIBase;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,9 +40,12 @@ public class BeneficiarioEditorWorkFlow {
 	@UiField
 	DialogBox dialog;
 
+	UIBase origen;
+	
 	private Driver editorDriver;
 
-	public BeneficiarioEditorWorkFlow() {
+	public BeneficiarioEditorWorkFlow(UIBase origen) {
+		this.origen = origen;
 		beneficiarioEditor = new BeneficiarioEditor();
 		Binder.BINDER.createAndBindUi(this);
 	}
@@ -60,7 +64,7 @@ public class BeneficiarioEditorWorkFlow {
 
 		// Send the request
 		context.fire();
-			
+
 
 	}
 
@@ -70,7 +74,6 @@ public class BeneficiarioEditorWorkFlow {
 	}	
 
 	public void create(BeneficiarioProxy beneficiario, ContextGestionBeneficiario requestContext, final FactoryGestion factoryGestion ) {
-	
 		try {
 		dialog.setText("Nuevo Beneficiario");
 		
@@ -93,6 +96,9 @@ public class BeneficiarioEditorWorkFlow {
 			public void onSuccess(Void response) {
 				// If everything went as planned, just dismiss the dialog box
 				dialog.hide();
+				if (origen != null) {
+					origen.refresh(null);
+				}
 			}
 		});
 		
@@ -107,23 +113,21 @@ public class BeneficiarioEditorWorkFlow {
 
 	}
 
-	public void edit(BeneficiarioProxy beneficiario, RequestContext requestContext, final FactoryGestion factoryGestion ) {
-
+	public void edit(BeneficiarioProxy beneficiario, final RequestContext requestContext, final FactoryGestion factoryGestion ) {
 		dialog.setText("Editando Beneficiario");
 
 		editorDriver = GWT.create(Driver.class);
 		editorDriver.initialize(factoryGestion, beneficiarioEditor);
 
 		Request<BeneficiarioProxy> fetchRequest = factoryGestion.contextGestionBeneficiario().find(beneficiario.getId());
-		fetchRequest.with(editorDriver.getPaths());
+		fetchRequest.with(editorDriver.getPaths());	
 
 		fetchRequest.to(new Receiver<BeneficiarioProxy>() {
 
 			@Override
 			public void onSuccess(BeneficiarioProxy response) {
-
-				ContextGestionBeneficiario contextX = factoryGestion.contextGestionBeneficiario();
 				
+				ContextGestionBeneficiario contextX = factoryGestion.contextGestionBeneficiario();
 				editorDriver = GWT.create(Driver.class);
 				editorDriver.initialize(factoryGestion, beneficiarioEditor);
 				editorDriver.edit(response, contextX);
@@ -147,6 +151,9 @@ public class BeneficiarioEditorWorkFlow {
 					public void onSuccess(Void response) {
 						// If everything went as planned, just dismiss the dialog box
 						dialog.hide();
+						if (origen != null) {
+							origen.refresh(null);
+						}
 					};
 				});
 
