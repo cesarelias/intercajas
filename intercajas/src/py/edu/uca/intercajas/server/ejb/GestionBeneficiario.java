@@ -44,7 +44,13 @@ public class GestionBeneficiario {
 	}
 
 	public List<Beneficiario> findByParam(String nombres, String apellidos, int startRow, int maxResults) {
-		return em.createQuery("select b from Beneficiario b where b.nombres like :nombres and apellidos like :apellidos",Beneficiario.class)
+		return em.createQuery("select b "
+				+ "              from Beneficiario b "
+				+ "             where b.nombres like :nombres "
+				+ "               and apellidos like :apellidos "
+				+ " order by id asc"
+				
+				,Beneficiario.class)
 				.setParameter("apellidos", apellidos)
 				.setParameter("nombres", nombres)
 				.setFirstResult(startRow)

@@ -149,13 +149,15 @@ public class ListaBeneficiarios extends UIBase {
     table.setEmptyTableWidget(new Label("Vacio"));
     
     
-//    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
-//        new EntityProxyChange.Handler<BeneficiarioProxy>() {
-//          @Override
-//          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
-//            ListaBeneficiarios.this.onBeneficiarioChanged(event);
-//          }
-//        });
+    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
+        new EntityProxyChange.Handler<BeneficiarioProxy>() {
+          @Override
+          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
+        	  Window.alert("cambio en BeneficiarioProxy fired!");
+            ListaBeneficiarios.this.onBeneficiarioChanged(event);
+          }
+          
+        });
 
 //    FilterChangeEvent.register(eventBus, new FilterChangeEvent.Handler() {
 //      @Override
@@ -178,7 +180,7 @@ public class ListaBeneficiarios extends UIBase {
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
       @Override
       public void onSelectionChange(SelectionChangeEvent event) {
-        ListaBeneficiarios.this.refreshSelection();
+        ListaBeneficiarios.this.edit();
       }
     });
 
@@ -197,7 +199,7 @@ public class ListaBeneficiarios extends UIBase {
 //    person.setClassSchedule(schedule);
 //    context.persist().using(person);
 //    eventBus.fireEvent(new EditPersonEvent(person, context));
-	  
+	 
 	  final ContextGestionBeneficiario context =  requestFactory.contextGestionBeneficiario();
 		requestFactory.initialize(eventBus);
 	  
@@ -209,43 +211,46 @@ public class ListaBeneficiarios extends UIBase {
 		beneficiario.setDocumento(docProxy);
 		beneficiario.setDireccion(dirProxy);
 	    
+		
 		new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
-	  
 	  
   }
 
   void onBeneficiarioChanged(EntityProxyChange<BeneficiarioProxy> event) {
-
-	/*
+	  Window.alert("beneficiarioChangeg -> hacemos fetch WriteOperation:"+ event.getWriteOperation());  
+//	  fetch(0);
     if (WriteOperation.PERSIST.equals(event.getWriteOperation())) {
-      // Re-fetch if we're already displaying the last page
-      if (table.isRowCountExact()) {
-        fetch(lastFetch + 1);
-      }
+    	fetch(0);
+//    	Window.alert("cambio algo por aqui con persist");
+//      // Re-fetch if we're already displaying the last page
+//      if (table.isRowCountExact()) {
+//        fetch(lastFetch + 1);
+//      }
     }
     if (WriteOperation.UPDATE.equals(event.getWriteOperation())) {
-      EntityProxyId<PersonProxy> personId = event.getProxyId();
 
-      // Is the changing record onscreen?
-      int displayOffset = offsetOf(personId);
-      if (displayOffset != -1) {
-        // Record is onscreen and may differ from our data
-        requestFactory.find(personId).fire(new Receiver<PersonProxy>() {
-          @Override
-          public void onSuccess(PersonProxy person) {
-            // Re-check offset in case of changes while waiting for data
-            int offset = offsetOf(person.stableId());
-            if (offset != -1) {
-              table.setRowData(table.getPageStart() + offset,
-                  Collections.singletonList(person));
-            }
-          }
-        });
-      }
+//    	Window.alert("cambio algo por aqui con UPDATE");
+//      EntityProxyId<PersonProxy> personId = event.getProxyId();
+//
+//      // Is the changing record onscreen?
+//      int displayOffset = offsetOf(personId);
+//      if (displayOffset != -1) {
+//        // Record is onscreen and may differ from our data
+//        requestFactory.find(personId).fire(new Receiver<PersonProxy>() {
+//          @Override
+//          public void onSuccess(PersonProxy person) {
+//            // Re-check offset in case of changes while waiting for data
+//            int offset = offsetOf(person.stableId());
+//            if (offset != -1) {
+//              table.setRowData(table.getPageStart() + offset,
+//                  Collections.singletonList(person));
+//            }
+//          }
+//        });
+//      }
     }
-	 */
-  }
 
+  }
   
   @UiHandler("table")
   void onRangeChange(RangeChangeEvent event) {
@@ -255,7 +260,7 @@ public class ListaBeneficiarios extends UIBase {
   }
   
 
-  void refreshSelection() {
+  void edit() {
     BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
     if (beneficiario == null) {
       return;
@@ -263,6 +268,7 @@ public class ListaBeneficiarios extends UIBase {
     new BeneficiarioEditorWorkFlow().edit(beneficiario, null, requestFactory);
     //eventBus.fireEvent(new EditPersonEvent(person));
     selectionModel.setSelected(beneficiario, false);
+    
   }
 
   private void fetch(final int start) {
@@ -285,7 +291,7 @@ public class ListaBeneficiarios extends UIBase {
 			
 		}
 	});
-	  
+
   }
 
   //TODO nosotros no tenemos EntityProxyId

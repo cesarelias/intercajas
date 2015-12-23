@@ -195,6 +195,7 @@ public class SummaryWidget extends Composite {
   }
 
   void onPersonChanged(EntityProxyChange<PersonProxy> event) {
+	  Window.alert("fetch WriteOperation:"+ event.getWriteOperation());  
     if (WriteOperation.PERSIST.equals(event.getWriteOperation())) {
       // Re-fetch if we're already displaying the last page
       if (table.isRowCountExact()) {

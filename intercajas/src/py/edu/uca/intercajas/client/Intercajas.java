@@ -103,7 +103,7 @@ public class Intercajas implements EntryPoint {
 		final DialogBox d = new DialogBox();
 			DockLayoutPanel dp = new DockLayoutPanel(Unit.PX);
 			d.setText("Beneficiarios");
-			dp.setSize("600px", "600px");
+			dp.setSize("600px", "500px");
 			Button close = new Button("Cerrar");
 			close.addClickHandler(new ClickHandler() {
 				@Override
@@ -112,7 +112,7 @@ public class Intercajas implements EntryPoint {
 				}
 			});
 			dp.addSouth(close,40);
-			dp.add(new ListaBeneficiarios(EVENTBUS, FACTORY,3));
+			dp.add(new ListaBeneficiarios(EVENTBUS, FACTORY,10));
 			d.add(dp);
 			d.center();
 			d.show();

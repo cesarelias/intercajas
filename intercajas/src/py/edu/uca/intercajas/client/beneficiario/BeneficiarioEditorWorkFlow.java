@@ -116,7 +116,7 @@ public class BeneficiarioEditorWorkFlow {
 
 		Request<BeneficiarioProxy> fetchRequest = factoryGestion.contextGestionBeneficiario().find(beneficiario.getId());
 		fetchRequest.with(editorDriver.getPaths());
-			
+
 		fetchRequest.to(new Receiver<BeneficiarioProxy>() {
 
 			@Override
