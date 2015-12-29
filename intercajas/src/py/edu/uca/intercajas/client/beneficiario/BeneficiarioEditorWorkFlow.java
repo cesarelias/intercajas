@@ -4,11 +4,10 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
+import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
-import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.server.entity.Direccion;
 import py.edu.uca.intercajas.shared.UIBase;
 
 import com.google.gwt.core.client.GWT;
@@ -17,17 +16,17 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriver;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
-public class BeneficiarioEditorWorkFlow {
+public class BeneficiarioEditorWorkFlow extends UIBase {
 
-	interface Binder extends UiBinder<DialogBox, BeneficiarioEditorWorkFlow> {
-		Binder BINDER = GWT.create(Binder.class);
+	interface Binder extends UiBinder<Widget, BeneficiarioEditorWorkFlow> {
+//		Binder BINDER = GWT.create(Binder.class);
 	}
 
 	interface Driver extends
@@ -36,29 +35,30 @@ public class BeneficiarioEditorWorkFlow {
 
 	@UiField(provided = true)
 	BeneficiarioEditor beneficiarioEditor;
+	
+	BeneficiarioProxy beneficiario;
 
-	@UiField
-	DialogBox dialog;
+//	@UiField
+//	DialogBox dialog;
 
 	UIBase origen;
 	
 	private Driver editorDriver;
 
-	public BeneficiarioEditorWorkFlow(UIBase origen) {
-		this.origen = origen;
+	public BeneficiarioEditorWorkFlow() {
 		beneficiarioEditor = new BeneficiarioEditor();
-		Binder.BINDER.createAndBindUi(this);
+		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 	}
 
 	@UiHandler("guardar")
-	void onGuardar(ClickEvent event) {
+	void onSave(ClickEvent event) {
 
 		// Flush the contents of the UI
 		RequestContext context = editorDriver.flush();
 
 		// Check for errors
 		if (editorDriver.hasErrors()) {
-			dialog.setText("Se encontraron errores");
+			setTitle("Se encontraron errores");
 			return;
 		}
 
@@ -70,19 +70,21 @@ public class BeneficiarioEditorWorkFlow {
 
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
-		dialog.hide();
+		close();
 	}	
 
 	public void create(BeneficiarioProxy beneficiario, ContextGestionBeneficiario requestContext, final FactoryGestion factoryGestion ) {
 		try {
-		dialog.setText("Nuevo Beneficiario");
+			this.beneficiario = beneficiario;
+
+			setTitle("Nuevo Beneficiario");
 		
-		
+			
 		requestContext.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
 			@Override
 			public void onConstraintViolation(Set<ConstraintViolation<?>> errors) {
 				// Otherwise, show ConstraintViolations in the UI
-				dialog.setText("Se encontraron errores");
+				setTitle("Se encontraron errores");
 				for (ConstraintViolation<?>  e : errors) {
 					Window.alert(e.getMessage());
 				}
@@ -95,10 +97,8 @@ public class BeneficiarioEditorWorkFlow {
 			@Override
 			public void onSuccess(Void response) {
 				// If everything went as planned, just dismiss the dialog box
-				dialog.hide();
-				if (origen != null) {
-					origen.refresh(null);
-				}
+				eventBus.fireEvent(new BeneficiarioChangedEvent(getBeneficiario()));
+				close();
 			}
 		});
 		
@@ -106,7 +106,8 @@ public class BeneficiarioEditorWorkFlow {
 		editorDriver = GWT.create(Driver.class);
 		editorDriver.initialize(factoryGestion, beneficiarioEditor);
 		editorDriver.edit(beneficiario, requestContext);
-		dialog.center();
+		
+		
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
 		}
@@ -114,7 +115,10 @@ public class BeneficiarioEditorWorkFlow {
 	}
 
 	public void edit(BeneficiarioProxy beneficiario, final RequestContext requestContext, final FactoryGestion factoryGestion ) {
-		dialog.setText("Editando Beneficiario");
+		
+		this.beneficiario = beneficiario;
+		
+		setTitle("Editando Beneficiario");
 
 		editorDriver = GWT.create(Driver.class);
 		editorDriver.initialize(factoryGestion, beneficiarioEditor);
@@ -131,13 +135,13 @@ public class BeneficiarioEditorWorkFlow {
 				editorDriver = GWT.create(Driver.class);
 				editorDriver.initialize(factoryGestion, beneficiarioEditor);
 				editorDriver.edit(response, contextX);
-				dialog.center();
+				d.center();
 
 				contextX.actualizarBeneficiario(response).to(new Receiver<Void>() {
 					@Override
 					public void onConstraintViolation(Set<ConstraintViolation<?>> errors) {
 						// Otherwise, show ConstraintViolations in the UI
-						dialog.setText("Se encontraron errores");
+						setTitle("Se encontraron errores");
 						for (ConstraintViolation<?>  e : errors) {
 							Window.alert(e.getMessage());
 						}
@@ -150,10 +154,9 @@ public class BeneficiarioEditorWorkFlow {
 					@Override
 					public void onSuccess(Void response) {
 						// If everything went as planned, just dismiss the dialog box
-						dialog.hide();
-						if (origen != null) {
-							origen.refresh(null);
-						}
+						//eventBus.fireEvent(new FinishDialogEvent(d));
+						eventBus.fireEvent(new BeneficiarioChangedEvent(getBeneficiario()));
+						close();
 					};
 				});
 
@@ -162,4 +165,7 @@ public class BeneficiarioEditorWorkFlow {
 
 	}
 	
+	BeneficiarioProxy getBeneficiario() {
+		return this.beneficiario;
+	}
 }

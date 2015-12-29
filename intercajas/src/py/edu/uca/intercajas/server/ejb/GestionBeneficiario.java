@@ -43,15 +43,20 @@ public class GestionBeneficiario {
 		return em.createQuery("select b from Beneficiario b",Beneficiario.class).getResultList();
 	}
 
-	public List<Beneficiario> findByParam(String nombres, String apellidos, int startRow, int maxResults) {
+	public List<Beneficiario> findByNombres(String nombres, int startRow, int maxResults) {
+		
+		if (nombres == null || nombres.length() == 0) {
+			nombres = "%";
+		} else {
+			nombres = '%' + nombres.toUpperCase() + '%';
+		}
+		
 		return em.createQuery("select b "
 				+ "              from Beneficiario b "
-				+ "             where b.nombres like :nombres "
-				+ "               and apellidos like :apellidos "
-				+ " order by id asc"
-				
+				+ "             where UPPER(b.nombres) like :nombres "
+				+ "                or UPPER(b.apellidos) like :nombres "
+				+ " order by b.nombres, b.apellidos asc"
 				,Beneficiario.class)
-				.setParameter("apellidos", apellidos)
 				.setParameter("nombres", nombres)
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)

@@ -12,25 +12,39 @@
 		}
 		</ui:style>
 
-	<g:DockLayoutPanel ui:field="dock" unit="EX">
-		<g:north size="6">
-			<g:DockLayoutPanel unit="PCT">
-				<g:east size="45">
-					<g:SimplePanel stylePrimaryName="{style.rightAlign}">
-						<cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"	display="{table}" />
-					</g:SimplePanel>
-				</g:east>
-				<g:west size="45">
-					<g:SimplePanel>
-						<g:Button stylePrimaryName="{style.displayInline}"
-							ui:field="create">Nuevo Beneficiario</g:Button>
-					</g:SimplePanel>
-				</g:west>
+	<g:DockLayoutPanel ui:field="dock"  unit="PX" width="270px" height="400px">
+		<g:north size="80">
+			<g:DockLayoutPanel unit="PX">
+				<g:center>
+					<g:DecoratorPanel>
+						<g:FlowPanel width="100%">
+							<g:Label>Nombres</g:Label>
+							<g:TextBox ui:field="filtroNombres" />
+							<g:Button ui:field="buscar" text="Buscar" />
+						</g:FlowPanel>
+					</g:DecoratorPanel>
+				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
 		<g:center>
 			<cv:DataGrid ui:field="table" stylePrimaryName="{style.table}" />
 		</g:center>
+		<g:south size="100">
+			<g:VerticalPanel>
+				<cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
+					display="{table}" />
+				<g:HorizontalPanel>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="create">Nuevo</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="edit">Editar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="del">Eliminar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="select">Seleccionar</g:Button>
+				</g:HorizontalPanel>
+			</g:VerticalPanel>
+		</g:south>
 	</g:DockLayoutPanel>
 
 </ui:UiBinder>

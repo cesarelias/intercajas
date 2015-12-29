@@ -4,30 +4,53 @@
 	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario"
 	xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
 	<ui:style>
-		.ui-datepicker { 
-  		margin-left: 1px;
-  		z-index: 25;
-}
+	.ui-datepicker {
+		margin-left: 1px;
+		z-index: 25;
+	}
 	</ui:style>
-	<g:HTMLPanel ui:field="panel">
-		<gt:DocumentoIdentidadEditor ui:field="documento" />
-		Nombre
-		<e:ValueBoxEditorDecorator ui:field="nombres">
-			<e:valuebox>
-				<g:TextBox />
-			</e:valuebox>
-		</e:ValueBoxEditorDecorator>
-		Apellidos
-		<e:ValueBoxEditorDecorator ui:field="apellidos">
-			<e:valuebox>
-				<g:TextBox/>
-			</e:valuebox>
-		</e:ValueBoxEditorDecorator>
-		Sexo
-		<gt:SexoEditor ui:field="sexo" />
-		Fecha Nacimineto<br/>
-		<dp:DateBox ui:field="fechaNacimiento" stylePrimaryName="{style.ui-datepicker}"/>
-		<gt:DireccionEditor ui:field="direccion" />
+	<g:HTMLPanel>
+		<table>
+			<gt:DocumentoIdentidadEditor ui:field="documento" />
+		</table>
+		<table>
+			<tr>
+				<td width="120px">Nombre</td>
+				<td>
+					<e:ValueBoxEditorDecorator ui:field="nombres">
+						<e:valuebox>
+							<g:TextBox />
+						</e:valuebox>
+					</e:ValueBoxEditorDecorator>
+				</td>
+			</tr>
+			<tr>
+				<td>Apellidos</td>
+				<td>
+					<e:ValueBoxEditorDecorator ui:field="apellidos">
+						<e:valuebox>
+							<g:TextBox />
+						</e:valuebox>
+					</e:ValueBoxEditorDecorator>
+				</td>
+			</tr>
+			<tr>
+				<td>Sexo</td>
+				<td>
+					<gt:SexoEditor ui:field="sexo" />
+				</td>
+			</tr>
+			<tr>
+				<td>Fecha Nacimineto</td>
+				<td>
+					<dp:DateBox ui:field="fechaNacimiento" stylePrimaryName="{style.ui-datepicker}" />
+				</td>
+			</tr>
+		</table>
+		<table>
+			<gt:DireccionEditor ui:field="direccion" />
+		</table>
 
 	</g:HTMLPanel>
+
 </ui:UiBinder> 

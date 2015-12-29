@@ -15,13 +15,19 @@
  */
 package py.edu.uca.intercajas.client.beneficiario;
 
-import static py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.SchoolCalendarRequest.ALL_DAYS;
-
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,14 +38,17 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RangeChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.shared.EntityProxyChange;
 import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -51,6 +60,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.scene.input.KeyCode;
+import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
@@ -85,7 +96,8 @@ public class ListaBeneficiarios extends UIBase {
     @Source(value = {DataGrid.Style.DEFAULT_CSS, "DataGridPatch.css"})
     DataGrid.Style dataGridStyle();
   }
-
+ 
+  
   private class ColNombres extends Column<BeneficiarioProxy, String> {
     public ColNombres() {
       super(new TextCell());
@@ -93,21 +105,9 @@ public class ListaBeneficiarios extends UIBase {
 
     @Override
     public String getValue(BeneficiarioProxy object) {
-      return object.getNombres();
+      return object.getNombres() + ", " + object.getApellidos();
     }
   }
-
-  private class ColApellidos extends Column<BeneficiarioProxy, String> {
-	    public ColApellidos() {
-	      super(new TextCell());
-	    }
-	    @Override
-	    public String getValue(BeneficiarioProxy object) {
-	      return object.getApellidos();
-	    }
-  }
-  
-  
 
 //  @UiField
 //  DockLayoutPanel dock;
@@ -117,16 +117,18 @@ public class ListaBeneficiarios extends UIBase {
 
   @UiField(provided = true)
   DataGrid<BeneficiarioProxy> table;
+  
+  @UiField TextBox filtroNombres;
 
-  private final EventBus eventBus;
-  private List<Boolean> filter = new ArrayList<Boolean>(ALL_DAYS);
+  private final SimpleEventBus eventBus;
   private int lastFetch;
   private final int maxRows;
+  private int lastStart = 0;
   private boolean pending;
   private final FactoryGestion requestFactory;
   private final SingleSelectionModel<BeneficiarioProxy> selectionModel = new SingleSelectionModel<BeneficiarioProxy>();
 
-  public ListaBeneficiarios(EventBus eventBus,
+  public ListaBeneficiarios(SimpleEventBus eventBus,
 		  FactoryGestion requestFactory, int maxRows) {
     this.eventBus = eventBus;
     this.requestFactory = requestFactory;
@@ -135,31 +137,26 @@ public class ListaBeneficiarios extends UIBase {
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
+
     Column<BeneficiarioProxy, String> colNombres = new ColNombres();
-    table.addColumn(colNombres, "Nombres");
+    table.addColumn(colNombres, "Nombres y apellidos");
     table.setColumnWidth(colNombres, "25ex");
 
-    Column<BeneficiarioProxy, String> colApellidos = new ColApellidos();
-    table.addColumn(colApellidos, "Apellidos");
-    table.setColumnWidth(colApellidos, "25ex");
-    
     table.setSelectionModel(selectionModel);
     table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
     table.setEmptyTableWidget(new Label("Vacio"));
     
+    
     requestFactory.initialize(eventBus);
     
-//    EntityProxyChange.registerForProxyType(eventBus, BeneficiarioProxy.class,
-//        new EntityProxyChange.Handler<BeneficiarioProxy>() {
-//          @Override
-//          public void onProxyChange(EntityProxyChange<BeneficiarioProxy> event) {
-//        	  Window.alert("cambio en BeneficiarioProxy fired! eventWired: " + event.getWriteOperation());
-//            ListaBeneficiarios.this.onBeneficiarioChanged(event);
-//          }
-//          
-//        });
-
+    eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+		@Override
+		public void selected(BeneficiarioProxy beneficiarioSelected) {
+			refreshTable();
+		}
+	});
+    
 //    FilterChangeEvent.register(eventBus, new FilterChangeEvent.Handler() {
 //      @Override
 //      public void onFilterChanged(FilterChangeEvent e) {
@@ -181,9 +178,21 @@ public class ListaBeneficiarios extends UIBase {
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
       @Override
       public void onSelectionChange(SelectionChangeEvent event) {
-        ListaBeneficiarios.this.edit();
+        //ListaBeneficiarios.this.edit();
       }
     });
+
+    table.addDomHandler(new DoubleClickHandler() {
+		@Override
+		public void onDoubleClick(DoubleClickEvent event) {
+			BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+		    if (beneficiario != null) {
+		    	Window.alert("el beneficiario seleccionado es:" + beneficiario.getNombres());
+		    }
+		}
+    },  DoubleClickEvent.getType());
+    
+    
 
     fetch(0);
     
@@ -192,88 +201,80 @@ public class ListaBeneficiarios extends UIBase {
   @UiHandler("create")
   void onCreate(ClickEvent event) {
 	  
-	  
-//    PersonRequest context = requestFactory.personRequest();
-//    AddressProxy address = context.create(AddressProxy.class);
-//    ScheduleProxy schedule = context.create(ScheduleProxy.class);
-//    schedule.setTimeSlots(new ArrayList<TimeSlotProxy>());
-//    PersonProxy person = context.edit(context.create(PersonProxy.class));
-//    person.setAddress(address);
-//    person.setClassSchedule(schedule);
-//    context.persist().using(person);
-//    eventBus.fireEvent(new EditPersonEvent(person, context));
-	 
 	  final ContextGestionBeneficiario context =  requestFactory.contextGestionBeneficiario();
-		
-	  
-		BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
-		DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
-		DireccionProxy dirProxy = context.create(DireccionProxy.class);
-
-		docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-		beneficiario.setDocumento(docProxy);
-		beneficiario.setDireccion(dirProxy);
-	    
-		
-		new BeneficiarioEditorWorkFlow(this).create(beneficiario, context, requestFactory);
-	  
-  }
-
-  void onBeneficiarioChanged(EntityProxyChange<BeneficiarioProxy> event) {
-    if (WriteOperation.PERSIST.equals(event.getWriteOperation())) {
-//      // Re-fetch if we're already displaying the last page
-//      if (table.isRowCountExact()) {
-//        fetch(lastFetch + 1);
-//      }
-    }
-    if (WriteOperation.UPDATE.equals(event.getWriteOperation())) {
-//      EntityProxyId<PersonProxy> personId = event.getProxyId();
-//
-//      // Is the changing record onscreen?
-//      int displayOffset = offsetOf(personId);
-//      if (displayOffset != -1) {
-//        // Record is onscreen and may differ from our data
-//        requestFactory.find(personId).fire(new Receiver<PersonProxy>() {
-//          @Override
-//          public void onSuccess(PersonProxy person) {
-//            // Re-check offset in case of changes while waiting for data
-//            int offset = offsetOf(person.stableId());
-//            if (offset != -1) {
-//              table.setRowData(table.getPageStart() + offset,
-//                  Collections.singletonList(person));
-//            }
-//          }
-//        });
-//      }
-    }
-
-  }
   
+	  BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
+	  DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
+	  DireccionProxy dirProxy = context.create(DireccionProxy.class);
+
+	  docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+	  beneficiario.setDocumento(docProxy);
+	  beneficiario.setDireccion(dirProxy);
+    
+	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
+	  b.mostrarDialog(null, "Editar beneficiario", eventBus);
+	  b.create(beneficiario, context, requestFactory);
+	    
+//	  new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
+	  
+  }
+
   @UiHandler("table")
   void onRangeChange(RangeChangeEvent event) {
     Range r = event.getNewRange();
     int start = r.getStart();
+    lastStart = start;
     fetch(start);
   }
   
-
-  void edit() {
+  
+  @UiHandler("edit")
+  void onEdit(ClickEvent event) {
 	
-	  
     BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
     if (beneficiario == null) {
+    	Window.alert("Seleccione un beneficiario para editar");
       return;
     }
-    new BeneficiarioEditorWorkFlow(this).edit(beneficiario, null, requestFactory);
+    
+    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
+    b.mostrarDialog(null, "Editar beneficiario", eventBus);
+    b.edit(beneficiario, null, requestFactory);
+//    selectionModel.setSelected(beneficiario, false);
     //eventBus.fireEvent(new EditPersonEvent(person));
-    selectionModel.setSelected(beneficiario, false);
     
   }
 
+  
+  @UiHandler("select")
+  void onSelect(ClickEvent event) {
+	
+    BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+    if (beneficiario == null) {
+    	return;
+    }
+    eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+    close();
+    
+  }
+
+  @UiHandler("buscar")
+  public void buscarClick(ClickEvent event){
+	  //fetch(0);
+	  eventBus.fireEvent(new BeneficiarioChangedEvent(table.getVisibleItem(1))); //trae la segunda fila
+  }
+
+  @UiHandler("filtroNombres")
+  public void buscarEnter(KeyDownEvent event){
+	  if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		  fetch(0);
+	  }
+  }
+  
   private void fetch(final int start) {
 	  
 	  lastFetch = start;
-	  requestFactory.contextGestionBeneficiario().findByParam("%", "%", start, maxRows).fire(new Receiver<List<BeneficiarioProxy>>() {
+	  requestFactory.contextGestionBeneficiario().findByNombres(filtroNombres.getText(), start, maxRows).fire(new Receiver<List<BeneficiarioProxy>>() {
 		@Override
 		public void onSuccess(List<BeneficiarioProxy> response) {
 
@@ -292,20 +293,9 @@ public class ListaBeneficiarios extends UIBase {
 	});
 
   }
-
-  //TODO nosotros no tenemos EntityProxyId
-  private int offsetOf(EntityProxyId<BeneficiarioProxy> beneficiarioId) {
-    List<BeneficiarioProxy> displayedItems = table.getVisibleItems();
-    for (int offset = 0, j = displayedItems.size(); offset < j; offset++) {
-      if (beneficiarioId.equals(displayedItems.get(offset).stableId())) {
-        return offset;
-      }
-    }
-    return -1;
+  
+  public void refreshTable() {
+	  fetch(lastStart);
   }
   
-	@Override
-	public void refresh(String campo) {
-		fetch(0);
-	}
 }

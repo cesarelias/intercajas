@@ -11,6 +11,7 @@ import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.beneficiario.TipoDocumentoEditor;
 import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
+import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
@@ -26,7 +27,6 @@ import py.edu.uca.intercajas.shared.UnknownException;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -44,20 +44,22 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler;
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.google.web.bindery.requestfactory.shared.Violation;
 
 public class Intercajas implements EntryPoint {
 
-	private static final EventBus EVENTBUS = new SimpleEventBus();
+	private final SimpleEventBus eventBus = new SimpleEventBus();
 	private static final Logger log = Logger.getLogger(Intercajas.class.getName());
 	private static final FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);
 
 	private BeneficiarioProxy beneficiario;
+	private HandlerRegistration r;
 	
 	public void onModuleLoad() {
 
@@ -92,34 +94,35 @@ public class Intercajas implements EntryPoint {
 //		new UIBeneficiario().mostrar(new Mail());
 		
 		final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
-		FACTORY.initialize(EVENTBUS);
+		FACTORY.initialize(eventBus);
 
 //		new UIBeneficiario().mostrar(MenuMail.getMain().getWidget(0));
 //		ListaBeneficiarios l = new ListaBeneficiarios(EVENTBUS, FACTORY,2);
 //		l.mostrar(MenuMail.getMain().getWidget(0));
 		
 		
-		try {
-		final DialogBox d = new DialogBox();
-			DockLayoutPanel dp = new DockLayoutPanel(Unit.PX);
-			d.setText("Beneficiarios");
-			dp.setSize("600px", "500px");
-			Button close = new Button("Cerrar");
-			close.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					d.hide();
-				}
-			});
-			dp.addSouth(close,40);
-			dp.add(new ListaBeneficiarios(EVENTBUS, FACTORY,10));
-			d.add(dp);
-			d.center();
-			d.show();
-		} catch (Exception e) {
-			Window.alert(e.getMessage());
-		}
-//		new MenuMail().getMain().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
+//		//* ventana tipo dialogBox
+//		final DialogBox d = new DialogBox();
+//		DockLayoutPanel dp = new DockLayoutPanel(Unit.PX);
+//		d.setText("Beneficiarios");
+//		dp.setSize("600px", "500px");
+//		Button close = new Button("Cerrar");
+//		close.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				d.hide();
+//			}
+//		});
+//		dp.addSouth(close,40);
+//		dp.add(new ListaBeneficiarios(EVENTBUS, FACTORY,10));
+//		d.add(dp);
+//		d.center();
+//		d.show();
+		
+		//new ListaBeneficiarios(eventBus, FACTORY,10 ).mostrarDialog(null, "Beneficiarios", eventBus);
+		new ListaBeneficiarios(eventBus, FACTORY,10 ).mostrar(null, eventBus, "Beneficiarios");
+		
+//		new BeneficiarioEditorWorkFlow().mostrarDialog(null, "Beneficiario", eventBus, "200px","550px");
 		
 //		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBUS, FACTORY,10 ));
 	    //Este es el INSERT
@@ -141,6 +144,31 @@ public class Intercajas implements EntryPoint {
 //			}
 //		});
 		
+		
+//		//Este es el test del eventBus.fire
+//		Button test = new Button("test");
+//		RootLayoutPanel.get().add(test);
+////		
+//		test.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				EVENTBUS.fireEvent(new BeneficiarioChangedEvent());
+//			}
+//		});
+		
+		//Ejemplo de registro de evento!
+//	    r = eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+//			@Override
+//			public void selected(BeneficiarioProxy beneficiarioSelected) {
+//				Window.alert("desde Intercajas: beneficiario selected: " + beneficiarioSelected.getNombres());
+//				removeH();
+//			}
+//		});
+	    
+	}
+
+	public void removeH() {
+		r.removeHandler();
 	}
 
 }

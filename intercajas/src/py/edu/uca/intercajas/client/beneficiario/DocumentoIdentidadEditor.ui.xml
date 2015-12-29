@@ -6,13 +6,24 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-		Numero Documento
-		<e:ValueBoxEditorDecorator ui:field="numeroDocumento">
-			<e:valuebox>
-				<g:TextBox />
-			</e:valuebox>
-		</e:ValueBoxEditorDecorator>
-		<gt:TipoDocumentoEditor ui:field="tipoDocumento"/>
-
+		<table>
+			<tr>
+				<td width="120px">Numero Documento</td>
+				<td>
+					<e:ValueBoxEditorDecorator ui:field="numeroDocumento">
+						<e:valuebox>
+							<g:TextBox />
+						</e:valuebox>
+					</e:ValueBoxEditorDecorator>
+				</td>
+			</tr>
+			<tr>
+				<td>Tipo Documento</td>
+				<td>
+					<gt:TipoDocumentoEditor ui:field="tipoDocumento" />
+				</td>
+			</tr>
+		</table>
 	</g:HTMLPanel>
+
 </ui:UiBinder> 
