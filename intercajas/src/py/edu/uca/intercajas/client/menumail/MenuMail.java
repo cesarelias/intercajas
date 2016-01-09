@@ -97,7 +97,7 @@ static DockLayoutPanel main;
     RootLayoutPanel.get().add(outer);
     
 //    Opcion 1 mail
-    new Mail().mostrar(null, null, null);
+    new Mail().mostrar();
   }
   
   public static DockLayoutPanel getMain() {

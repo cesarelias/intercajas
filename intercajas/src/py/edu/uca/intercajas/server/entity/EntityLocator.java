@@ -3,7 +3,7 @@ package py.edu.uca.intercajas.server.entity;
 
 import py.edu.uca.intercajas.server.ejb.BeanLocator;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
-import py.edu.uca.intercajas.server.ejb.GestionCosto;
+import py.edu.uca.intercajas.server.ejb.GestionSolicitud;
 import py.edu.uca.intercajas.server.ejb.GestionUsuario;
 
 import com.google.web.bindery.requestfactory.shared.Locator;
@@ -36,8 +36,14 @@ public class EntityLocator extends Locator<EntityBase, Long> {
         if (clazz.equals(Beneficiario.class)) {
 			return BeanLocator.lookupBean(GestionBeneficiario.class).find(id);
         }
+        if (clazz.equals(SolicitudTitular.class)) {
+			return BeanLocator.lookupBean(GestionSolicitud.class).find(id);
+        }
+        if (clazz.equals(PeriodoAporteDeclarado.class)) {
+			return BeanLocator.lookupBean(GestionSolicitud.class).findPeriodoAporteDeclarado(id);
+        }
         
-        
+        System.out.println("se retorna nulo en el EntityBase locator");
         return null;
     }
 

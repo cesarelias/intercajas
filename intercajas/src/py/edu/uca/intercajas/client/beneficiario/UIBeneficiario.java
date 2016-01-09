@@ -122,10 +122,10 @@ public class UIBeneficiario extends UIBase  {
 //			Window.alert(a.getMessage());
 //		}
 		
-		context.insertarBeneficiario(beneficiarioProxy).fire(new Receiver<Void>() {
+		context.insertarBeneficiario(beneficiarioProxy).fire(new Receiver<Long>() {
 
 			@Override
-			public void onSuccess(Void response) {
+			public void onSuccess(Long response) {
 //				new UIDialog("Aviso!", new HTML("Grabado con exito"));
 				Window.alert("guardado");
 			}

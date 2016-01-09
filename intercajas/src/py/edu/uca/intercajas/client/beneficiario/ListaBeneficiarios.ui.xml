@@ -18,7 +18,7 @@
 				<g:center>
 					<g:DecoratorPanel>
 						<g:FlowPanel width="100%">
-							<g:Label>Nombres</g:Label>
+							<g:Label>Nombres / Numero Documento</g:Label>
 							<g:TextBox ui:field="filtroNombres" />
 							<g:Button ui:field="buscar" text="Buscar" />
 						</g:FlowPanel>
@@ -29,7 +29,7 @@
 		<g:center>
 			<cv:DataGrid ui:field="table" stylePrimaryName="{style.table}" />
 		</g:center>
-		<g:south size="100">
+		<g:south size="55">
 			<g:VerticalPanel>
 				<cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
 					display="{table}" />

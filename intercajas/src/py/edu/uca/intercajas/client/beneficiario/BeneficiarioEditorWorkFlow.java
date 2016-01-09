@@ -41,8 +41,6 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 //	@UiField
 //	DialogBox dialog;
 
-	UIBase origen;
-	
 	private Driver editorDriver;
 
 	public BeneficiarioEditorWorkFlow() {
@@ -80,7 +78,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 			setTitle("Nuevo Beneficiario");
 		
 			
-		requestContext.insertarBeneficiario(beneficiario).to(new Receiver<Void>() {
+		requestContext.insertarBeneficiario(beneficiario).to(new Receiver<Long>() {
 			@Override
 			public void onConstraintViolation(Set<ConstraintViolation<?>> errors) {
 				// Otherwise, show ConstraintViolations in the UI
@@ -95,8 +93,9 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				Window.alert("Error al grabar" + error.getMessage());
 			}
 			@Override
-			public void onSuccess(Void response) {
+			public void onSuccess(Long response) {
 				// If everything went as planned, just dismiss the dialog box
+				Window.alert("el nuevo id de beneficiario es: " + response.toString());
 				eventBus.fireEvent(new BeneficiarioChangedEvent(getBeneficiario()));
 				close();
 			}

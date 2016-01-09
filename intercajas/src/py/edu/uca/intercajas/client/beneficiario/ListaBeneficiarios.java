@@ -15,20 +15,24 @@
  */
 package py.edu.uca.intercajas.client.beneficiario;
 
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.Cell;
+import java.util.List;
+
+import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
+import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
+import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
+import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
+import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
+import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
+import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.UIBase;
+
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -38,9 +42,6 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,41 +50,12 @@ import com.google.gwt.view.client.RangeChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.google.web.bindery.requestfactory.shared.EntityProxyChange;
-import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.google.web.bindery.requestfactory.shared.WriteOperation;
-import com.sun.java.swing.plaf.windows.resources.windows;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javafx.scene.input.KeyCode;
-import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
-import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
-import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
-import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
-import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.dynatablerf.client.events.EditPersonEvent;
-import py.edu.uca.intercajas.dynatablerf.client.events.FilterChangeEvent;
-import py.edu.uca.intercajas.dynatablerf.shared.AddressProxy;
-import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory;
-import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
-import py.edu.uca.intercajas.dynatablerf.shared.ScheduleProxy;
-import py.edu.uca.intercajas.dynatablerf.shared.TimeSlotProxy;
-import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
-import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
-import py.edu.uca.intercajas.shared.UIBase;
 
 /**
  * A paging table with summaries of all known people.
  */
 public class ListaBeneficiarios extends UIBase {
-
-	
 
   interface Binder extends UiBinder<Widget, ListaBeneficiarios> {
   }
@@ -97,7 +69,6 @@ public class ListaBeneficiarios extends UIBase {
     DataGrid.Style dataGridStyle();
   }
  
-  
   private class ColNombres extends Column<BeneficiarioProxy, String> {
     public ColNombres() {
       super(new TextCell());
@@ -105,7 +76,7 @@ public class ListaBeneficiarios extends UIBase {
 
     @Override
     public String getValue(BeneficiarioProxy object) {
-      return object.getNombres() + ", " + object.getApellidos();
+      return object.getNombres() + ", " + object.getApellidos();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
     }
   }
 
@@ -133,6 +104,9 @@ public class ListaBeneficiarios extends UIBase {
     this.eventBus = eventBus;
     this.requestFactory = requestFactory;
     this.maxRows = maxRows;
+    
+    this.title = "Beneficiarios";
+    
     table = new DataGrid<BeneficiarioProxy>(maxRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
@@ -212,11 +186,13 @@ public class ListaBeneficiarios extends UIBase {
 	  beneficiario.setDireccion(dirProxy);
     
 	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
-	  b.mostrarDialog(null, "Editar beneficiario", eventBus);
+	  b.eventBus = eventBus;
+	  b.title = "Nuevo Beneficiario";
+	  b.mostrarDialog();
 	  b.create(beneficiario, context, requestFactory);
-	    
+
 //	  new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
-	  
+
   }
 
   @UiHandler("table")
@@ -238,7 +214,8 @@ public class ListaBeneficiarios extends UIBase {
     }
     
     BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
-    b.mostrarDialog(null, "Editar beneficiario", eventBus);
+    b.title = "Editando Beneficiario";
+    b.mostrarDialog();
     b.edit(beneficiario, null, requestFactory);
 //    selectionModel.setSelected(beneficiario, false);
     //eventBus.fireEvent(new EditPersonEvent(person));
@@ -274,7 +251,7 @@ public class ListaBeneficiarios extends UIBase {
   private void fetch(final int start) {
 	  
 	  lastFetch = start;
-	  requestFactory.contextGestionBeneficiario().findByNombres(filtroNombres.getText(), start, maxRows).fire(new Receiver<List<BeneficiarioProxy>>() {
+	  requestFactory.contextGestionBeneficiario().findByNombresDocs(filtroNombres.getText(), start, maxRows).with("documento").fire(new Receiver<List<BeneficiarioProxy>>() {
 		@Override
 		public void onSuccess(List<BeneficiarioProxy> response) {
 

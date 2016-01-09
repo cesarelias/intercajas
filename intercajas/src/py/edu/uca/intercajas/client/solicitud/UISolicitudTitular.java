@@ -40,6 +40,7 @@ public class UISolicitudTitular extends UIBase {
 
 	public UISolicitudTitular() {
 		initWidget(uiBinder.createAndBindUi(this));
+		title = "Solicitud Titular";
 	}
 
 	

@@ -27,11 +27,10 @@ public class MailItems {
 
   private static final String[] senders = new String[] {
       "FISCAL", "ANDE", "ITAIPU",
-      "BANCARIA", "FERRICARRIL", "MINICIPAL", "PARLAMENTARIA"};
+      "BANCARIA", "FERROCARRIL", "MINICIPAL", "PARLAMENTARIA"};
 
   private static final String[] emails = new String[] {
-      "Solicitud", "Antiguedad", "Liquidacion",
-      "Aclaracion", "Finiquito"};
+      "Antiguedad", "Liquidacion", "Aclaracion", "Finiquito"};
 
   private static final String[] subjects = new String[] {
       "EXP 203/2015 Juan Perez, En tramite",
@@ -41,7 +40,7 @@ public class MailItems {
       "EXP 127/2015 Lourdes Drews, para liquidacion"};
 
   private static final String[] fragments = new String[] {
-      "Señores Caja XXXX<br>",
+      "Señores Caja XXXXXXXXXX<br>",
       "Tengo el agrado de dirigirme a ustedes, a fin de solicitar proseguir tramite ",
       "I have all necessary legal documents that can be used to back up any "
           + "claim we may make. All I require is your honest Co-operation, "

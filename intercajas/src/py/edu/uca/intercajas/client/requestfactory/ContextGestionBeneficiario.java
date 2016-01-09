@@ -13,10 +13,10 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(value=GestionBeneficiario.class, locator=BeanLocator.class)
 
 public interface ContextGestionBeneficiario extends RequestContext{
-	Request<Void> insertarBeneficiario(BeneficiarioProxy beneficiario);
+	Request<Long> insertarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<Void> actualizarBeneficiario(BeneficiarioProxy beneficiario);
 	Request<BeneficiarioProxy> find (Long id);
 	Request<List<BeneficiarioProxy>> findAll ();
-	Request<List<BeneficiarioProxy>> findByNombres(String nombres, int startRow, int maxResults);
+	Request<List<BeneficiarioProxy>> findByNombresDocs(String nombresDocs, int startRow, int maxResults);
 	Request<BeneficiarioProxy> findByDocumento(String numeroDocumento, TipoDocumentoIdentidad tipoDocumento);
 }

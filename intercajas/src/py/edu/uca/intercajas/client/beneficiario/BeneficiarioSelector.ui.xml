@@ -1,0 +1,17 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario"
+	xmlns:e='urn:import:com.google.gwt.editor.ui.client'>
+
+	<g:HTMLPanel>
+		<table>
+			<tr>
+				<td width="120px">
+					<gt:NameLabel ui:field="nameLabel" />
+				</td>
+				<td>
+					<g:Button ui:field="choose">Buscar</g:Button>
+				</td>
+			</tr>
+		</table>
+	</g:HTMLPanel>
+</ui:UiBinder>

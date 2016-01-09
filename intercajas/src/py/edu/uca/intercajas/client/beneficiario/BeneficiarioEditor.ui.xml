@@ -43,7 +43,7 @@
 			<tr>
 				<td>Fecha Nacimineto</td>
 				<td>
-					<dp:DateBox ui:field="fechaNacimiento" stylePrimaryName="{style.ui-datepicker}" />
+					<dp:DateBox ui:field="fechaNacimiento" />
 				</td>
 			</tr>
 		</table>

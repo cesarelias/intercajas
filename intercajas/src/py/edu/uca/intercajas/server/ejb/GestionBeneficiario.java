@@ -43,30 +43,32 @@ public class GestionBeneficiario {
 		return em.createQuery("select b from Beneficiario b",Beneficiario.class).getResultList();
 	}
 
-	public List<Beneficiario> findByNombres(String nombres, int startRow, int maxResults) {
+	public List<Beneficiario> findByNombresDocs(String nombresDocs, int startRow, int maxResults) {
 		
-		if (nombres == null || nombres.length() == 0) {
-			nombres = "%";
+		if (nombresDocs == null || nombresDocs.length() == 0) {
+			nombresDocs = "%";
 		} else {
-			nombres = '%' + nombres.toUpperCase() + '%';
+			nombresDocs = '%' + nombresDocs.toUpperCase() + '%';
 		}
 		
 		return em.createQuery("select b "
 				+ "              from Beneficiario b "
-				+ "             where UPPER(b.nombres) like :nombres "
-				+ "                or UPPER(b.apellidos) like :nombres "
+				+ "             where UPPER(b.nombres) like :nombresDocs "
+				+ "                or UPPER(b.apellidos) like :nombresDocs"
+				+ "                or UPPER(b.documento.numeroDocumento) like :nombresDocs "
 				+ " order by b.nombres, b.apellidos asc"
 				,Beneficiario.class)
-				.setParameter("nombres", nombres)
+				.setParameter("nombresDocs", nombresDocs)
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)
 				.getResultList();
 	}
 
 	
-	public void insertarBeneficiario(Beneficiario beneficiario)  {
+	public Long insertarBeneficiario(Beneficiario beneficiario)  {
 			em.persist(beneficiario);
 			LOG.info("Beneficiario persisted");
+			return beneficiario.getId();
 	}
 	            
 	public void actualizarBeneficiario(Beneficiario beneficiario)  {

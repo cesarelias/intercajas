@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client">
+	<ui:style>
+
+	</ui:style>
+	<g:DockLayoutPanel height="100%" width="100%">
+		<g:center>
+			<cv:DataGrid ui:field="table"/>
+		</g:center>
+		<g:south size="45">
+			<g:Button ui:field="create">Nuevo periodo de aporte</g:Button>
+		</g:south>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

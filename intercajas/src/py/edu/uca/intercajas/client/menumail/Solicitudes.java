@@ -113,7 +113,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UISolicitudTitular().mostrar(MenuMail.getMain().getWidget(0), eventBus, "Solicitud Titular");
+				new UISolicitudTitular().mostrar();
 			}
 		});
 	}
@@ -127,7 +127,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UIBeneficiario().mostrar(MenuMail.getMain().getWidget(0), eventBus, "UI Beneficiario");
+				new UIBeneficiario().mostrar();
 			}
 		});
 
@@ -142,7 +142,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new DynaTableRf().mostrar(MenuMail.getMain().getWidget(0), eventBus, "DynaTable");
+				new DynaTableRf().mostrar();
 			}
 		});
 	}	
@@ -156,7 +156,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new ListaBeneficiarios(eventBus, null,10).mostrar(MenuMail.getMain().getWidget(0), eventBus, "Lista Beneficiarios");
+				new ListaBeneficiarios(eventBus, null,10).mostrar();
 			}
 		});
 	}		

@@ -15,6 +15,20 @@
  */
 package py.edu.uca.intercajas.dynatablerf.client;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+
+import py.edu.uca.intercajas.dynatablerf.client.events.EditPersonEvent;
+import py.edu.uca.intercajas.dynatablerf.client.widgets.MentorSelector;
+import py.edu.uca.intercajas.dynatablerf.client.widgets.PersonEditor;
+import py.edu.uca.intercajas.dynatablerf.client.widgets.ScheduleEditor;
+import py.edu.uca.intercajas.dynatablerf.client.widgets.TimeSlotListWidget;
+import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory;
+import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
+import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
+import py.edu.uca.intercajas.shared.UIDialog;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -34,20 +48,6 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
-
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-
-import py.edu.uca.intercajas.dynatablerf.client.events.EditPersonEvent;
-import py.edu.uca.intercajas.dynatablerf.client.widgets.MentorSelector;
-import py.edu.uca.intercajas.dynatablerf.client.widgets.PersonEditor;
-import py.edu.uca.intercajas.dynatablerf.client.widgets.ScheduleEditor;
-import py.edu.uca.intercajas.dynatablerf.client.widgets.TimeSlotListWidget;
-import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory;
-import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
-import py.edu.uca.intercajas.dynatablerf.shared.DynaTableRequestFactory.PersonRequest;
-import py.edu.uca.intercajas.shared.UIDialog;
 
 /**
  * This class shows how the UI for editing a person is wired up to the
