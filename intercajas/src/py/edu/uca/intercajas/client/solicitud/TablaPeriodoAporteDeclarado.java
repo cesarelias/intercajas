@@ -185,7 +185,7 @@ public class TablaPeriodoAporteDeclarado extends UIBase {
 	@UiHandler("create")
 	void onCreate(ClickEvent event) {
 
-	    h = eventBus.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
+	    h	 = eventBus.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
 			@Override
 			public void selected(PeriodoAporteDeclaradoProxy periodoAporteDeclaradoProxy) {
 				listaPeriodoAporteDeclarado.add(periodoAporteDeclaradoProxy);
