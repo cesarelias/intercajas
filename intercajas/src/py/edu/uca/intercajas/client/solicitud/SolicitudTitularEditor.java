@@ -34,25 +34,23 @@ public class SolicitudTitularEditor extends UIBase implements
 			UiBinder<Widget, SolicitudTitularEditor> {
 	}
 	
-
-	
 	SimpleEventBus eventBus;
 	FactoryGestion factoryGestion;
-	
+
 	@UiField ValueBoxEditorDecorator<String> numero;
 	@UiField DateBox fecha;
 	@UiField (provided = true) BeneficiarioSelector beneficiario;
-	SolicitudTitularProxy solicitudTitular;
-	  
+
 	public SolicitudTitularEditor(SimpleEventBus eventBus, FactoryGestion factoryGestion) {
+
 		this.eventBus = eventBus;
 		this.factoryGestion = factoryGestion;
-		
+
 		beneficiario = new BeneficiarioSelector(eventBus, factoryGestion);
-		
+
 		title = "Solicitud Titular";
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 //		eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 //			@Override
 //			public void selected(BeneficiarioProxy beneficiarioSelected) {
@@ -60,11 +58,12 @@ public class SolicitudTitularEditor extends UIBase implements
 //				//TODO falta sacar el evento una vez disparado. O sino queda por siempre aqui.
 //			}
 //		});
-		
+
 		DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 		fecha.setFormat(new DateBox.DefaultFormat(dateFormat));
 		fecha.getDatePicker().setYearAndMonthDropdownVisible(true);
 		fecha.getDatePicker().setVisibleYearCount(99);
+
 	}
 	
 //	@UiHandler("buscarBeneficiario")

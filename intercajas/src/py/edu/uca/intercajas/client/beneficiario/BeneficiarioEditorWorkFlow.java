@@ -95,7 +95,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 			@Override
 			public void onSuccess(Long response) {
 				// If everything went as planned, just dismiss the dialog box
-				Window.alert("el nuevo id de beneficiario es: " + response.toString());
+//				Window.alert("el nuevo id de beneficiario es: " + response.toString());
 				eventBus.fireEvent(new BeneficiarioChangedEvent(getBeneficiario()));
 				close();
 			}

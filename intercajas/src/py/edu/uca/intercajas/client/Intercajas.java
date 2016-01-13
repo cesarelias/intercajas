@@ -1,8 +1,14 @@
 package py.edu.uca.intercajas.client;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Resource;
 
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
@@ -12,6 +18,7 @@ import py.edu.uca.intercajas.client.requestfactory.PeriodoAporteDeclaradoProxy;
 import py.edu.uca.intercajas.client.requestfactory.SolicitudTitularProxy;
 import py.edu.uca.intercajas.client.solicitud.PeriodoAporteDeclaradoEditor;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.shared.domain.BeneficiarioClient;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -21,6 +28,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler;
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 public class Intercajas implements EntryPoint {
 
@@ -82,6 +90,42 @@ public class Intercajas implements EntryPoint {
 		
 //		RootLayoutPanel.get().add(new ListaBeneficiarios(EVENTBU
 
+		try {
+			BeneficiarioService bx = GWT.create(BeneficiarioService.class);
+			
+			bx.getAll(new MethodCallback<List<BeneficiarioClient>>() {
+				@Override
+				public void onSuccess(Method method, List<BeneficiarioClient> response) {
+					for (BeneficiarioClient bb : response) {
+						Window.alert(bb.getNombre());
+					}
+				}
+				
+				@Override
+				public void onFailure(Method method, Throwable exception) {
+					Window.alert("ERROR: " + exception.getMessage());
+				}
+			});
+			
+			
+			BeneficiarioClient b = new BeneficiarioClient("10", "Elias");
+			
+			bx.insert(b, new MethodCallback<Void>() {
+				
+				@Override
+				public void onSuccess(Method method, Void response) {
+					Window.alert("insertado");
+				}
+				@Override
+				public void onFailure(Method method, Throwable exception) {
+					Window.alert("ERROR: " + exception.getMessage());
+				}
+			});
+			
+		
+	    } catch (Exception e) {
+	    	Window.alert(e.getMessage());
+	    }
 		
 		//probamos Solicitud Titular
 		try {

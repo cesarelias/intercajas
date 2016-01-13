@@ -93,7 +93,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		}
 
 		// Send the request
-		context.fire();
+//		context.fire();
 
 	}
 

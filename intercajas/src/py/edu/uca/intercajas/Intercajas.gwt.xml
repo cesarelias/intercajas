@@ -18,6 +18,7 @@
 <!--   <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
+<inherits name="org.fusesource.restygwt.RestyGWT"/>
 <inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
 <inherits name='com.google.gwt.editor.Editor' />
 <inherits name='com.google.gwt.logging.Logging'/>
