@@ -19,6 +19,7 @@ import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
+import py.edu.uca.intercajas.server.entity.Beneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.IsEditor;
@@ -90,8 +91,9 @@ public class BeneficiarioSelector extends Composite implements
     
     r = eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 		@Override
-		public void selected(BeneficiarioProxy beneficiarioSelected) {
+		public void selected(Beneficiario beneficiarioSelected) {
 			r.removeHandler();
+			//TODO esto hay que arreglar
 			setValue(beneficiarioSelected);
 		}
 	});
@@ -115,8 +117,8 @@ public class BeneficiarioSelector extends Composite implements
   /**
    * This method is not called by the Editor framework.
    */
-  private void setValue(BeneficiarioProxy beneficiario) {
-    editor.setValue(beneficiario);
+  private void setValue(Beneficiario beneficiario) {
+    //editor.setValue(beneficiario);
     nameLabel.setVisible(beneficiario != null);
     nameLabel.setTexto(beneficiario.getNombres() + ", " + beneficiario.getApellidos());
   }

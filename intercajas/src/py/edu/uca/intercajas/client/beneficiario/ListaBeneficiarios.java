@@ -17,12 +17,19 @@ package py.edu.uca.intercajas.client.beneficiario;
 
 import java.util.List;
 
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
+import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
 import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
 import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
 import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
 import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
+import py.edu.uca.intercajas.server.entity.Beneficiario;
+import py.edu.uca.intercajas.server.entity.Direccion;
+import py.edu.uca.intercajas.server.entity.DocumentoIdentidad;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UIBase;
 
@@ -69,13 +76,13 @@ public class ListaBeneficiarios extends UIBase {
     DataGrid.Style dataGridStyle();
   }
  
-  private class ColNombres extends Column<BeneficiarioProxy, String> {
+  private class ColNombres extends Column<Beneficiario, String> {
     public ColNombres() {
       super(new TextCell());
     }
 
     @Override
-    public String getValue(BeneficiarioProxy object) {
+    public String getValue(Beneficiario object) {
       return object.getNombres() + ", " + object.getApellidos();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
     }
   }
@@ -87,7 +94,7 @@ public class ListaBeneficiarios extends UIBase {
   SimplePager pager = new SimplePager();
 
   @UiField(provided = true)
-  DataGrid<BeneficiarioProxy> table;
+  DataGrid<Beneficiario> table;
   
   @UiField TextBox filtroNombres;
 
@@ -97,7 +104,7 @@ public class ListaBeneficiarios extends UIBase {
   private int lastStart = 0;
   private boolean pending;
   private final FactoryGestion requestFactory;
-  private final SingleSelectionModel<BeneficiarioProxy> selectionModel = new SingleSelectionModel<BeneficiarioProxy>();
+  private final SingleSelectionModel<Beneficiario> selectionModel = new SingleSelectionModel<Beneficiario>();
 
   public ListaBeneficiarios(SimpleEventBus eventBus,
 		  FactoryGestion requestFactory, int maxRows) {
@@ -107,12 +114,12 @@ public class ListaBeneficiarios extends UIBase {
     
     this.title = "Beneficiarios";
     
-    table = new DataGrid<BeneficiarioProxy>(maxRows,
+    table = new DataGrid<Beneficiario>(maxRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
 
-    Column<BeneficiarioProxy, String> colNombres = new ColNombres();
+    Column<Beneficiario, String> colNombres = new ColNombres();
     table.addColumn(colNombres, "Nombres y apellidos");
     table.setColumnWidth(colNombres, "25ex");
 
@@ -126,7 +133,7 @@ public class ListaBeneficiarios extends UIBase {
     
     eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 		@Override
-		public void selected(BeneficiarioProxy beneficiarioSelected) {
+		public void selected(Beneficiario beneficiarioSelected) {
 			refreshTable();
 		}
 	});
@@ -159,7 +166,7 @@ public class ListaBeneficiarios extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+			Beneficiario beneficiario = selectionModel.getSelectedObject();
 		    if (beneficiario != null) {
 		    	Window.alert("el beneficiario seleccionado es:" + beneficiario.getNombres());
 		    }
@@ -177,19 +184,22 @@ public class ListaBeneficiarios extends UIBase {
 	  
 	  final ContextGestionBeneficiario context =  requestFactory.contextGestionBeneficiario();
   
-	  BeneficiarioProxy beneficiario = context.create(BeneficiarioProxy.class);
-	  DocumentoIdentidadProxy docProxy = context.create(DocumentoIdentidadProxy.class);
-	  DireccionProxy dirProxy = context.create(DireccionProxy.class);
+	  
+	  
+	  Beneficiario beneficiario = new Beneficiario();
+	  DocumentoIdentidad doc = new DocumentoIdentidad();
+	  Direccion dir = new Direccion();
 
-	  docProxy.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-	  beneficiario.setDocumento(docProxy);
-	  beneficiario.setDireccion(dirProxy);
+	  doc.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
+	  beneficiario.setDocumento(doc);
+	  beneficiario.setDireccion(dir);
     
+	  beneficiario.setNombres("test");
 	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
 	  b.eventBus = eventBus;
 	  b.title = "Nuevo Beneficiario";
 	  b.mostrarDialog();
-	  b.create(beneficiario, context, requestFactory);
+	  b.create();
 
 //	  new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
 
@@ -207,7 +217,7 @@ public class ListaBeneficiarios extends UIBase {
   @UiHandler("edit")
   void onEdit(ClickEvent event) {
 	
-    BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+    Beneficiario beneficiario = selectionModel.getSelectedObject();
     if (beneficiario == null) {
     	Window.alert("Seleccione un beneficiario para editar");
       return;
@@ -216,17 +226,15 @@ public class ListaBeneficiarios extends UIBase {
     BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
     b.title = "Editando Beneficiario";
     b.mostrarDialog();
-    b.edit(beneficiario, null, requestFactory);
-//    selectionModel.setSelected(beneficiario, false);
-    //eventBus.fireEvent(new EditPersonEvent(person));
-    
+    b.edit(beneficiario);
+//    
   }
 
   
   @UiHandler("select")
   void onSelect(ClickEvent event) {
 	
-    BeneficiarioProxy beneficiario = selectionModel.getSelectedObject();
+    Beneficiario beneficiario = selectionModel.getSelectedObject();
     if (beneficiario == null) {
     	return;
     }
@@ -237,8 +245,7 @@ public class ListaBeneficiarios extends UIBase {
 
   @UiHandler("buscar")
   public void buscarClick(ClickEvent event){
-	  //fetch(0);
-	  eventBus.fireEvent(new BeneficiarioChangedEvent(table.getVisibleItem(1))); //trae la segunda fila
+//	  eventBus.fireEvent(new BeneficiarioChangedEvent(table.getVisibleItem(1))); //trae la segunda fila
   }
 
   @UiHandler("filtroNombres")
@@ -251,10 +258,11 @@ public class ListaBeneficiarios extends UIBase {
   private void fetch(final int start) {
 	  
 	  lastFetch = start;
-	  requestFactory.contextGestionBeneficiario().findByNombresDocs(filtroNombres.getText(), start, maxRows).with("documento").fire(new Receiver<List<BeneficiarioProxy>>() {
+	  
+	  BeneficiarioService.Util.get().findByNombresDocs(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Beneficiario>>() {
+		
 		@Override
-		public void onSuccess(List<BeneficiarioProxy> response) {
-
+		public void onSuccess(Method method, List<Beneficiario> response) {
             if (lastFetch != start) {
                 return;
               }
@@ -265,10 +273,13 @@ public class ListaBeneficiarios extends UIBase {
             if (start == 0 || !table.isRowCountExact()) {
               table.setRowCount(start + responses, responses < maxRows);
             }
-			
 		}
-	});
-
+		
+		@Override
+		public void onFailure(Method method, Throwable exception) {
+			// TODO Auto-generated method stub
+		}
+	  });
   }
   
   public void refreshTable() {

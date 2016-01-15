@@ -8,9 +8,10 @@ import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DocumentoIdentidadEditor extends Composite implements Editor<DocumentoIdentidadProxy> {
+public class DocumentoIdentidadEditor extends Composite  {
 
 	private static DocumentoIdentidadEditorUiBinder uiBinder = GWT
 			.create(DocumentoIdentidadEditorUiBinder.class);
@@ -20,7 +21,7 @@ public class DocumentoIdentidadEditor extends Composite implements Editor<Docume
 	}
 	
 	@UiField
-	ValueBoxEditorDecorator<String> numeroDocumento;
+	TextBox numeroDocumento;
 
 	@UiField
 	TipoDocumentoEditor tipoDocumento;

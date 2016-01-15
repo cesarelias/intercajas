@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:e="urn:import:com.google.gwt.editor.ui.client"
 	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario">
 	<ui:style>
-	
+
 	</ui:style>
 	<g:HTMLPanel>
 		<table>
@@ -16,11 +16,7 @@
 			<tr>
 				<td width="120px">Numero Documento</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="numeroDocumento">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="numeroDocumento" />
 				</td>
 			</tr>
 		</table>

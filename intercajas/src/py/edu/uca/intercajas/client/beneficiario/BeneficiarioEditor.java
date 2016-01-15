@@ -9,11 +9,11 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
-public class BeneficiarioEditor extends Composite implements
-		Editor<BeneficiarioProxy> {
+public class BeneficiarioEditor extends Composite {
 
 	private static BeneficiarioEditorUiBinder uiBinder = GWT
 			.create(BeneficiarioEditorUiBinder.class);
@@ -23,10 +23,10 @@ public class BeneficiarioEditor extends Composite implements
 	}
 	
 	@UiField
-	ValueBoxEditorDecorator<String> nombres;
+	TextBox nombres;
 
 	@UiField
-	ValueBoxEditorDecorator<String> apellidos;
+	TextBox apellidos;
 
 	@UiField
 	DateBox fechaNacimiento;

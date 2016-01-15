@@ -2,19 +2,23 @@ package py.edu.uca.intercajas.shared.domain;
 
 public class BeneficiarioClient {
 
-	private final String id;
-	private final String nombre;
+	private String id;
+	private String nombre;
 	
 //	@JsonCreator
-//	public BeneficiarioClient (@JsonProperty("id") final String id, @JsonProperty("nombre") final String nombre) {
+//	public BeneficiarioClient (@JsonProperty("id") String id, @JsonProperty("nombre") String nombre) {
 //		this.id = id;
 //		this.nombre = nombre;
 //	}
 
-	public BeneficiarioClient (final String id, final String nombre) {
-		this.id = id;
-		this.nombre = nombre;
-	}
+//	public BeneficiarioClient() {
+//		
+//	}
+//	  
+//	public BeneficiarioClient (String id, String nombre) {
+//		this.id = id;
+//		this.nombre = nombre;
+//	}
 	
 	
 	public String getId() {
@@ -24,6 +28,15 @@ public class BeneficiarioClient {
 	public String getNombre() {
 		return nombre;
 	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	
 
 }

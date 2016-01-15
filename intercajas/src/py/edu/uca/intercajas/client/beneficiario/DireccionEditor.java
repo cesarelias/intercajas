@@ -8,6 +8,7 @@ import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DireccionEditor extends Composite implements Editor<DireccionProxy> {
@@ -20,16 +21,15 @@ public class DireccionEditor extends Composite implements Editor<DireccionProxy>
 
 	
 	@UiField
-	ValueBoxEditorDecorator<String> callePrincipal;
+	TextBox callePrincipal;
 	@UiField
-	ValueBoxEditorDecorator<String> numeroCasa;
+	TextBox numeroCasa;
 	@UiField
-	ValueBoxEditorDecorator<String> barrio;
+	TextBox barrio;
 	@UiField
-	ValueBoxEditorDecorator<String> ciudad;
+	TextBox ciudad;
 	@UiField
-	ValueBoxEditorDecorator<String> departamento;
-	
+	TextBox departamento;
 	
 	public DireccionEditor() {
 		initWidget(uiBinder.createAndBindUi(this));

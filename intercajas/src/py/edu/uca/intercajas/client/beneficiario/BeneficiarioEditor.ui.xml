@@ -17,21 +17,13 @@
 			<tr>
 				<td width="120px">Nombre</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="nombres">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="nombres" />
 				</td>
 			</tr>
 			<tr>
 				<td>Apellidos</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="apellidos">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="apellidos" />
 				</td>
 			</tr>
 			<tr>

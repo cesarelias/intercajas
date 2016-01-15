@@ -1,6 +1,6 @@
 package py.edu.uca.intercajas.client.beneficiario.events;
 
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
+import py.edu.uca.intercajas.server.entity.Beneficiario;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -9,13 +9,13 @@ public class BeneficiarioChangedEvent extends GwtEvent<BeneficiarioChangedEvent.
 
 	public static Type<Handler> TYPE = new Type<Handler>();
 
-	BeneficiarioProxy beneficiarioSelected;
+	Beneficiario beneficiarioSelected;
 	
 	public interface Handler extends EventHandler {
-		void selected(BeneficiarioProxy beneficiarioSelected);
+		void selected(Beneficiario beneficiarioSelected);
 	}
 	
-	public  BeneficiarioChangedEvent(BeneficiarioProxy beneficiarioSelected) {
+	public  BeneficiarioChangedEvent(Beneficiario beneficiarioSelected) {
 		this.beneficiarioSelected = beneficiarioSelected;
 	}
 	

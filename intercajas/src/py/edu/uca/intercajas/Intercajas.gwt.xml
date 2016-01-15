@@ -32,6 +32,7 @@
   <source path='client'/>
   <source path='shared'/>
   <source path='server/entity/enums'/>
+  <source path='server/entity'/>
 
   <extend-property name="locale" values="es" />
   <!-- allow Super Dev Mode -->

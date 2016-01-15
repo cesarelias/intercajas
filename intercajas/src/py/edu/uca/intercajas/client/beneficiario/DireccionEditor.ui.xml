@@ -2,58 +2,38 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:e="urn:import:com.google.gwt.editor.ui.client">
 	<ui:style>
-	
+
 	</ui:style>
 	<g:HTMLPanel>
 		<table>
 			<tr>
 				<td width="120px">Calle Principal</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="callePrincipal">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="callePrincipal" />
 				</td>
 			</tr>
 			<tr>
 				<td>Numero de casa</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="numeroCasa">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="numeroCasa" />
 				</td>
 			</tr>
 			<tr>
 				<td>Barrio</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="barrio">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="barrio" />
 				</td>
 			</tr>
 			<tr>
 				<td>Ciudad</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="ciudad">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="ciudad" />
 				</td>
 			</tr>
 			<tr>
 				<td>Departamento</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="departamento">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="departamento" />
 				</td>
 			</tr>
 		</table>
