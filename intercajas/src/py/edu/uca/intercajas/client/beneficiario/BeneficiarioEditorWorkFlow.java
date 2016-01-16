@@ -4,6 +4,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.server.entity.Beneficiario;
 import py.edu.uca.intercajas.server.entity.Direccion;
 import py.edu.uca.intercajas.server.entity.DocumentoIdentidad;
@@ -18,6 +19,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 public class BeneficiarioEditorWorkFlow extends UIBase {
 
@@ -35,7 +37,8 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 //	@UiField
 //	DialogBox dialog;
 
-	public BeneficiarioEditorWorkFlow() {
+	public BeneficiarioEditorWorkFlow(SimpleEventBus  eventBus) {
+		this.eventBus = eventBus;
 		beneficiarioEditor = new BeneficiarioEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 	}
@@ -62,6 +65,11 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				
 				@Override
 				public void onSuccess(Method method, Long response) {
+					try { 
+					eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+					} catch (Exception e) {
+						Window.alert(e.getMessage());
+					}
 					close();
 				}
 				
@@ -76,6 +84,12 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 			BeneficiarioService.Util.get().actualizarBeneficiario(beneficiario, new MethodCallback<Void>() {
 				@Override
 				public void onSuccess(Method method, Void response) {
+					try { 
+						eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+					} catch (Exception e) {
+						Window.alert(e.getMessage());
+					}
+
 					close();
 				}
 				@Override

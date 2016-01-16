@@ -1,31 +1,18 @@
 package py.edu.uca.intercajas.client.solicitud;
 
 import py.edu.uca.intercajas.client.beneficiario.BeneficiarioSelector;
-import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
-import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.client.requestfactory.PeriodoAporteDeclaradoProxy;
-import py.edu.uca.intercajas.client.requestfactory.SolicitudTitularProxy;
 import py.edu.uca.intercajas.shared.UIBase;
 
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-public class SolicitudTitularEditor extends UIBase implements
-		Editor<SolicitudTitularProxy> {
+public class SolicitudTitularEditor extends UIBase  {
 
 	private static SolicitudTitularEditorUiBinder uiBinder = GWT
 			.create(SolicitudTitularEditorUiBinder.class);
@@ -35,18 +22,16 @@ public class SolicitudTitularEditor extends UIBase implements
 	}
 	
 	SimpleEventBus eventBus;
-	FactoryGestion factoryGestion;
 
 	@UiField ValueBoxEditorDecorator<String> numero;
 	@UiField DateBox fecha;
 	@UiField (provided = true) BeneficiarioSelector beneficiario;
 
-	public SolicitudTitularEditor(SimpleEventBus eventBus, FactoryGestion factoryGestion) {
+	public SolicitudTitularEditor(SimpleEventBus eventBus) {
 
 		this.eventBus = eventBus;
-		this.factoryGestion = factoryGestion;
 
-		beneficiario = new BeneficiarioSelector(eventBus, factoryGestion);
+		beneficiario = new BeneficiarioSelector(eventBus);
 
 		title = "Solicitud Titular";
 		initWidget(uiBinder.createAndBindUi(this));

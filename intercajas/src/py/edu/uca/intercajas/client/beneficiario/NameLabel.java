@@ -15,17 +15,12 @@
  */
 package py.edu.uca.intercajas.client.beneficiario;
 
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
-import py.edu.uca.intercajas.dynatablerf.client.events.EditPersonEvent;
-import py.edu.uca.intercajas.dynatablerf.shared.PersonProxy;
+import py.edu.uca.intercajas.server.entity.Beneficiario;
 
 import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.ValueAwareEditor;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 
@@ -33,7 +28,7 @@ import com.google.gwt.user.client.ui.Label;
  * This NameLabel uses the EditorDelegate to receive notifications on updates to
  * the displayed object.
  */
-class NameLabel extends Composite implements ValueAwareEditor<BeneficiarioProxy> {
+class NameLabel extends Composite implements ValueAwareEditor<Beneficiario> {
   /**
    * Many of the GWT UI widgets that implement TakesValue also implement
    * IsEditor and are directly usable as sub-Editors.
@@ -42,7 +37,7 @@ class NameLabel extends Composite implements ValueAwareEditor<BeneficiarioProxy>
 
   Label nombres = new Label();
   Label apellidos = new Label();
-  private BeneficiarioProxy beneficiario;
+  private Beneficiario beneficiario;
   private HandlerRegistration subscription;
 
   public NameLabel() {
@@ -67,14 +62,14 @@ class NameLabel extends Composite implements ValueAwareEditor<BeneficiarioProxy>
   public void onPropertyChange(String... paths) {
   }
 
-  public void setDelegate(EditorDelegate<BeneficiarioProxy> delegate) {
+  public void setDelegate(EditorDelegate<Beneficiario> delegate) {
     if (subscription != null) {
       subscription.removeHandler();
     }
     subscription = delegate.subscribe();
   }
 
-  public void setValue(BeneficiarioProxy value) {
+  public void setValue(Beneficiario value) {
     beneficiario = value;
   }
 

@@ -1,6 +1,6 @@
 package py.edu.uca.intercajas.client.solicitud.events;
 
-import py.edu.uca.intercajas.client.requestfactory.PeriodoAporteDeclaradoProxy;
+import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -9,14 +9,14 @@ public class PeriodoAporteDeclaradoChangedEvent extends GwtEvent<PeriodoAporteDe
 
 	public static Type<Handler> TYPE = new Type<Handler>();
 
-	PeriodoAporteDeclaradoProxy periodoAporteDeclaradoProxy;
+	PeriodoAporteDeclarado periodoAporteDeclarado;
 	
 	public interface Handler extends EventHandler {
-		void selected(PeriodoAporteDeclaradoProxy periodoAporteDeclaradoProxy);
+		void selected(PeriodoAporteDeclarado periodoAporteDeclarado);
 	}
 	
-	public  PeriodoAporteDeclaradoChangedEvent(PeriodoAporteDeclaradoProxy periodoAporteDeclaradoProxy) {
-		this.periodoAporteDeclaradoProxy = periodoAporteDeclaradoProxy;
+	public  PeriodoAporteDeclaradoChangedEvent(PeriodoAporteDeclarado periodoAporteDeclarado) {
+		this.periodoAporteDeclarado = periodoAporteDeclarado;
 	}
 	
 	@Override
@@ -26,7 +26,7 @@ public class PeriodoAporteDeclaradoChangedEvent extends GwtEvent<PeriodoAporteDe
 
 	@Override
 	protected void dispatch(Handler handler) {
-		handler.selected(periodoAporteDeclaradoProxy);
+		handler.selected(periodoAporteDeclarado);
 	}
 
 }

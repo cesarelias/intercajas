@@ -6,7 +6,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
@@ -15,11 +14,12 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
-import com.google.gwt.core.client.GWT;
-
 import py.edu.uca.intercajas.server.entity.Beneficiario;
+import py.edu.uca.intercajas.server.entity.Caja;
+import py.edu.uca.intercajas.server.entity.Empleador;
 import py.edu.uca.intercajas.server.entity.SolicitudTitular;
-import py.edu.uca.intercajas.shared.domain.BeneficiarioClient;
+
+import com.google.gwt.core.client.GWT;
 
 //@Path("/rest/beneficiarios")
 public interface BeneficiarioService extends RestService {
@@ -51,6 +51,19 @@ public interface BeneficiarioService extends RestService {
 	@POST
 	@Consumes("application/json")
 	public void nuevoSolicitudTitular(SolicitudTitular solicitudTitular, MethodCallback<Void> callback);
+	
+	
+	//esto es para otro lado
+	@Path("empleadores/findBycaja")
+	@GET
+	@Produces("application/json")
+	public void findBycaja(@QueryParam("caja_id") Long caja_id, MethodCallback<List<Empleador>> listaEmpleadores);
+	
+	
+	@Path("cajas/findAll")
+	@GET
+	@Produces("application/json")
+	public void findAllCajas(MethodCallback<List<Caja>> listaCajas);
 	
 	/**
      * Utility class to get the instance of the Rest Service

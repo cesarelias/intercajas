@@ -1,10 +1,6 @@
 package py.edu.uca.intercajas.client.beneficiario;
 
-import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.Editor;
-import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;

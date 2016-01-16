@@ -16,9 +16,6 @@
 package py.edu.uca.intercajas.client.beneficiario;
 
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
-import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
-import py.edu.uca.intercajas.server.ejb.GestionBeneficiario;
 import py.edu.uca.intercajas.server.entity.Beneficiario;
 
 import com.google.gwt.core.client.GWT;
@@ -28,7 +25,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,13 +38,12 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
  * {@link OptionalValueEditor} adapter class.
  */
 public class BeneficiarioSelector extends Composite implements
-    IsEditor<OptionalFieldEditor<BeneficiarioProxy, NameLabel>> {
+    IsEditor<OptionalFieldEditor<Beneficiario, NameLabel>> {
 
   interface Binder extends UiBinder<Widget, BeneficiarioSelector> {
   }
 
   SimpleEventBus eventBus;
-  FactoryGestion requestFactory;
   HandlerRegistration r;
   
   @UiField
@@ -60,18 +55,17 @@ public class BeneficiarioSelector extends Composite implements
   @UiField
   NameLabel nameLabel;
 
-  private final OptionalFieldEditor<BeneficiarioProxy, NameLabel> editor;
+  private final OptionalFieldEditor<Beneficiario, NameLabel> editor;
 //  private final GestionBeneficiario gestionBeneficiario;
 
-  public BeneficiarioSelector(SimpleEventBus eventBus, FactoryGestion requestFactory) {
+  public BeneficiarioSelector(SimpleEventBus eventBus) {
 	this.eventBus = eventBus;
-	this.requestFactory = requestFactory;
 	
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
     editor = OptionalFieldEditor.of(nameLabel);
   }
 
-  public OptionalFieldEditor<BeneficiarioProxy, NameLabel> asEditor() {
+  public OptionalFieldEditor<Beneficiario, NameLabel> asEditor() {
     return editor;
   }
 
@@ -98,7 +92,7 @@ public class BeneficiarioSelector extends Composite implements
 		}
 	});
     
-    new ListaBeneficiarios(eventBus, requestFactory, 10).mostrarDialog();
+    new ListaBeneficiarios(eventBus, 10).mostrarDialog();
 //    factory.schoolCalendarRequest().getRandomPerson().to(
 //        new Receiver<PersonProxy>() {
 //          @Override

@@ -1,20 +1,16 @@
 package py.edu.uca.intercajas.server.ejb;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -22,10 +18,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.server.entity.Beneficiario;
+import py.edu.uca.intercajas.server.entity.Caja;
+import py.edu.uca.intercajas.server.entity.Empleador;
 import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
 import py.edu.uca.intercajas.server.entity.SolicitudTitular;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
-import py.edu.uca.intercajas.shared.domain.BeneficiarioClient;
 
 
 @Path("/")
@@ -141,7 +138,25 @@ public class RestExample   {
 		LOG.info("Solicitud titular persisted");
 		
 	}
+
+	//esto no se donde debe estar-- empleadoresService?
 	
+	@Path("beneficiarios/empleadores/findBycaja")
+	@GET
+	@Produces("application/json")
+	public List<Empleador> findBycaja(@QueryParam("caja_id") Long caja_id) {
+		return em.createQuery("select e from Empleador e where e.caja.id = :caja_id", Empleador.class)
+				.setParameter("caja_id", caja_id)
+				.getResultList();
+	}
+
+	@Path("beneficiarios/cajas/findAll")
+	@GET
+	@Produces("application/json")
+	public List<Caja> findAllCajas() {
+		return em.createQuery("from Caja", Caja.class).getResultList();
+	}
+
 	
 /*	
 	

@@ -19,16 +19,12 @@
 
   <!-- Other module inherits                                      -->
 <inherits name="org.fusesource.restygwt.RestyGWT"/>
-<inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
-<inherits name='com.google.gwt.editor.Editor' />
 <inherits name='com.google.gwt.logging.Logging'/>
-<set-configuration-property name="CssResource.obfuscationPrefix" value="empty" />
-  <!-- Specify the app entry point class.                         -->
+
+<!-- Specify the app entry point class.                         -->
   <entry-point class='py.edu.uca.intercajas.client.Intercajas'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='dynatablerf/client'/>
-  <source path='dynatablerf/shared'/>
   <source path='client'/>
   <source path='shared'/>
   <source path='server/entity/enums'/>

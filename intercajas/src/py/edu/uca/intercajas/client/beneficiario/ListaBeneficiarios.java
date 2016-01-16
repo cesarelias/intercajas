@@ -22,11 +22,6 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.client.requestfactory.BeneficiarioProxy;
-import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
-import py.edu.uca.intercajas.client.requestfactory.DireccionProxy;
-import py.edu.uca.intercajas.client.requestfactory.DocumentoIdentidadProxy;
-import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.server.entity.Beneficiario;
 import py.edu.uca.intercajas.server.entity.Direccion;
 import py.edu.uca.intercajas.server.entity.DocumentoIdentidad;
@@ -56,8 +51,8 @@ import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RangeChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
 
 /**
  * A paging table with summaries of all known people.
@@ -103,13 +98,11 @@ public class ListaBeneficiarios extends UIBase {
   private final int maxRows;
   private int lastStart = 0;
   private boolean pending;
-  private final FactoryGestion requestFactory;
   private final SingleSelectionModel<Beneficiario> selectionModel = new SingleSelectionModel<Beneficiario>();
-
-  public ListaBeneficiarios(SimpleEventBus eventBus,
-		  FactoryGestion requestFactory, int maxRows) {
+  private HandlerRegistration r;
+  
+  public ListaBeneficiarios(SimpleEventBus eventBus, int maxRows) {
     this.eventBus = eventBus;
-    this.requestFactory = requestFactory;
     this.maxRows = maxRows;
     
     this.title = "Beneficiarios";
@@ -129,11 +122,10 @@ public class ListaBeneficiarios extends UIBase {
     table.setEmptyTableWidget(new Label("Vacio"));
     
     
-    requestFactory.initialize(eventBus);
-    
-    eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+    r = eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 		@Override
 		public void selected(Beneficiario beneficiarioSelected) {
+			r.removeHandler();
 			refreshTable();
 		}
 	});
@@ -182,10 +174,6 @@ public class ListaBeneficiarios extends UIBase {
   @UiHandler("create")
   void onCreate(ClickEvent event) {
 	  
-	  final ContextGestionBeneficiario context =  requestFactory.contextGestionBeneficiario();
-  
-	  
-	  
 	  Beneficiario beneficiario = new Beneficiario();
 	  DocumentoIdentidad doc = new DocumentoIdentidad();
 	  Direccion dir = new Direccion();
@@ -195,13 +183,10 @@ public class ListaBeneficiarios extends UIBase {
 	  beneficiario.setDireccion(dir);
     
 	  beneficiario.setNombres("test");
-	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
-	  b.eventBus = eventBus;
+	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow(eventBus);
 	  b.title = "Nuevo Beneficiario";
 	  b.mostrarDialog();
 	  b.create();
-
-//	  new BeneficiarioEditorWorkFlow().create(beneficiario, context, requestFactory);
 
   }
 
@@ -223,7 +208,7 @@ public class ListaBeneficiarios extends UIBase {
       return;
     }
     
-    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
+    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow(eventBus);
     b.title = "Editando Beneficiario";
     b.mostrarDialog();
     b.edit(beneficiario);

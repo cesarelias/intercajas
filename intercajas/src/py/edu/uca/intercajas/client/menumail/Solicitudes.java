@@ -17,32 +17,20 @@ package py.edu.uca.intercajas.client.menumail;
 
 import java.util.logging.Logger;
 
-import org.apache.tools.mail.MailMessage;
-
 import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
-import py.edu.uca.intercajas.client.requestfactory.ContextGestionBeneficiario;
-import py.edu.uca.intercajas.client.requestfactory.FactoryGestion;
 import py.edu.uca.intercajas.client.solicitud.UISolicitudTitular;
-import py.edu.uca.intercajas.dynatablerf.client.DynaTableRf;
-import py.edu.uca.intercajas.shared.UIBase;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -54,8 +42,6 @@ public class Solicitudes extends Composite {
 	
 	private final SimpleEventBus eventBus = new SimpleEventBus();
 	private static final Logger log = Logger.getLogger(Intercajas.class.getName());
-	private static final FactoryGestion FACTORY  = GWT.create(FactoryGestion.class);
-	final ContextGestionBeneficiario context = FACTORY.contextGestionBeneficiario();
 	
 	/**
 	 * Simple data structure representing a itemMenu.
@@ -85,9 +71,6 @@ public class Solicitudes extends Composite {
 	Style style;
 
 	public Solicitudes() {
-		
-		
-		FACTORY.initialize(eventBus);
 		
 		
 		
@@ -142,7 +125,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new DynaTableRf().mostrar();
+//				new DynaTableRf().mostrar();
 			}
 		});
 	}	
@@ -156,7 +139,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new ListaBeneficiarios(eventBus, null,10).mostrar();
+				new ListaBeneficiarios(eventBus, 10).mostrar();
 			}
 		});
 	}		
