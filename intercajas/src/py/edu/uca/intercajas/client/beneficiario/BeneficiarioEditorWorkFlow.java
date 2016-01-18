@@ -61,7 +61,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 
 		if (nuevo) { //insert
 			
-			BeneficiarioService.Util.get().nuevo(beneficiario, new MethodCallback<Long>() {
+			BeneficiarioService.Util.get().nuevoBeneficiario(beneficiario, new MethodCallback<Long>() {
 				
 				@Override
 				public void onSuccess(Method method, Long response) {

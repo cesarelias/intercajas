@@ -54,6 +54,8 @@ public class BeneficiarioSelector extends Composite implements
 
   @UiField
   NameLabel nameLabel;
+  
+  Beneficiario beneficiario;
 
   private final OptionalFieldEditor<Beneficiario, NameLabel> editor;
 //  private final GestionBeneficiario gestionBeneficiario;
@@ -113,7 +115,12 @@ public class BeneficiarioSelector extends Composite implements
    */
   private void setValue(Beneficiario beneficiario) {
     //editor.setValue(beneficiario);
+	this.beneficiario = beneficiario;  
     nameLabel.setVisible(beneficiario != null);
     nameLabel.setTexto(beneficiario.getNombres() + ", " + beneficiario.getApellidos());
+  }
+  
+  public Beneficiario getBeneficiario() {
+	  return this.beneficiario;
   }
 }

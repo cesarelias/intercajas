@@ -109,7 +109,7 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 			caja.setValue(periodoAporteDeclarado.getCaja(), true);
 		}
 
-		BeneficiarioService.Util.get().findAllCajas(new MethodCallback<List<Caja>>() {
+		BeneficiarioService.Util.get().findCajaAll(new MethodCallback<List<Caja>>() {
 
 			@Override
 			public void onFailure(Method method, Throwable exception) {
@@ -157,7 +157,7 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 	}
 
 	void setSuggest(Long caja_id) {
-		BeneficiarioService.Util.get().findBycaja(caja_id, new MethodCallback<List<Empleador>>() {
+		BeneficiarioService.Util.get().findEmpleadorByCajaId(caja_id, new MethodCallback<List<Empleador>>() {
 			@Override
 			public void onSuccess(Method method, List<Empleador> response) {
 				oracle.clear();

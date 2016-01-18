@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:e="urn:import:com.google.gwt.editor.ui.client"
 	xmlns:gt="urn:import:py.edu.uca.intercajas.client.beneficiario"
-	xmlns:dp="urn:import:com.google.gwt.user.datepicker.client" >
+	xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
 	<ui:style>
 	
 	</ui:style>
@@ -11,11 +11,7 @@
 			<tr>
 				<td width="120px">Numero</td>
 				<td>
-					<e:ValueBoxEditorDecorator ui:field="numero">
-						<e:valuebox>
-							<g:TextBox />
-						</e:valuebox>
-					</e:ValueBoxEditorDecorator>
+					<g:TextBox ui:field="numero" />
 				</td>
 			</tr>
 			<tr>

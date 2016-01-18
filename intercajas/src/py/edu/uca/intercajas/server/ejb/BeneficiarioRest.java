@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -18,27 +19,30 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.server.entity.Beneficiario;
-import py.edu.uca.intercajas.server.entity.Caja;
-import py.edu.uca.intercajas.server.entity.Empleador;
-import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
-import py.edu.uca.intercajas.server.entity.SolicitudTitular;
 import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 
 
-@Path("/")
+@Path("/beneficiario")
 @Stateless
-public class RestExample   {
+public class BeneficiarioRest   {
 
-	private static final Logger LOG = Logger.getLogger(GestionBeneficiario.class.getName());
+	private static final Logger LOG = Logger.getLogger(BeneficiarioRest.class.getName());
 	
 
 	@PersistenceContext
 	EntityManager em;
+
+	@Path("/test")
+	@GET
+	public String test() {
+		System.out.println("rest working");
+		return "rest working";
+	}
 	
-	@Path("/beneficiarios/beneficiario")
-	@POST
+	@Path("/{id}")
+	@GET
 	@Produces("application/json")
-	public Beneficiario find(Long id) {
+	public Beneficiario find(@PathParam("id") Long id) {
 		System.out.println("**************************************id :"+id);
 		return em.find(Beneficiario.class, id);
 	}
@@ -61,7 +65,7 @@ public class RestExample   {
 		return em.createQuery("select b from Beneficiario b",Beneficiario.class).getResultList();
 	}
 
-	@Path("/beneficiarios/findByNombresDocs")
+	@Path("/findByNombresDocs")
 	@GET
 	@Produces("application/json")
 	public List<Beneficiario> findByNombresDocs(@QueryParam("nombresDocs") String nombresDocs,
@@ -91,7 +95,7 @@ public class RestExample   {
 				.getResultList();
 	}
 
-	@Path("/beneficiarios/nuevo")
+	@Path("/nuevo")
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -106,7 +110,7 @@ public class RestExample   {
 			}
 	}
 	           
-	@Path("/beneficiarios/actualizar")
+	@Path("/actualizar")
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -119,45 +123,8 @@ public class RestExample   {
 	
 	
 	
-	//esto es solo test, debe estar en gestionSolicitud
-	@Path("/beneficiarios/solicitud")
-	@POST
-	@Consumes("application/json")
-	public void nuevoSolicitudTitular(SolicitudTitular solicitudTitular) {
-		if (solicitudTitular.getListaPeriodoAporteDeclarados() == null){
-				System.out.println("no debe ser nulo los periodosDeAportesDeclarados");
-		} else {
-			for (PeriodoAporteDeclarado pad : solicitudTitular.getListaPeriodoAporteDeclarados()) {
-				System.out.println("pad.getLugar(): " + "pag.get");
-				pad.setSolicitud(solicitudTitular);
-				em.persist(pad);
-			}
-		}
-		
-		em.persist(solicitudTitular);
-		LOG.info("Solicitud titular persisted");
-		
-	}
 
-	//esto no se donde debe estar-- empleadoresService?
-	
-	@Path("beneficiarios/empleadores/findBycaja")
-	@GET
-	@Produces("application/json")
-	public List<Empleador> findBycaja(@QueryParam("caja_id") Long caja_id) {
-		return em.createQuery("select e from Empleador e where e.caja.id = :caja_id", Empleador.class)
-				.setParameter("caja_id", caja_id)
-				.getResultList();
-	}
 
-	@Path("beneficiarios/cajas/findAll")
-	@GET
-	@Produces("application/json")
-	public List<Caja> findAllCajas() {
-		return em.createQuery("from Caja", Caja.class).getResultList();
-	}
-
-	
 /*	
 	
 	@Path("/beneficiarios")

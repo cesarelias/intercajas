@@ -8,6 +8,7 @@ import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -23,7 +24,7 @@ public class SolicitudTitularEditor extends UIBase  {
 	
 	SimpleEventBus eventBus;
 
-	@UiField ValueBoxEditorDecorator<String> numero;
+	@UiField TextBox numero;
 	@UiField DateBox fecha;
 	@UiField (provided = true) BeneficiarioSelector beneficiario;
 

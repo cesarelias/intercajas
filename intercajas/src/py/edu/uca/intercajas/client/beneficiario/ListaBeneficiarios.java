@@ -244,7 +244,7 @@ public class ListaBeneficiarios extends UIBase {
 	  
 	  lastFetch = start;
 	  
-	  BeneficiarioService.Util.get().findByNombresDocs(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Beneficiario>>() {
+	  BeneficiarioService.Util.get().findBeneficiarioByNombresDocs(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Beneficiario>>() {
 		
 		@Override
 		public void onSuccess(Method method, List<Beneficiario> response) {

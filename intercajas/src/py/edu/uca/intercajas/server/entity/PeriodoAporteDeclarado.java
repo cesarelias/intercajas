@@ -3,18 +3,25 @@ package py.edu.uca.intercajas.server.entity;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.fusesource.restygwt.rebind.JsonSerializerGenerators;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class PeriodoAporteDeclarado extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@ManyToOne
 	private Caja caja;
 	private String lugar;
 	private Date inicio;
 	private Date fin;
 	@ManyToOne
+	@JsonIgnore //Esto evita la la recursividad infinita (Cuando traigo una Solicitud, me trae sus periodos, y cada periodo la misma solicitud, y asi se repite indefinidamente)
 	private Solicitud solicitud;
 	
 	public Date getInicio() {
@@ -36,9 +43,11 @@ public class PeriodoAporteDeclarado extends EntityBase {
 	public void setCaja(Caja caja) {
 		this.caja = caja;
 	}
+
 	public Solicitud getSolicitud() {
 		return solicitud;
 	}
+	
 	public void setSolicitud(Solicitud solicitud) {
 		this.solicitud = solicitud;
 	}

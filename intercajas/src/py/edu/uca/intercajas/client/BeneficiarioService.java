@@ -6,6 +6,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
@@ -28,42 +29,42 @@ public interface BeneficiarioService extends RestService {
 	public void getAll(MethodCallback<List<Beneficiario>> lista);
 	
 	@POST
-	@Path("nuevo")
-	public void nuevo(Beneficiario beneficiario,  MethodCallback<Long> callback);
+	@Path("beneficiario/nuevo")
+	public void nuevoBeneficiario(Beneficiario beneficiario,  MethodCallback<Long> callback);
 	
 	@POST
-	@Path("actualizar")
+	@Path("beneficiario/actualizar")
 	public void actualizarBeneficiario(Beneficiario beneficiario,  MethodCallback<Void> callback);
 	
-	@POST
-	@Path("beneficiario")
-	public void getById(Long id, MethodCallback<Beneficiario> callback);
+	@GET
+	@Path("beneficiario/{id}")
+	public void findBenediciarioById(@PathParam("id") Long id, MethodCallback<Beneficiario> callback);
 	
 	@GET
-	@Path("findByNombresDocs")
-	public void findByNombresDocs(
+	@Path("beneficiario/findByNombresDocs")
+	public void findBeneficiarioByNombresDocs(
 			@QueryParam("nombresDocs") String nombresDocs,
 			@QueryParam("startRow") int startRow,
 			@QueryParam("maxResults") int maxResults,
 			MethodCallback<List<Beneficiario>> callback);
 	
-	@Path("solicitud")
+	@Path("solicitudTitular/nuevo")
 	@POST
 	@Consumes("application/json")
 	public void nuevoSolicitudTitular(SolicitudTitular solicitudTitular, MethodCallback<Void> callback);
 	
 	
 	//esto es para otro lado
-	@Path("empleadores/findBycaja")
+	@Path("empleador/findBycaja_id")
 	@GET
 	@Produces("application/json")
-	public void findBycaja(@QueryParam("caja_id") Long caja_id, MethodCallback<List<Empleador>> listaEmpleadores);
+	public void findEmpleadorByCajaId(@QueryParam("caja_id") Long caja_id, MethodCallback<List<Empleador>> listaEmpleadores);
 	
 	
-	@Path("cajas/findAll")
+	@Path("caja/findAll")
 	@GET
 	@Produces("application/json")
-	public void findAllCajas(MethodCallback<List<Caja>> listaCajas);
+	public void findCajaAll(MethodCallback<List<Caja>> listaCajas);
 	
 	/**
      * Utility class to get the instance of the Rest Service
@@ -75,7 +76,7 @@ public interface BeneficiarioService extends RestService {
         public static final BeneficiarioService get() {
             if (instance == null) {
                 instance = GWT.create(BeneficiarioService.class);
-                ((RestServiceProxy) instance).setResource(new Resource("rest/beneficiarios"));
+                ((RestServiceProxy) instance).setResource(new Resource("rest"));
             }
             return instance;
         }
