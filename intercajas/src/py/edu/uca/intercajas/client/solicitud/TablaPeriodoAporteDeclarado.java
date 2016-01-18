@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
-import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;

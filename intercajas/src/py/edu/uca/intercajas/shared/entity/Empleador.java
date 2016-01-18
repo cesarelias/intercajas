@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.server.entity;
+package py.edu.uca.intercajas.shared.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

@@ -1,7 +1,7 @@
 package py.edu.uca.intercajas.client.view.login;
 
 import py.edu.uca.intercajas.client.menumail.MenuMail;
-import py.edu.uca.intercajas.server.entity.Usuario;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.RootPanel;

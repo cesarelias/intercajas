@@ -4,22 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import py.edu.uca.intercajas.server.entity.enums.Sexo;
-import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
-public class SexoEditor extends FlowPanel implements LeafValueEditor<Sexo> {
+public class SexoEditor extends FlowPanel implements LeafValueEditor<Beneficiario.Sexo> {
 
-    private Map<RadioButton, Sexo> map;
+    private Map<RadioButton, Beneficiario.Sexo> map;
 
     @UiConstructor
     public SexoEditor() {
-        map = new HashMap<RadioButton, Sexo>();
-        for (Sexo e: Sexo.class.getEnumConstants()){
+        map = new HashMap<RadioButton, Beneficiario.Sexo>();
+        for (Beneficiario.Sexo e: Beneficiario.Sexo.class.getEnumConstants()){
             RadioButton rb = new RadioButton("sexo", e.name());
             map.put(rb, e);
             super.add(rb);
@@ -27,7 +26,7 @@ public class SexoEditor extends FlowPanel implements LeafValueEditor<Sexo> {
     }
 
     @Override
-    public void setValue(Sexo value) {
+    public void setValue(Beneficiario.Sexo value) {
         if (value==null)
             return;
         RadioButton rb = (RadioButton) super.getWidget(value.ordinal());
@@ -35,8 +34,8 @@ public class SexoEditor extends FlowPanel implements LeafValueEditor<Sexo> {
     }
 
     @Override
-    public Sexo getValue() {
-        for (Entry<RadioButton, Sexo> e: map.entrySet()) {
+    public Beneficiario.Sexo getValue() {
+        for (Entry<RadioButton, Beneficiario.Sexo> e: map.entrySet()) {
             if (e.getKey().getValue())
                 return e.getValue();
         }

@@ -16,7 +16,7 @@
 package py.edu.uca.intercajas.client.beneficiario;
 
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.server.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.IsEditor;

@@ -11,7 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import py.edu.uca.intercajas.server.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Caja;
 
 @Path("/caja")
 @Stateless

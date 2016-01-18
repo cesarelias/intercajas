@@ -1,6 +1,6 @@
 package py.edu.uca.intercajas.client.beneficiario.events;
 
-import py.edu.uca.intercajas.server.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

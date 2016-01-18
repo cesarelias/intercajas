@@ -15,10 +15,10 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
-import py.edu.uca.intercajas.server.entity.Beneficiario;
-import py.edu.uca.intercajas.server.entity.Caja;
-import py.edu.uca.intercajas.server.entity.Empleador;
-import py.edu.uca.intercajas.server.entity.SolicitudTitular;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
 

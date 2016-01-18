@@ -4,9 +4,10 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
-import py.edu.uca.intercajas.server.entity.SolicitudTitular;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,7 +27,6 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaPeriodoAporteDeclarado tablaPeriodoAporteDeclarado;
 	
-	
 	SolicitudTitular solicitudTitular;
 	
 	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
@@ -45,9 +45,17 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiHandler("guardar")
 	void onSave(ClickEvent event) {
 		
-		Window.alert("entro aqui");
+		//TODO falta agregar la validacion del formulario
+		/* 1. Beneficiario seleccionado (no nulo)
+		 * 2. Fecha de solicitud no puede ser futura, ni menor a la fecha de la ley de intercajas
+		 * 3. Periodos declarados no puede estar vacio
+		 * 4. Periodos declarados debe contener al menos dos cajas en cuestion
+		 * 5. El numero de solicitud debe ser autogenerado? o tenes ambos (agregar numero expediente interno)
+		 */
+		
 		try { 
 			
+		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
@@ -61,6 +69,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			@Override
 			public void onSuccess(Method method, Void response) {
 				close();
+				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!!");
 			}
 			
 			@Override

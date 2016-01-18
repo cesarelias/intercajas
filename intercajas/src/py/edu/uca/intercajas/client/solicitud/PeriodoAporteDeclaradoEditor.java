@@ -8,10 +8,10 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
-import py.edu.uca.intercajas.server.entity.Caja;
-import py.edu.uca.intercajas.server.entity.Empleador;
-import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;

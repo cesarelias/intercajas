@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
 
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
-public class TipoDocumentoEditor extends FlowPanel implements LeafValueEditor<TipoDocumentoIdentidad> {
+public class TipoDocumentoEditor extends FlowPanel implements LeafValueEditor<DocumentoIdentidad.TipoDocumentoIdentidad> {
 
-    private Map<RadioButton, TipoDocumentoIdentidad> map;
+    private Map<RadioButton, DocumentoIdentidad.TipoDocumentoIdentidad> map;
 
     @UiConstructor
     public TipoDocumentoEditor() {
-        map = new HashMap<RadioButton, TipoDocumentoIdentidad>();
-        for (TipoDocumentoIdentidad e: TipoDocumentoIdentidad.class.getEnumConstants()){
+        map = new HashMap<RadioButton, DocumentoIdentidad.TipoDocumentoIdentidad>();
+        for (DocumentoIdentidad.TipoDocumentoIdentidad e: DocumentoIdentidad.TipoDocumentoIdentidad.class.getEnumConstants()){
             RadioButton rb = new RadioButton("tipoDocumento", e.name());
             map.put(rb, e);
             super.add(rb);
@@ -26,7 +26,7 @@ public class TipoDocumentoEditor extends FlowPanel implements LeafValueEditor<Ti
     }
 
     @Override
-    public void setValue(TipoDocumentoIdentidad value) {
+    public void setValue(DocumentoIdentidad.TipoDocumentoIdentidad value) {
         if (value==null)
             return;
         RadioButton rb = (RadioButton) super.getWidget(value.ordinal());
@@ -34,8 +34,8 @@ public class TipoDocumentoEditor extends FlowPanel implements LeafValueEditor<Ti
     }
 
     @Override
-    public TipoDocumentoIdentidad getValue() {
-        for (Entry<RadioButton, TipoDocumentoIdentidad> e: map.entrySet()) {
+    public DocumentoIdentidad.TipoDocumentoIdentidad getValue() {
+        for (Entry<RadioButton, DocumentoIdentidad.TipoDocumentoIdentidad> e: map.entrySet()) {
             if (e.getKey().getValue())
                 return e.getValue();
         }

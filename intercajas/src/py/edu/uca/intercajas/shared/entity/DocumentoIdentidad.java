@@ -1,8 +1,6 @@
-package py.edu.uca.intercajas.server.entity;
+package py.edu.uca.intercajas.shared.entity;
 
 import javax.persistence.Embeddable;
-
-import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
 
 @Embeddable
 public class DocumentoIdentidad   {
@@ -11,6 +9,11 @@ public class DocumentoIdentidad   {
 
 	private TipoDocumentoIdentidad tipoDocumento;
 
+	public enum TipoDocumentoIdentidad {
+		CEDULA,
+		PASAPORTE
+	}
+	
 	public TipoDocumentoIdentidad getTipoDocumento() {
 		return tipoDocumento;
 	}

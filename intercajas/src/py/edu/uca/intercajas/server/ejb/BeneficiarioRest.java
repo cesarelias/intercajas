@@ -18,8 +18,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import py.edu.uca.intercajas.server.entity.Beneficiario;
-import py.edu.uca.intercajas.server.entity.enums.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
 
 
 @Path("/beneficiario")

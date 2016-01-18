@@ -5,11 +5,11 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.server.entity.Beneficiario;
-import py.edu.uca.intercajas.server.entity.Direccion;
-import py.edu.uca.intercajas.server.entity.DocumentoIdentidad;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Direccion;
+import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

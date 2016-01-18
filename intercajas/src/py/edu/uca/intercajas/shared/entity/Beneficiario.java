@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.server.entity;
+package py.edu.uca.intercajas.shared.entity;
 
 import java.util.Date;
 
@@ -8,11 +8,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-
-import py.edu.uca.intercajas.server.entity.enums.Sexo;
 
 @Entity
 @Table(uniqueConstraints=
@@ -39,6 +36,10 @@ public class Beneficiario extends EntityBase {
 	@Embedded
 	private Direccion direccion;
 	
+	public enum Sexo {
+		MASCULINO,
+		FEMENINO
+	}
 	
 	public String getNombres() {
 		return nombres;

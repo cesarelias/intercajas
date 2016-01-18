@@ -13,9 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import py.edu.uca.intercajas.server.entity.PeriodoAporteDeclarado;
-import py.edu.uca.intercajas.server.entity.Solicitud;
-import py.edu.uca.intercajas.server.entity.SolicitudTitular;
+import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
+import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 @Path("/solicitudTitular")
 @Stateless

@@ -12,7 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import py.edu.uca.intercajas.server.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.Empleador;
 
 @Path("/empleador")
 @Stateless
