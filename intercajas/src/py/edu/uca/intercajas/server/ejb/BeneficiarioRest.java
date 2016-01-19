@@ -43,7 +43,6 @@ public class BeneficiarioRest   {
 	@GET
 	@Produces("application/json")
 	public Beneficiario find(@PathParam("id") Long id) {
-		System.out.println("**************************************id :"+id);
 		return em.find(Beneficiario.class, id);
 	}
 	
@@ -119,8 +118,6 @@ public class BeneficiarioRest   {
 		LOG.info("Beneficiario merged");
 	}
 
-	
-	
 	
 	
 

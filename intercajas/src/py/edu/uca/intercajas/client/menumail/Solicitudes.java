@@ -19,9 +19,7 @@ import java.util.logging.Logger;
 
 import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
-import py.edu.uca.intercajas.client.beneficiario.UIBeneficiario;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
-import py.edu.uca.intercajas.client.solicitud.UISolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -115,7 +113,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new UIBeneficiario().mostrar();
+				new ListaBeneficiarios(eventBus, 10).mostrarDialog();
 			}
 		});
 
