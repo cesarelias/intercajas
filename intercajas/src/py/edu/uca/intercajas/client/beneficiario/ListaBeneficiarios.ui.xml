@@ -12,11 +12,12 @@
 		}
 		</ui:style>
 
-	<g:DockLayoutPanel ui:field="dock"  unit="PX" width="270px" height="400px">
+	<g:DockLayoutPanel ui:field="dock" unit="PX" width="320px"
+		height="400px">
 		<g:north size="80">
 			<g:DockLayoutPanel unit="PX">
 				<g:center>
-					<g:DecoratorPanel>
+					<g:DecoratorPanel height="100%">
 						<g:FlowPanel width="100%">
 							<g:Label>Nombres / Numero Documento</g:Label>
 							<g:TextBox ui:field="filtroNombres" />
@@ -42,6 +43,8 @@
 						ui:field="del">Eliminar</g:Button>
 					<g:Button stylePrimaryName="{style.displayInline}"
 						ui:field="select">Seleccionar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="close">Cancelar</g:Button>
 				</g:HorizontalPanel>
 			</g:VerticalPanel>
 		</g:south>

@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -71,11 +72,7 @@ public class Solicitudes extends Composite {
 
 	public Solicitudes() {
 		
-		
-		
 		initWidget(binder.createAndBindUi(this));
-		
-		
 		
 		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
 		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
@@ -113,7 +110,9 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				new ListaBeneficiarios(eventBus, 10).mostrarDialog();
+				ListaBeneficiarios beneficiarios = 	new ListaBeneficiarios(eventBus, 10);
+				beneficiarios.mostrarDialog();
+				beneficiarios.hideSelectButton();
 			}
 		});
 
@@ -132,19 +131,5 @@ public class Solicitudes extends Composite {
 			}
 		});
 	}	
-	
-	private void addItemListaBeneficiarios(final ItemMenu itemMenu) {
-		final Anchor link = new Anchor(itemMenu.nombre);
-		link.setStyleName(style.item());
-
-		panel.add(link);
-
-		// Add a click handler that displays a ContactPopup when it is clicked.
-		link.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				new ListaBeneficiarios(eventBus, 10).mostrar();
-			}
-		});
-	}		
 	
 }

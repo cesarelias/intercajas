@@ -30,24 +30,25 @@ public class Solicitud extends EntityBase {
 	private List<PeriodoAporteDeclarado> listaPeriodoAporteDeclarados = new ArrayList<PeriodoAporteDeclarado>();
 
 	public enum Estado {
-		Nuevo,
-		Solicitado,
-		AntiguedadParcial,
-		AntiguedadCompleta,
-		FiniquitoParcial,
-		FiniquitoCompleto,
-		Anulado
+		Nuevo, //estado inicial al crear la solicitud
+		Solicitado, //solicitud enviada, con las documentaciones a todas las cajas intervinientes
+		ConAntiguedad, //todas las cajas intervinientes informacon la antiguedad
+		Finiquitado, //todas las cajas intervinientes finiquitaron la solicitud
+		Anulado //Solo se puede anular una solicitus con estado Nuevo, una vez enviada, se dede finiquitar indefectiblemente.
 	}
 	
 	public Date getFecha() {
 		return fecha;
 	}
+	
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+	
 	public String getNumero() {
 		return numero;
 	}
+	
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
@@ -64,6 +65,7 @@ public class Solicitud extends EntityBase {
 	public Estado getEstado() {
 		return estado;
 	}
+	
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}

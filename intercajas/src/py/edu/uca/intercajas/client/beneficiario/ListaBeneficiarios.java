@@ -44,6 +44,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -93,6 +94,8 @@ public class ListaBeneficiarios extends UIBase {
   
   @UiField TextBox filtroNombres;
 
+  @UiField Button select;
+  
   private final SimpleEventBus eventBus;
   private int lastFetch;
   private final int maxRows;
@@ -169,7 +172,16 @@ public class ListaBeneficiarios extends UIBase {
 
     fetch(0);
     
+    filtroNombres.setFocus(true);
+    
   }
+
+
+  @UiHandler("close")
+  void onClose(ClickEvent event) { 
+	  close();
+  }
+  
 
   @UiHandler("create")
   void onCreate(ClickEvent event) {
@@ -230,6 +242,7 @@ public class ListaBeneficiarios extends UIBase {
 
   @UiHandler("buscar")
   public void buscarClick(ClickEvent event){
+	  fetch(0);
 //	  eventBus.fireEvent(new BeneficiarioChangedEvent(table.getVisibleItem(1))); //trae la segunda fila
   }
 
@@ -237,6 +250,8 @@ public class ListaBeneficiarios extends UIBase {
   public void buscarEnter(KeyDownEvent event){
 	  if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 		  fetch(0);
+	  } else if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+		  close();
 	  }
   }
   
@@ -269,6 +284,10 @@ public class ListaBeneficiarios extends UIBase {
   
   public void refreshTable() {
 	  fetch(lastStart);
+  }
+  
+  public void hideSelectButton() {
+	  select.setVisible(false);
   }
   
 }
