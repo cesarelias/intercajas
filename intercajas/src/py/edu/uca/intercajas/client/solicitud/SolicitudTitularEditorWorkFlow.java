@@ -1,5 +1,14 @@
 package py.edu.uca.intercajas.client.solicitud;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import gwtupload.client.IUploadStatus.Status;
+import gwtupload.client.IUploader;
+import gwtupload.client.MultiUploader;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -16,17 +25,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CustomButton;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -37,12 +38,14 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaPeriodoAporteDeclarado tablaPeriodoAporteDeclarado;
-	@UiField FlexTable adjuntos;
+	@UiField FlowPanel upload;
+	@UiField Label resumenUpload;
 	
 	SolicitudTitular solicitudTitular;
 	
 	Images images = GWT.create(Images.class);
 	
+	Map<String, String> adjuntos = new HashMap<String, String>();
 	
 	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
 //		title = "Solicitud Titular";
@@ -51,24 +54,35 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitularEditor = new SolicitudTitularEditor(eventBus);
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
-		//Formateamos la tabla de adjuntos
-		FlexCellFormatter cellFormatter = adjuntos.getFlexCellFormatter();
-//		adjuntos.addStyleName("cw-FlexTable");
-//		adjuntos.setBorderWidth(2);
-//		adjuntos.setWidth("2em");
-		adjuntos.setCellSpacing(1);
-		adjuntos.setCellPadding(1);
+		
+		MultiUploader defaultUploader = new MultiUploader();
+		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
+		upload.add(defaultUploader);
 
 		
 	}
 
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
-		close();
+		
+		Iterator<Entry<String, String>> entries = adjuntos.entrySet().iterator();
+		while (entries.hasNext()) {
+		  Entry<String,String> thisEntry = (Entry<String,String>) entries.next();
+		  Window.alert(thisEntry.getKey() + "<--->" + thisEntry.getValue());
+		  
+		}
+		//close();
 	}
 	
-	@UiHandler("guardar")
+	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
+		
+		
+		if (adjuntos.isEmpty()) {
+			Window.alert("Es obligatorio enviar al menos un adjunto");
+			return;
+		}
 		
 		//TODO falta agregar la validacion del formulario
 		/* 1. Beneficiario seleccionado (no nulo)
@@ -94,7 +108,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			@Override
 			public void onSuccess(Method method, Void response) {
 				close();
-				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!!");
+				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! ahh y tambien debe ya ENVIAR el formulario de una a todas las cajas declaradas!");
 			}
 			
 			@Override
@@ -106,14 +120,14 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 	}
 
-	@UiHandler("agregarAdjunto")
-	void onAgregarAdjunto(ClickEvent event) {
-		int numRows = adjuntos.getRowCount();
-		adjuntos.setWidget(numRows, 0,  new PushButton(new Image(images.trash())));
-		adjuntos.setWidget(numRows, 1, new Hyperlink("Adjunto", "Adjuntito"));
-//		adjuntos.getFlexCellFormatter().setRowSpan(0, 1, 5);
-		
-	}
+//	@UiHandler("agregarAdjunto")
+//	void onAgregarAdjunto(ClickEvent event) {
+//		int numRows = adjuntos.getRowCount();
+//		adjuntos.setWidget(numRows, 0,  new PushButton(new Image(images.trash())));
+//		adjuntos.setWidget(numRows, 1, new Hyperlink("Adjunto", "Adjuntito"));
+////		adjuntos.getFlexCellFormatter().setRowSpan(0, 1, 5);
+//		
+//	}
 	
 	public void create() {
 		try {
@@ -122,5 +136,44 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			Window.alert("este es el error?: " + e.getMessage());
 		}
 
-	}	
+	}
+	
+	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
+	    public void onFinish(IUploader uploader) {
+	      if (uploader.getStatus() == Status.SUCCESS) {
+	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
+	    	  for (int i=0; i< archivos.length; i+=2) {
+	    		  adjuntos.put(archivos[i], archivos[i+1]);
+	    	  }
+	    	  refreshResumenUpload();
+	      }
+	  
+	    }
+	};
+
+	private IUploader.OnStatusChangedHandler onStatusChangedHandler = new IUploader.OnStatusChangedHandler() {
+		
+		@Override
+		public void onStatusChanged(IUploader uploader) {
+			if (uploader.getStatus() == Status.DELETED) {
+	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
+	    	  for (int i=0; i< archivos.length; i+=2) {
+	    		  adjuntos.remove(archivos[i]);
+	    	  }
+	    	  refreshResumenUpload();
+			}
+			
+		}
+	};
+	
+	private void refreshResumenUpload() {
+		if (adjuntos.isEmpty()) {
+			resumenUpload.setText("");
+		} else if (adjuntos.size() == 1) {
+			resumenUpload.setText(adjuntos.size() + " archivo listo");
+		} else {
+			resumenUpload.setText(adjuntos.size() + " archivos listos");
+		}
+	}
+
 }

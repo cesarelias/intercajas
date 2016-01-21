@@ -20,6 +20,7 @@
   <!-- Other module inherits                                      -->
 <inherits name="org.fusesource.restygwt.RestyGWT"/>
 <inherits name='com.google.gwt.logging.Logging'/>
+<inherits name="gwtupload.GWTUpload"/>
 
 <!-- Specify the app entry point class.                         -->
   <entry-point class='py.edu.uca.intercajas.client.Intercajas'/>

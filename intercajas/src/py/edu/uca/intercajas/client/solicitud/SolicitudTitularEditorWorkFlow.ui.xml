@@ -6,18 +6,19 @@
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
 		<g:center>
-
 			<g:DockLayoutPanel height="100%" width="100%">
 				<g:north size="110">
-					<g:HorizontalPanel>
+					<g:HorizontalPanel width="100%">
 						<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
-						<g:HorizontalPanel>
-							<g:Button ui:field="agregarAdjunto">Agregar Adjunto</g:Button>
-							<g:ScrollPanel width="250px" height="100px">
-								<g:FlexTable ui:field="adjuntos">
-								</g:FlexTable>
-							</g:ScrollPanel>
-						</g:HorizontalPanel>
+						<g:DecoratorPanel title="Adjuntos">
+							<g:VerticalPanel>
+								<g:Label>Adjuntos</g:Label>
+								<g:ScrollPanel width="350px" height="70px">
+									<g:FlowPanel ui:field="upload" />
+								</g:ScrollPanel>
+								<g:Label ui:field="resumenUpload"/>
+							</g:VerticalPanel>
+						</g:DecoratorPanel>
 					</g:HorizontalPanel>
 				</g:north>
 				<g:center>
@@ -29,7 +30,7 @@
 		<g:south size="40">
 			<g:HorizontalPanel>
 				<g:Button ui:field="cancelar">Cancelar</g:Button>
-				<g:Button ui:field="guardar">Guardar</g:Button>
+				<g:Button ui:field="enviar">Enviar</g:Button>
 			</g:HorizontalPanel>
 		</g:south>
 	</g:DockLayoutPanel>
