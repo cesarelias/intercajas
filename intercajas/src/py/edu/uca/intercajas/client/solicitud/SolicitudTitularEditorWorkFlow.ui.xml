@@ -9,14 +9,22 @@
 
 			<g:DockLayoutPanel height="100%" width="100%">
 				<g:north size="110">
-					<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
+					<g:HorizontalPanel>
+						<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
+						<g:HorizontalPanel>
+							<g:Button ui:field="agregarAdjunto">Agregar Adjunto</g:Button>
+							<g:ScrollPanel width="250px" height="100px">
+								<g:FlexTable ui:field="adjuntos">
+								</g:FlexTable>
+							</g:ScrollPanel>
+						</g:HorizontalPanel>
+					</g:HorizontalPanel>
 				</g:north>
 				<g:center>
-					<gt:TablaPeriodoAporteDeclarado ui:field="tablaPeriodoAporteDeclarado"/>
+					<gt:TablaPeriodoAporteDeclarado
+						ui:field="tablaPeriodoAporteDeclarado" />
 				</g:center>
 			</g:DockLayoutPanel>
-
-
 		</g:center>
 		<g:south size="40">
 			<g:HorizontalPanel>

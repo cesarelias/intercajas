@@ -40,6 +40,13 @@ public class Intercajas implements EntryPoint {
 //		RootPanel.get().remove(0);
 		new MenuMail();
 		
+		//Abrimos solicitud al iniciar.
+		  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow(eventBus);
+		  b.title = "Nueva solicitud titular";
+		  b.mostrarDialog();
+		  b.create();
+		
+		
 	}
 		
 		
