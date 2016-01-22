@@ -54,12 +54,10 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitularEditor = new SolicitudTitularEditor(eventBus);
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
-		
 		MultiUploader defaultUploader = new MultiUploader();
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
 		upload.add(defaultUploader);
-
 		
 	}
 
@@ -72,7 +70,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		  Window.alert(thisEntry.getKey() + "<--->" + thisEntry.getValue());
 		  
 		}
-		//close();
+		close();
 	}
 	
 	@UiHandler("enviar")
@@ -90,6 +88,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		 * 3. Periodos declarados no puede estar vacio
 		 * 4. Periodos declarados debe contener al menos dos cajas en cuestion
 		 * 5. El numero de solicitud debe ser autogenerado? o tenes ambos (agregar numero expediente interno)
+		 * 6. Agregar insertarEnvio -- con los adjutos.!
 		 */
 		
 		try { 
@@ -156,6 +155,9 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		@Override
 		public void onStatusChanged(IUploader uploader) {
 			if (uploader.getStatus() == Status.DELETED) {
+				if (uploader.getServerMessage().getMessage() == null) { 
+					return;
+				}
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
 	    		  adjuntos.remove(archivos[i]);
