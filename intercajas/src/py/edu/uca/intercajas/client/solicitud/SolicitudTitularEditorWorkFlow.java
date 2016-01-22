@@ -37,7 +37,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	}
 	
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
-	@UiField(provided = true) TablaPeriodoAporteDeclarado tablaPeriodoAporteDeclarado;
+	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
 	@UiField FlowPanel upload;
 	@UiField Label resumenUpload;
 	
@@ -50,7 +50,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
 //		title = "Solicitud Titular";
 		this.eventBus = eventBus;
-	    tablaPeriodoAporteDeclarado = new TablaPeriodoAporteDeclarado(eventBus);
+		tablaTiempoServicioDeclarado = new TablaTiempoServicioDeclarado(eventBus);
 		solicitudTitularEditor = new SolicitudTitularEditor(eventBus);
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
@@ -67,8 +67,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		Iterator<Entry<String, String>> entries = adjuntos.entrySet().iterator();
 		while (entries.hasNext()) {
 		  Entry<String,String> thisEntry = (Entry<String,String>) entries.next();
-		  Window.alert(thisEntry.getKey() + "<--->" + thisEntry.getValue());
-		  
+//		  Window.alert(thisEntry.getKey() + "<--->" + thisEntry.getValue());
 		}
 		close();
 	}
@@ -97,7 +96,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
-		solicitudTitular.setListaPeriodoAporteDeclarados(tablaPeriodoAporteDeclarado.listaPeriodoAporteDeclarado);
+		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
@@ -164,7 +163,6 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	    	  }
 	    	  refreshResumenUpload();
 			}
-			
 		}
 	};
 	

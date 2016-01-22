@@ -1,6 +1,6 @@
 package py.edu.uca.intercajas.client.solicitud.events;
 
-import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -9,13 +9,13 @@ public class PeriodoAporteDeclaradoChangedEvent extends GwtEvent<PeriodoAporteDe
 
 	public static Type<Handler> TYPE = new Type<Handler>();
 
-	PeriodoAporteDeclarado periodoAporteDeclarado;
+	TiempoServicioDeclarado periodoAporteDeclarado;
 	
 	public interface Handler extends EventHandler {
-		void selected(PeriodoAporteDeclarado periodoAporteDeclarado);
+		void selected(TiempoServicioDeclarado periodoAporteDeclarado);
 	}
 	
-	public  PeriodoAporteDeclaradoChangedEvent(PeriodoAporteDeclarado periodoAporteDeclarado) {
+	public  PeriodoAporteDeclaradoChangedEvent(TiempoServicioDeclarado periodoAporteDeclarado) {
 		this.periodoAporteDeclarado = periodoAporteDeclarado;
 	}
 	

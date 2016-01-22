@@ -22,8 +22,8 @@
 					</g:HorizontalPanel>
 				</g:north>
 				<g:center>
-					<gt:TablaPeriodoAporteDeclarado
-						ui:field="tablaPeriodoAporteDeclarado" />
+					<gt:TablaTiempoServicioDeclarado
+						ui:field="tablaTiempoServicioDeclarado" />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:center>

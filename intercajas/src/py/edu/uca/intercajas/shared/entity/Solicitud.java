@@ -27,7 +27,7 @@ public class Solicitud extends EntityBase {
 	private Estado estado;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="solicitud")
-	private List<PeriodoAporteDeclarado> listaPeriodoAporteDeclarados = new ArrayList<PeriodoAporteDeclarado>();
+	private List<TiempoServicioDeclarado> listaTiempoServicioDeclarado = new ArrayList<TiempoServicioDeclarado>();
 
 	public enum Estado {
 		Nuevo, //estado inicial al crear la solicitud
@@ -53,14 +53,6 @@ public class Solicitud extends EntityBase {
 		this.numero = numero;
 	}
 	
-	public List<PeriodoAporteDeclarado> getListaPeriodoAporteDeclarados() {
-		return listaPeriodoAporteDeclarados;
-	}
-	
-	public void setListaPeriodoAporteDeclarados(
-			List<PeriodoAporteDeclarado> listaPeriodoAporteDeclarados) {
-		this.listaPeriodoAporteDeclarados = listaPeriodoAporteDeclarados;
-	}
 	
 	public Estado getEstado() {
 		return estado;
@@ -68,6 +60,15 @@ public class Solicitud extends EntityBase {
 	
 	public void setEstado(Estado estado) {
 		this.estado = estado;
+	}
+
+	public List<TiempoServicioDeclarado> getListaTiempoServicioDeclarado() {
+		return listaTiempoServicioDeclarado;
+	}
+
+	public void setListaTiempoServicioDeclarado(
+			List<TiempoServicioDeclarado> listaTiempoServicioDeclarado) {
+		this.listaTiempoServicioDeclarado = listaTiempoServicioDeclarado;
 	}
 
 }

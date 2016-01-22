@@ -11,7 +11,7 @@ import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChang
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Empleador;
-import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -30,11 +30,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.SimpleKeyProvider;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.google.web.bindery.requestfactory.gwt.ui.client.ProxyRenderer;
 
-public class PeriodoAporteDeclaradoEditor extends UIBase  {
+public class TiempoServicioDeclaradoEditor extends UIBase  {
 
-	interface Binder extends UiBinder<Widget, PeriodoAporteDeclaradoEditor> {
+	interface Binder extends UiBinder<Widget, TiempoServicioDeclaradoEditor> {
 	}
 	
 	@UiField DateBox inicio;
@@ -45,11 +44,11 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 
 	@Editor.Ignore	MultiWordSuggestOracle oracle;
 	
-	PeriodoAporteDeclarado periodoAporteDeclarado;
+	TiempoServicioDeclarado tiempoServicioDeclarado;
 
-	public PeriodoAporteDeclaradoEditor(SimpleEventBus eventBus, PeriodoAporteDeclarado periodoAporteDeclaradoEdit) {
+	public TiempoServicioDeclaradoEditor(SimpleEventBus eventBus, TiempoServicioDeclarado periodoAporteDeclaradoEdit) {
 		
-		this.periodoAporteDeclarado = periodoAporteDeclaradoEdit;
+		this.tiempoServicioDeclarado = periodoAporteDeclaradoEdit;
 		this.eventBus = eventBus;
 		
 		oracle = new MultiWordSuggestOracle();
@@ -100,13 +99,13 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 		
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
-		if (periodoAporteDeclarado == null) {
-			periodoAporteDeclarado = new PeriodoAporteDeclarado();
+		if (tiempoServicioDeclarado == null) {
+			tiempoServicioDeclarado = new TiempoServicioDeclarado();
 		} else {
-			inicio.setValue(periodoAporteDeclarado.getInicio());
-			fin.setValue(periodoAporteDeclarado.getFin());
-			lugar.setValue(periodoAporteDeclarado.getLugar());
-			caja.setValue(periodoAporteDeclarado.getCaja(), true);
+			inicio.setValue(tiempoServicioDeclarado.getInicio());
+			fin.setValue(tiempoServicioDeclarado.getFin());
+			lugar.setValue(tiempoServicioDeclarado.getLugar());
+			caja.setValue(tiempoServicioDeclarado.getCaja(), true);
 		}
 
 		BeneficiarioService.Util.get().findCajaAll(new MethodCallback<List<Caja>>() {
@@ -119,7 +118,7 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 
 			@Override
 			public void onSuccess(Method method, List<Caja> response) {
-				if (periodoAporteDeclarado.getCaja() == null) {
+				if (tiempoServicioDeclarado.getCaja() == null) {
 					caja.setValue(response.get(0), true);
 				} ;
 				caja.setAcceptableValues(response);
@@ -140,13 +139,13 @@ public class PeriodoAporteDeclaradoEditor extends UIBase  {
 	@UiHandler("save")
 	void onSave(ClickEvent event){
 
-		periodoAporteDeclarado.setCaja(caja.getValue());
-		periodoAporteDeclarado.setInicio(inicio.getValue());
-		periodoAporteDeclarado.setFin(fin.getValue());
-		periodoAporteDeclarado.setLugar(lugar.getValue());
+		tiempoServicioDeclarado.setCaja(caja.getValue());
+		tiempoServicioDeclarado.setInicio(inicio.getValue());
+		tiempoServicioDeclarado.setFin(fin.getValue());
+		tiempoServicioDeclarado.setLugar(lugar.getValue());
 		
 		
-		eventBus.fireEvent(new PeriodoAporteDeclaradoChangedEvent(periodoAporteDeclarado));
+		eventBus.fireEvent(new PeriodoAporteDeclaradoChangedEvent(tiempoServicioDeclarado));
 		close();
 		
 	}

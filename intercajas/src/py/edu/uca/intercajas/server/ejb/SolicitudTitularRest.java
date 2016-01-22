@@ -13,7 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 @Path("/solicitudTitular")
@@ -52,10 +52,10 @@ public class SolicitudTitularRest   {
 	@POST
 	@Consumes("application/json")
 	public void nuevo(SolicitudTitular solicitudTitular) {
-		if (solicitudTitular.getListaPeriodoAporteDeclarados() == null){
+		if (solicitudTitular.getListaTiempoServicioDeclarado() == null){
 				System.out.println("no debe ser nulo los periodosDeAportesDeclarados");
 		} else {
-			for (PeriodoAporteDeclarado pad : solicitudTitular.getListaPeriodoAporteDeclarados()) {
+			for (TiempoServicioDeclarado pad : solicitudTitular.getListaTiempoServicioDeclarado()) {
 				System.out.println("pad.getLugar(): " + "pag.get");
 				pad.setSolicitud(solicitudTitular);
 				em.persist(pad);

@@ -11,7 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import py.edu.uca.intercajas.shared.entity.PeriodoAporteDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
@@ -31,7 +31,7 @@ public class SolicitudRest   {
 		
 		List<Solicitud> lista = em.createQuery("select b from Solicitud b", Solicitud.class).getResultList();
 		for (Solicitud s : lista) {
-			for (PeriodoAporteDeclarado p : s.getListaPeriodoAporteDeclarados()) {
+			for (TiempoServicioDeclarado p : s.getListaTiempoServicioDeclarado()) {
 				System.out.println(p.getLugar());
 			}
 		}

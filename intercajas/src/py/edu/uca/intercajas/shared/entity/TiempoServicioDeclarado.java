@@ -11,7 +11,7 @@ import org.fusesource.restygwt.rebind.JsonSerializerGenerators;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class PeriodoAporteDeclarado extends EntityBase {
+public class TiempoServicioDeclarado extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
