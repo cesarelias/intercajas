@@ -97,7 +97,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		try { 
 			
 			
-		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
+		solicitudTitular.setEstado(Solicitud.Estado.NuevoSolicitado);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
