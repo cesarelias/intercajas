@@ -1,7 +1,9 @@
 package py.edu.uca.intercajas.client.solicitud;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +18,8 @@ import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
+import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
@@ -45,7 +49,9 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	Images images = GWT.create(Images.class);
 	
-	Map<String, String> adjuntos = new HashMap<String, String>();
+	//Map<String, String> adjuntos = new HashMap<String, String>();
+	
+	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 	
 	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
 //		title = "Solicitud Titular";
@@ -64,12 +70,10 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
 		
-		Iterator<Entry<String, String>> entries = adjuntos.entrySet().iterator();
-		while (entries.hasNext()) {
-		  Entry<String,String> thisEntry = (Entry<String,String>) entries.next();
-//		  Window.alert(thisEntry.getKey() + "<--->" + thisEntry.getValue());
+		for (Adjunto a : adjuntos) {
+			Window.alert(a.getNombreArchivo());
 		}
-		close();
+//		close();
 	}
 	
 	@UiHandler("enviar")
@@ -91,6 +95,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		 */
 		
 		try { 
+			
 			
 		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
@@ -141,11 +146,12 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  adjuntos.put(archivos[i], archivos[i+1]);
+	    		  Adjunto a = new Adjunto();
+	    		  a.setNombreArchivo(archivos[i] + "|" + archivos[i+1]);
+	    		  adjuntos.add(a);
 	    	  }
 	    	  refreshResumenUpload();
 	      }
-	  
 	    }
 	};
 
@@ -159,7 +165,13 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 				}
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  adjuntos.remove(archivos[i]);
+	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
+	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i] + "|" + archivos[i+1])) {
+	    				  adjuntos.remove(ii);
+	    				  break;
+	    			  }
+	    		  }
+	    		  //adjuntos.remove(archivos[i]);
 	    	  }
 	    	  refreshResumenUpload();
 			}

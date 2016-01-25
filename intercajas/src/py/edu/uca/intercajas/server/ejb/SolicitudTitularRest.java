@@ -48,6 +48,9 @@ public class SolicitudTitularRest   {
 		return lista;
 	}
 	
+	/*
+	 * Este metodo, crea la solicitud, el adjunto(s), las cajas declaras (al menos dos), y hace el envio (mensaje + destino(s))
+	 */
 	@Path("/nuevo")
 	@POST
 	@Consumes("application/json")
