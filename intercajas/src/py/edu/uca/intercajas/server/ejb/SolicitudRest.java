@@ -30,11 +30,11 @@ public class SolicitudRest   {
 		System.out.println("rest working");
 		
 		List<Solicitud> lista = em.createQuery("select b from Solicitud b", Solicitud.class).getResultList();
-		for (Solicitud s : lista) {
-			for (TiempoServicioDeclarado p : s.getListaTiempoServicioDeclarado()) {
-				System.out.println(p.getLugar());
-			}
-		}
+//		for (Solicitud s : lista) {
+//			for (TiempoServicioDeclarado p : s.getListaTiempoServicioDeclarado()) {
+//				System.out.println(p.getLugar());
+//			}
+//		}
 		
 		return "rest working";
 	}

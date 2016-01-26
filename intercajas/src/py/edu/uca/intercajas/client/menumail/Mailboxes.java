@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 /**
  * A tree displaying a set of email folders.
@@ -36,6 +37,9 @@ public class Mailboxes extends Composite {
    * Specifies the images that will be bundled for this Composite and specify
    * that tree's images should also be included in the same bundle.
    */
+	
+	SimpleEventBus eventBus;
+	
   public interface Images extends Tree.Resources {
     ImageResource drafts();
 
@@ -60,6 +64,8 @@ public class Mailboxes extends Composite {
    * Constructs a new mailboxes widget.
    */
   public Mailboxes() {
+	  
+	  
     Images images = GWT.create(Images.class);
 
     tree = new Tree(images);
@@ -73,7 +79,8 @@ public class Mailboxes extends Composite {
 //  	    TreeItem item = event.getSelectedItem();
   		
   	    if (event.getSelectedItem().getText().trim().equals("Entrada")) {
-  	    	new Mail().mostrar();
+  	    	
+//  	    	new Mail(eventBus).mostrar();
   	    }
   	  }
   	});
@@ -86,6 +93,7 @@ public class Mailboxes extends Composite {
 
     root.setState(true);
     initWidget(tree);
+    
   }
 
   /**

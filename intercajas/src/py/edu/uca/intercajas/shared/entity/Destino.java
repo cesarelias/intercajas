@@ -8,6 +8,7 @@ public class Destino extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@ManyToOne
 	private Caja destinatario;
 	private Boolean leido;
 	@ManyToOne

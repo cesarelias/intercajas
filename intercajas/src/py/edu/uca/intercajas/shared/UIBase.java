@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.shared;
 
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -23,19 +24,28 @@ public class UIBase  extends Composite {
 
 	public void mostrar() {
 		
+		MenuMail.getMain().remove(0);
+		
+		if (title != null) {
+			MenuMail.getMain().addNorth(new HTML("<h2>" + title + "</h2>"), 40);
+		} 
+		try {
 				
 //		String nombre1 = this.getClass().getName();
 //		String nombre2 = MenuMail.getMain().getWidget(0).getClass().getName();
 //		if (!nombre1.equals(nombre2)) {
-			this.anterior = MenuMail.getMain().getWidget(0);
-			MenuMail.getMain().remove(0);
-			if (title != null) {
-				MenuMail.getMain().addNorth(new HTML("<h2>" + title + "</h2>"), 40);
-			} 
+//			this.anterior = MenuMail.getMain().getWidget(0);
 			MenuMail.getMain().add(this);
-//		}
-		
+//		}			MenuMail.getMain().remove(0);
+			
 
+		} catch (Exception e) {
+			Window.alert("*               *: " + e.getMessage());
+		}
+
+		if (title != null) {
+			MenuMail.getMain().addNorth(new HTML("<h2>" + title + "</h2>"), 40);
+		} 
 	}
 	
 	public void mostrarDialog() {

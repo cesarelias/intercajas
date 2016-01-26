@@ -15,10 +15,13 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import py.edu.uca.intercajas.shared.entity.Mensaje;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,14 +43,16 @@ public class MailDetail extends ResizeComposite {
     initWidget(binder.createAndBindUi(this));
   }
 
-  public void setItem(MailItem item) {
-    subject.setInnerText(item.subject);
-    sender.setInnerText(item.sender);
-    recipient.setInnerHTML("IPS");
+  public void setItem(Mensaje item) {
+    subject.setInnerText(item.getReferencia());
+    sender.setInnerText(item.getRemitente().getSiglas());
+    //TODO falta
+    recipient.setInnerHTML("IPS (debe venir del session");
 
     // WARNING: For the purposes of this demo, we're using HTML directly, on
     // the assumption that the "server" would have appropriately scrubbed the
     // HTML. Failure to do so would open your application to XSS attacks.
-    body.setHTML(item.body);
+    //body.setHTML(item.body);
+    body.setHTML("ESTO FALTA");
   }
 }

@@ -15,9 +15,11 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
+import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
@@ -51,7 +53,7 @@ public interface BeneficiarioService extends RestService {
 	@Path("solicitudTitular/nuevo")
 	@POST
 	@Consumes("application/json")
-	public void nuevoSolicitudTitular(SolicitudTitular solicitudTitular, MethodCallback<Void> callback);
+	public void nuevoSolicitudTitular(NuevaSolicitudTitular nuevaSolicitudTitular, MethodCallback<Void> callback);
 	
 	
 	//esto es para otro lado
@@ -65,6 +67,12 @@ public interface BeneficiarioService extends RestService {
 	@GET
 	@Produces("application/json")
 	public void findCajaAll(MethodCallback<List<Caja>> listaCajas);
+	
+	
+	@Path("mensaje/findAllPending")
+	@GET
+	@Produces("application/json")
+	public void findAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Mensaje>> mensajes);
 	
 	/**
      * Utility class to get the instance of the Rest Service

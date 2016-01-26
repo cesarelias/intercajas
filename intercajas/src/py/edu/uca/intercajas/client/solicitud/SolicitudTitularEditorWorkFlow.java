@@ -1,21 +1,18 @@
 package py.edu.uca.intercajas.client.solicitud;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
+import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -45,6 +42,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField FlowPanel upload;
 	@UiField Label resumenUpload;
 	
+	
 	SolicitudTitular solicitudTitular;
 	
 	Images images = GWT.create(Images.class);
@@ -52,7 +50,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	//Map<String, String> adjuntos = new HashMap<String, String>();
 	
 	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
-	
+
 	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
 //		title = "Solicitud Titular";
 		this.eventBus = eventBus;
@@ -69,11 +67,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
-		
-		for (Adjunto a : adjuntos) {
-			Window.alert(a.getNombreArchivo());
-		}
-//		close();
+		close();
 	}
 	
 	@UiHandler("enviar")
@@ -94,26 +88,34 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		 * 6. Agregar insertarEnvio -- con los adjutos.!
 		 */
 		
-		try { 
-			
-			
-		solicitudTitular.setEstado(Solicitud.Estado.NuevoSolicitado);	
+		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
-		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
+//		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
-		} catch (Exception e) {
-			Window.alert(e.getMessage());
-		}
-		BeneficiarioService.Util.get().nuevoSolicitudTitular(solicitudTitular, new MethodCallback<Void>() {
-			
+		//Creamos el mensaje
+//		List<Mensaje> mensajes = new ArrayList<Mensaje>();
+		Mensaje mensaje = new Mensaje();
+		mensaje.setAsunto(Mensaje.Asunto.NuevaSolicitud);
+		mensaje.setReferencia("Referencia del mensaje");
+//		mensaje.setAdjuntos(adjuntos);
+		mensaje.setSolicitud(solicitudTitular);
+//		mensajes.add(mensaje);
+//		solicitudTitular.setMensajes(mensajes);
+
+		
+		NuevaSolicitudTitular nuevaSolicitudTitular = new NuevaSolicitudTitular(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, adjuntos);
+		
+		BeneficiarioService.Util.get().nuevoSolicitudTitular(nuevaSolicitudTitular, new MethodCallback<Void>() {
+
 			@Override
 			public void onSuccess(Method method, Void response) {
 				close();
-				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! ahh y tambien debe ya ENVIAR el formulario de una a todas las cajas declaradas!");
+				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! Se crearon: Solicitud, SolicitudTituilar, Mensaje, Adjunto, Destino");
+				
 			}
-			
+
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				Window.alert(exception.getMessage());
@@ -123,15 +125,6 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 	}
 
-//	@UiHandler("agregarAdjunto")
-//	void onAgregarAdjunto(ClickEvent event) {
-//		int numRows = adjuntos.getRowCount();
-//		adjuntos.setWidget(numRows, 0,  new PushButton(new Image(images.trash())));
-//		adjuntos.setWidget(numRows, 1, new Hyperlink("Adjunto", "Adjuntito"));
-////		adjuntos.getFlexCellFormatter().setRowSpan(0, 1, 5);
-//		
-//	}
-	
 	public void create() {
 		try {
 			solicitudTitular = new SolicitudTitular();
@@ -147,7 +140,8 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
 	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i] + "|" + archivos[i+1]);
+	    		  a.setNombreArchivo(archivos[i]);
+	    		  a.setRutaArchivo(archivos[i+1]);
 	    		  adjuntos.add(a);
 	    	  }
 	    	  refreshResumenUpload();
@@ -166,7 +160,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
 	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
-	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i] + "|" + archivos[i+1])) {
+	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i])) {
 	    				  adjuntos.remove(ii);
 	    				  break;
 	    			  }

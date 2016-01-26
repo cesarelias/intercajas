@@ -11,9 +11,10 @@ public class Adjunto extends EntityBase {
 	private static final long serialVersionUID = 1L;
 
 	private String nombreArchivo;
+	private String rutaArchivo;
 
-	@JsonIgnore
 	@ManyToOne
+	@JsonIgnore
 	private Mensaje mensaje;
 
 	public String getNombreArchivo() {
@@ -30,6 +31,14 @@ public class Adjunto extends EntityBase {
 
 	public void setMensaje(Mensaje mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public String getRutaArchivo() {
+		return rutaArchivo;
+	}
+
+	public void setRutaArchivo(String rutaArchivo) {
+		this.rutaArchivo = rutaArchivo;
 	}
 
 }

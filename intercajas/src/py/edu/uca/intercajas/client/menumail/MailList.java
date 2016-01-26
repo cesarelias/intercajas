@@ -15,17 +15,27 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
+import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 /**
  * A composite that displays a list of emails that can be selected.
@@ -35,8 +45,9 @@ public class MailList extends ResizeComposite {
   /**
    * Callback when mail items are selected. 
    */
+	
   public interface Listener {
-    void onItemSelected(MailItem item);
+    void onItemSelected(Mensaje item);
   }
 
   interface Binder extends UiBinder<Widget, MailList> { }
@@ -45,22 +56,27 @@ public class MailList extends ResizeComposite {
   }
 
   private static final Binder binder = GWT.create(Binder.class);
-  static final int VISIBLE_EMAIL_COUNT = 20;
+  static final int VISIBLE_EMAIL_COUNT = 8;
 
   @UiField FlexTable header;
   @UiField FlexTable table;
   @UiField SelectionStyle selectionStyle;
 
+  Mensaje selectedItem;
+  List<Mensaje> mensajes =  new ArrayList<Mensaje>();
+  
   private Listener listener;
   private int startIndex, selectedRow = -1;
   private NavBar navBar;
 
   public MailList() {
+	  
     initWidget(binder.createAndBindUi(this));
     navBar = new NavBar(this);
-
+    
     initTable();
     update();
+    
   }
 
   /**
@@ -90,6 +106,7 @@ public class MailList extends ResizeComposite {
     }
   }
 
+  //TODO arreglar el older, nunca termina!
   void older() {
     // Move forward a page.
     startIndex += VISIBLE_EMAIL_COUNT;
@@ -123,7 +140,7 @@ public class MailList extends ResizeComposite {
     header.getColumnFormatter().setWidth(3, "256px");
 
     header.setText(0, 0, "De");
-    header.setText(0, 1, "Estado");
+    header.setText(0, 1, "Asunto");
     header.setText(0, 2, "Referencia");
     header.setWidget(0, 3, navBar);
     header.getCellFormatter().setHorizontalAlignment(0, 3, HasHorizontalAlignment.ALIGN_RIGHT);
@@ -141,20 +158,29 @@ public class MailList extends ResizeComposite {
   private void selectRow(int row) {
     // When a row (other than the first one, which is used as a header) is
     // selected, display its associated MailItem.
-    MailItem item = MailItems.getMailItem(startIndex + row);
-    if (item == null) {
-      return;
-    }
+    		//MailItems.getMailItem(startIndex + row);
+	  
+	  		if (row < 0) {
+	  			Window.alert(String.valueOf(row))	;
+	  			return; 
+	  		};
+			selectedItem = mensajes.get(row);
+		     
+		     if (selectedItem == null) {
+		       return;
+		     }
 
-    styleRow(selectedRow, false);
-    styleRow(row, true);
+		     styleRow(selectedRow, false);
+		     styleRow(row, true);
+//
+//		     //TODO aqui marcar como leido
+////		     item.set read = true;
+		     selectedRow = row;
+//
+		     if (listener != null) {
+		       listener.onItemSelected(selectedItem);
+		     }
 
-    item.read = true;
-    selectedRow = row;
-
-    if (listener != null) {
-      listener.onItemSelected(item);
-    }
   }
 
   private void styleRow(int row, boolean selected) {
@@ -171,35 +197,37 @@ public class MailList extends ResizeComposite {
 
   private void update() {
     // Update the older/newer buttons & label.
-    int count = MailItems.getMailItemCount();
+//    int count = MailItems.getMailItemCount();
     int max = startIndex + VISIBLE_EMAIL_COUNT;
-    if (max > count) {
-      max = count;
-    }
+//    if (max > count) {
+//      max = count;
+//    }
 
     // Update the nav bar.
-    navBar.update(startIndex, count, max);
-
-    // Show the selected emails.
-    int i = 0;
-    for (; i < VISIBLE_EMAIL_COUNT; ++i) {
-      // Don't read past the end.
-      if (startIndex + i >= MailItems.getMailItemCount()) {
-        break;
-      }
-
-      MailItem item = MailItems.getMailItem(startIndex + i);
-
-      // Add a new row to the table, then set each of its columns to the
-      // email's sender and subject values.
-      table.setText(i, 0, item.sender);
-      table.setText(i, 1, item.email);
-      table.setText(i, 2, item.subject);
-    }
-
-    // Clear any remaining slots.
-    for (; i < VISIBLE_EMAIL_COUNT; ++i) {
-      table.removeRow(table.getRowCount() - 1);
-    }
+    navBar.update(startIndex, max);
+    
+    BeneficiarioService.Util.get().findAllPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Mensaje>>() {
+		
+		@Override
+		public void onSuccess(Method method, List<Mensaje> response) {
+			table.removeAllRows();
+		      // Add a new row to the table, then set each of its columns to the
+		      // email's sender and subject values.
+						
+			for (int i=0; i<response.size(); i++) {
+		      table.setText(i, 0, response.get(i).getRemitente().getSiglas());
+		      table.setText(i, 1, response.get(i).getAsunto().toString());
+		      table.setText(i, 2, response.get(i).getReferencia());
+			}
+			
+			mensajes = response;
+		}
+		
+		@Override
+		public void onFailure(Method method, Throwable exception) {
+			// TODO falta agregar el mensaje de error del REST
+		}
+	});
+    
   }
 }

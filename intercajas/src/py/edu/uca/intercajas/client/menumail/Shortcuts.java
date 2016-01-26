@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.StackLayoutPanel;
  */
 public class Shortcuts extends ResizeComposite {
 
+	
+	
   interface Binder extends UiBinder<StackLayoutPanel, Shortcuts> { }
   private static final Binder binder = GWT.create(Binder.class);
 
@@ -38,12 +40,14 @@ public class Shortcuts extends ResizeComposite {
   @UiField Contacts contacts;
   @UiField Solicitudes solicitudes;
 
+  
   /**
    * Constructs a new shortcuts widget using the specified images.
    * 
    * @param images a bundle that provides the images for this widget
    */
   public Shortcuts() {
+	  
     initWidget(binder.createAndBindUi(this));
   }
 }

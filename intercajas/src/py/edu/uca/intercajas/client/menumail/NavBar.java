@@ -46,12 +46,10 @@ class NavBar extends Composite {
     this.outer = outer;
   }
 
-  public void update(int startIndex, int count, int max) {
+  public void update(int startIndex, int max) {
     setVisibility(newerButton, startIndex != 0);
-    setVisibility(olderButton,
-        startIndex + MailList.VISIBLE_EMAIL_COUNT < count);
-    countLabel.setInnerText("" + (startIndex + 1) + " - " + max + " of "
-        + count);
+    //setVisibility(olderButton,startIndex + MailList.VISIBLE_EMAIL_COUNT < count); //TODO arreglar la visibilidad del olderButton
+    countLabel.setInnerText("" + (startIndex + 1) + " - " + max);
   }
 
   @UiHandler("newerButton")

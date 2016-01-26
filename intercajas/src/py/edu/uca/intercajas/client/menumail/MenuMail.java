@@ -55,7 +55,7 @@ public class MenuMail  {
 //  @UiField MailDetail mailDetail;
   @UiField Shortcuts shortcuts;
   @UiField
-static DockLayoutPanel main;
+  static DockLayoutPanel main;
 
   public MenuMail() {
 	init();
@@ -96,11 +96,13 @@ static DockLayoutPanel main;
     //MenuMain PRINCIPAL
     RootLayoutPanel.get().add(outer);
     
-//    Opcion 1 mail
-    new Mail().mostrar();
+
   }
   
   public static DockLayoutPanel getMain() {
+	  if (main == null ) {
+		  Window.alert("el main esta vacio");
+	  }
 	  return main;
   }
 }

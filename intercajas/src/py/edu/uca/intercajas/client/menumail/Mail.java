@@ -18,6 +18,7 @@ package py.edu.uca.intercajas.client.menumail;
 
 
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -53,6 +54,7 @@ public class Mail extends UIBase {
 //  @UiField SimplePanel main;
 
   public Mail() {
+	 
     initWidget(binder.createAndBindUi(this));
 	init();
   }
@@ -81,9 +83,8 @@ public class Mail extends UIBase {
     // Listen for item selection, displaying the currently-selected item in
     // the detail area.
     mailList.setListener(new MailList.Listener() {
-      public void onItemSelected(MailItem item) {
+      public void onItemSelected(Mensaje item) {
         mailDetail.setItem(item);
-        //Window.alert("se ejecuto el listener: body: " + item.body);
       }
     });
 

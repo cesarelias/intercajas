@@ -21,7 +21,7 @@ public class TiempoServicioDeclarado extends EntityBase {
 	private Date inicio;
 	private Date fin;
 	@ManyToOne
-	@JsonIgnore //Esto evita la la recursividad infinita (Cuando traigo una Solicitud, me trae sus periodos, y cada periodo la misma solicitud, y asi se repite indefinidamente)
+	@JsonIgnore //Esto evita la recursividad infinita con JSON (Cuando traigo una Solicitud, me trae sus periodos, y cada periodo la misma solicitud, y asi se repite indefinidamente)
 	private Solicitud solicitud;
 	
 	public Date getInicio() {

@@ -53,7 +53,7 @@ public class UILoginImpl extends UILogin{
 //			uiMenu.getLblBienvenido().setText("Bienvenido!! " + usuario.getNombre());
 			RootPanel.get().remove(0);
 //			RootPanel.get().add(uiMenu);
-			new MenuMail();
+//			new MenuMail(null);
 			
 			
 		}
