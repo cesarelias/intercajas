@@ -25,6 +25,9 @@
 					<gt:TablaTiempoServicioDeclarado
 						ui:field="tablaTiempoServicioDeclarado" />
 				</g:center>
+				<g:south size="110">
+					<g:TextArea ui:field="cuerpoMensaje"></g:TextArea>
+				</g:south>
 			</g:DockLayoutPanel>
 		</g:center>
 		<g:south size="40">

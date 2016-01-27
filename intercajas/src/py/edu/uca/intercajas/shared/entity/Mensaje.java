@@ -19,6 +19,7 @@ public class Mensaje extends EntityBase {
 	private Caja remitente;
 	private String referencia;
 	private Asunto asunto;
+	private String cuerpo;
 	@ManyToOne
 	@JsonIgnoreProperties({"beneficiario"})
 	private Solicitud solicitud;
@@ -77,6 +78,14 @@ public class Mensaje extends EntityBase {
 
 	public void setAsunto(Asunto asunto) {
 		this.asunto = asunto;
+	}
+
+	public String getCuerpo() {
+		return cuerpo;
+	}
+
+	public void setCuerpo(String cuerpo) {
+		this.cuerpo = cuerpo;
 	}
 
 }

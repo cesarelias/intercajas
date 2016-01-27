@@ -1,6 +1,14 @@
 body, table {
   font-size: small;
 }
+
+cuerpo {
+	font-size: large;
+    font-family: Helvetica, Arial, sans-serif;
+    color: red;
+    background: #fff;
+}
+
 body {
   font-family: Helvetica, Arial, sans-serif;
   color: #000;

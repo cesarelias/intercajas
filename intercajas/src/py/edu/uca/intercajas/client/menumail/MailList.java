@@ -24,11 +24,13 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -49,8 +51,10 @@ public class MailList extends ResizeComposite {
    * Callback when mail items are selected. 
    */
 	
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
+	
   public interface Listener {
-    void onItemSelected(Mensaje item);
+    void onItemSelected(Destino item);
   }
 
   interface Binder extends UiBinder<Widget, MailList> { }
@@ -65,8 +69,8 @@ public class MailList extends ResizeComposite {
   @UiField FlexTable table;
   @UiField SelectionStyle selectionStyle;
 
-  Mensaje selectedItem;
-  List<Mensaje> mensajes =  new ArrayList<Mensaje>();
+  Destino selectedItem;
+  List<Destino> destinos =  new ArrayList<Destino>();
   
   private Listener listener;
   private int startIndex, selectedRow = -1;
@@ -149,19 +153,24 @@ public class MailList extends ResizeComposite {
    */
   private void initTable() {
     // Initialize the header.
-    header.getColumnFormatter().setWidth(0, "128px");
-    header.getColumnFormatter().setWidth(1, "192px");
-    header.getColumnFormatter().setWidth(3, "256px");
+    header.getColumnFormatter().setWidth(0, "120px");
+    header.getColumnFormatter().setWidth(1, "120px");
+    header.getColumnFormatter().setWidth(2, "120px");
+//    header.getColumnFormatter().setWidth(3, "300x");
+    
 
     header.setText(0, 0, "De");
-    header.setText(0, 1, "Asunto");
-    header.setText(0, 2, "Referencia");
-    header.setWidget(0, 3, navBar);
-    header.getCellFormatter().setHorizontalAlignment(0, 3, HasHorizontalAlignment.ALIGN_RIGHT);
+    header.setText(0, 1, "Fecha");
+    header.setText(0, 2, "Asunto");
+    header.setText(0, 3, "Referencia");
+    header.setWidget(0, 4, navBar);
+    header.getCellFormatter().setHorizontalAlignment(0, 4, HasHorizontalAlignment.ALIGN_RIGHT);
 
     // Initialize the table.
-    table.getColumnFormatter().setWidth(0, "128px");
-    table.getColumnFormatter().setWidth(1, "192px");
+    table.getColumnFormatter().setWidth(0, "120px");
+    table.getColumnFormatter().setWidth(1, "120px");
+    table.getColumnFormatter().setWidth(2, "120px");
+//    table.getColumnFormatter().setWidth(3, "300px");
   }
 
   /**
@@ -174,12 +183,12 @@ public class MailList extends ResizeComposite {
     // selected, display its associated MailItem.
     		//MailItems.getMailItem(startIndex + row);
 	  
-	  		if (row < 0 || mensajes.size() == 0) {
+	  		if (row < 0 || destinos.size() == 0) {
 	  			Window.alert("aqui nomas estaba el problem ");
 	  			return; 
 	  		};
 	  		
-			selectedItem = mensajes.get(row);
+			selectedItem = destinos.get(row);
 		     
 		     if (selectedItem == null) {
 		       return;
@@ -221,24 +230,25 @@ public class MailList extends ResizeComposite {
     // Update the nav bar.
     navBar.update(startIndex, max);
     
-    BeneficiarioService.Util.get().findAllPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Mensaje>>() {
+    BeneficiarioService.Util.get().destinoFindAllPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 		
 		@Override
-		public void onSuccess(Method method, List<Mensaje> response) {
+		public void onSuccess(Method method, List<Destino> response) {
 			table.removeAllRows();
 		      // Add a new row to the table, then set each of its columns to the
 		      // email's sender and subject values.
 						
 			for (int i=0; i<response.size(); i++) {
-		      table.setText(i, 0, response.get(i).getRemitente().getSiglas());
-		      table.setText(i, 1, response.get(i).getAsunto().toString());
-		      table.setText(i, 2, response.get(i).getReferencia());
+		      table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
+		      table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
+		      table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
+		      table.setText(i, 3, response.get(i).getMensaje().getReferencia());
 			}
 			
-			mensajes = response;
+			destinos = response;
 			
 			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
-			if (onLoad && mensajes.size() > 1) {
+			if (onLoad && destinos.size() > 1) {
 				selectRow(0);
 				onLoad = false;
 			}

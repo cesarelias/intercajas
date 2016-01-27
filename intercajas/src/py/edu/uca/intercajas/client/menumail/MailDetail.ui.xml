@@ -23,6 +23,13 @@
     padding: 20px 40px 20px 10px;
     font-family: 'Times New Roman', Times, serif;
   }
+
+  .cuerpo {
+    line-height: 150%;
+    padding: 20px 40px 20px 10px;
+    font-family: 'Times New Roman', Times, serif;
+	font-size: medium;
+  }
   </ui:style>
 
   <g:DockLayoutPanel unit='EM' styleName='{style.detail}'>
@@ -30,10 +37,16 @@
 	      <g:HTMLPanel styleName='{style.header}'>
 	        <table>
 	            <tr>
-					<td width="500px">
-				        <div class='{style.headerItem}' ui:field='subject'/>
+					<td width="100%">
+						<tr>
+					    <div class='{style.headerItem}' ui:field='subject'/>
+					    </tr>
+					    <tr> 
 				        <div class='{style.headerItem}'><b>De:</b> <span ui:field='sender'/></div>
-				        <div class='{style.headerItem}'><b>Para:</b> <span ui:field='recipient'/></div>
+				        </tr>
+				        <tr>
+				        <div class='{style.headerItem}'><b>Para:</b> <span ui:field='recipient'/> <g:FlowPanel ui:field="panelAdjuntos"/> </div>
+				        </tr>
 				     </td>
 				     <td>
 				      	<g:Button>Enviar</g:Button>
@@ -50,7 +63,7 @@
 
     <g:center>
       <g:ScrollPanel>
-        <g:HTML styleName='{style.body}' ui:field='body' wordWrap='true'/>
+        <g:HTML styleName='{style.cuerpo}' ui:field='body' wordWrap='true'/>
       </g:ScrollPanel>
     </g:center>
   </g:DockLayoutPanel>

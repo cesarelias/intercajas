@@ -18,7 +18,7 @@ package py.edu.uca.intercajas.client.menumail;
 
 
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.Destino;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -27,7 +27,6 @@ import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 /**
@@ -83,7 +82,7 @@ public class Mail extends UIBase {
     // Listen for item selection, displaying the currently-selected item in
     // the detail area.
     mailList.setListener(new MailList.Listener() {
-      public void onItemSelected(Mensaje item) {
+      public void onItemSelected(Destino item) {
         mailDetail.setItem(item);
       }
     });

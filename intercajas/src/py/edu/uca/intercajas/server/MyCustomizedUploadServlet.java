@@ -63,9 +63,9 @@ public class MyCustomizedUploadServlet extends UploadAction {
           
           /// Send a customized message to the client.
           if (response.length() == 0) {
-        	  response +=  item.getName() + "|" + file.getAbsolutePath();
+        	  response +=  item.getName() + "|" + file.getName();
           }  else {
-        	  response += "|" + item.getName() + "|" + file.getAbsolutePath();
+        	  response += "|" + item.getName() + "|" + file.getName();
        	  }
         		  
           
@@ -91,8 +91,10 @@ public class MyCustomizedUploadServlet extends UploadAction {
   @Override
   public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String fieldName = request.getParameter(UConsts.PARAM_SHOW);
-    File f = receivedFiles.get(fieldName);
-    if (f != null) {
+    
+    File f = new File("/tmp/"+fieldName);
+    
+    if (f.exists()) {
       response.setContentType(receivedContentTypes.get(fieldName));
       FileInputStream is = new FileInputStream(f);
       copyFromInputStreamToOutputStream(is, response.getOutputStream());

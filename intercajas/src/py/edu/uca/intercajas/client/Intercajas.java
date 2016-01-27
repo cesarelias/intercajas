@@ -45,11 +45,11 @@ public class Intercajas implements EntryPoint {
 //	    Opcion 1 mail
 	    new Mail().mostrar();
 
-		//Abrimos solicitud al iniciar.
-		  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
-		  b.titulo = "Nueva solicitud titular";
-		  b.mostrarDialog();
-		  b.create();
+//		//Abrimos solicitud al iniciar.
+//		  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
+//		  b.titulo = "Nueva solicitud titular";
+//		  b.mostrarDialog();
+//		  b.create();
 		  
 		  
 		  

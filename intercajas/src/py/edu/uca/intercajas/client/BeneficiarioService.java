@@ -16,8 +16,10 @@ import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Empleador;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 
@@ -71,7 +73,17 @@ public interface BeneficiarioService extends RestService {
 	@Path("mensaje/findAllPending")
 	@GET
 	@Produces("application/json")
-	public void findAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Mensaje>> mensajes);
+	public void mensajeFindAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Mensaje>> mensajes);
+
+	@Path("destino/findAllPending")
+	@GET
+	@Produces("application/json")
+	public void destinoFindAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+
+	@Path("adjunto/findByMensajeId")
+	@GET
+	@Produces("application/json")
+	public void adjuntoFindByMensajeId(@QueryParam("mensaje_id") Long mensaje_id, MethodCallback<List<Adjunto>> adjuntos);
 	
 	/**
      * Utility class to get the instance of the Rest Service

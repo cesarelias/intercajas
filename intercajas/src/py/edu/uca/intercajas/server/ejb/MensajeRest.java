@@ -72,8 +72,9 @@ public class MensajeRest   {
 			maxResults = 500;
 		}
 		
-		return em.createQuery("select a "
-				+ "              from Mensaje a, Solicitud b"
+		
+		return  em.createQuery("select a "
+				+ "              from Mensaje a FETCH ALL PROPERTIES, Solicitud b"
 				+ "             where a.solicitud = b "
 				+ "               and b.estado = :estado"
 				+ " order by a.fecha desc "
@@ -82,6 +83,7 @@ public class MensajeRest   {
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)
 				.getResultList();
+		
 	}
 	
 	

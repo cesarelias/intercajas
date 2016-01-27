@@ -31,6 +31,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SolicitudTitularEditorWorkFlow extends UIBase {
@@ -42,6 +43,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
 	@UiField FlowPanel upload;
 	@UiField Label resumenUpload;
+	@UiField TextArea cuerpoMensaje;
 	
 	
 	SolicitudTitular solicitudTitular;
@@ -92,12 +94,14 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
+		
 //		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
 		//Creamos el mensaje
 //		List<Mensaje> mensajes = new ArrayList<Mensaje>();
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.NuevaSolicitud);
+		mensaje.setCuerpo(cuerpoMensaje.getValue());
 		mensaje.setReferencia(solicitudTitular.getNumero() + " " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
 //		mensaje.setAdjuntos(adjuntos);
 		mensaje.setSolicitud(solicitudTitular);
