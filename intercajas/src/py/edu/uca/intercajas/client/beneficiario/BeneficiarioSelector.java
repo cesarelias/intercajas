@@ -15,6 +15,7 @@
  */
 package py.edu.uca.intercajas.client.beneficiario;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 
@@ -43,7 +44,6 @@ public class BeneficiarioSelector extends Composite implements
   interface Binder extends UiBinder<Widget, BeneficiarioSelector> {
   }
 
-  SimpleEventBus eventBus;
   HandlerRegistration r;
   
   @UiField
@@ -60,8 +60,7 @@ public class BeneficiarioSelector extends Composite implements
   private final OptionalFieldEditor<Beneficiario, NameLabel> editor;
 //  private final GestionBeneficiario gestionBeneficiario;
 
-  public BeneficiarioSelector(SimpleEventBus eventBus) {
-	this.eventBus = eventBus;
+  public BeneficiarioSelector() {
 	
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
     editor = OptionalFieldEditor.of(nameLabel);
@@ -85,7 +84,7 @@ public class BeneficiarioSelector extends Composite implements
   void onChoose(ClickEvent event) {
 //    setEnabled(false);
     
-    r = eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+    r = AppUtils.EVENT_BUS.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 		@Override
 		public void selected(Beneficiario beneficiarioSelected) {
 			r.removeHandler();
@@ -94,7 +93,7 @@ public class BeneficiarioSelector extends Composite implements
 		}
 	});
     
-    new ListaBeneficiarios(eventBus, 10).mostrarDialog();
+    new ListaBeneficiarios(10).mostrarDialog();
 //    factory.schoolCalendarRequest().getRandomPerson().to(
 //        new Receiver<PersonProxy>() {
 //          @Override

@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.client.beneficiario;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -37,8 +38,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 //	@UiField
 //	DialogBox dialog;
 
-	public BeneficiarioEditorWorkFlow(SimpleEventBus  eventBus) {
-		this.eventBus = eventBus;
+	public BeneficiarioEditorWorkFlow() {
 		beneficiarioEditor = new BeneficiarioEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 	}
@@ -66,7 +66,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				@Override
 				public void onSuccess(Method method, Long response) {
 					try { 
-					eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+					AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
 					} catch (Exception e) {
 						Window.alert(e.getMessage());
 					}
@@ -85,7 +85,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				@Override
 				public void onSuccess(Method method, Void response) {
 					try { 
-						eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+						AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
 					} catch (Exception e) {
 						Window.alert(e.getMessage());
 					}

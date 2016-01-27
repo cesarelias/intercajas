@@ -28,13 +28,11 @@ public class SolicitudTitularEditor extends UIBase  {
 	@UiField DateBox fecha;
 	@UiField (provided = true) BeneficiarioSelector beneficiario;
 
-	public SolicitudTitularEditor(SimpleEventBus eventBus) {
+	public SolicitudTitularEditor() {
 
-		this.eventBus = eventBus;
+		beneficiario = new BeneficiarioSelector();
 
-		beneficiario = new BeneficiarioSelector(eventBus);
-
-		title = "Solicitud Titular";
+		titulo = "Solicitud Titular";
 		initWidget(uiBinder.createAndBindUi(this));
 
 //		eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {

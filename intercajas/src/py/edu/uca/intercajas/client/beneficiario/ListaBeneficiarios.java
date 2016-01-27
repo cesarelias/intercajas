@@ -20,6 +20,7 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -96,7 +97,6 @@ public class ListaBeneficiarios extends UIBase {
 
   @UiField Button select;
   
-  private final SimpleEventBus eventBus;
   private int lastFetch;
   private final int maxRows;
   private int lastStart = 0;
@@ -104,11 +104,10 @@ public class ListaBeneficiarios extends UIBase {
   private final SingleSelectionModel<Beneficiario> selectionModel = new SingleSelectionModel<Beneficiario>();
   private HandlerRegistration r;
   
-  public ListaBeneficiarios(SimpleEventBus eventBus, int maxRows) {
-    this.eventBus = eventBus;
+  public ListaBeneficiarios(int maxRows) {
     this.maxRows = maxRows;
     
-    this.title = "Beneficiarios";
+    this.titulo = "Beneficiarios";
     
     table = new DataGrid<Beneficiario>(maxRows,
         GWT.<TableResources> create(TableResources.class));
@@ -125,7 +124,7 @@ public class ListaBeneficiarios extends UIBase {
     table.setEmptyTableWidget(new Label("Vacio"));
     
     
-    r = eventBus.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+    r = AppUtils.EVENT_BUS.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
 		@Override
 		public void selected(Beneficiario beneficiarioSelected) {
 			r.removeHandler();
@@ -195,8 +194,8 @@ public class ListaBeneficiarios extends UIBase {
 	  beneficiario.setDireccion(dir);
     
 	  beneficiario.setNombres("test");
-	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow(eventBus);
-	  b.title = "Nuevo Beneficiario";
+	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
+	  b.titulo = "Nuevo Beneficiario";
 	  b.mostrarDialog();
 	  b.create();
 
@@ -220,8 +219,8 @@ public class ListaBeneficiarios extends UIBase {
       return;
     }
     
-    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow(eventBus);
-    b.title = "Editando Beneficiario";
+    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
+    b.titulo = "Editando Beneficiario";
     b.mostrarDialog();
     b.edit(beneficiario);
 //    
@@ -235,7 +234,7 @@ public class ListaBeneficiarios extends UIBase {
     if (beneficiario == null) {
     	return;
     }
-    eventBus.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+    AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
     close();
     
   }

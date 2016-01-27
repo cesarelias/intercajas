@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.client.solicitud;
 import java.util.ArrayList;
 import java.util.List;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
@@ -91,9 +92,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	
 
 	
-	public TablaTiempoServicioDeclarado(SimpleEventBus eventBus) {
-		
-		this.eventBus = eventBus;
+	public TablaTiempoServicioDeclarado() {
 		
 		model = new ListDataProvider<TiempoServicioDeclarado>();
 		
@@ -172,7 +171,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	@UiHandler("create")
 	void onCreate(ClickEvent event) {
 
-	    h	 = eventBus.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
+	    h	 = AppUtils.EVENT_BUS.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
 			@Override
 			public void selected(TiempoServicioDeclarado periodoAporteDeclaradoProxy) {
 				listaTiempoServicioDeclarado.add(periodoAporteDeclaradoProxy);
@@ -180,8 +179,8 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 				h.removeHandler();
 			}
 		});
-		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(eventBus, null);
-		pp.title = "Nuevo tiempo de servicio declarado";
+		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(null);
+		pp.titulo = "Nuevo tiempo de servicio declarado";
 		pp.mostrarDialog();
 
 	}
@@ -189,7 +188,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	
 	void onEdit(TiempoServicioDeclarado periodoAporteDeclaradoProxy) {
 		
-	    h = eventBus.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
+	    h = AppUtils.EVENT_BUS.addHandler(PeriodoAporteDeclaradoChangedEvent.TYPE, new PeriodoAporteDeclaradoChangedEvent.Handler() {
 			@Override
 			public void selected(TiempoServicioDeclarado periodoAporteDeclaradoProxy) {
 				listaTiempoServicioDeclarado.set(row, periodoAporteDeclaradoProxy);
@@ -200,8 +199,8 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 			}
 		});
 		
-		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(eventBus, periodoAporteDeclaradoProxy);
-		pp.title = "Editar tiempo de servicio declarado";
+		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(periodoAporteDeclaradoProxy);
+		pp.titulo = "Editar tiempo de servicio declarado";
 		pp.mostrarDialog();
 		
 	}

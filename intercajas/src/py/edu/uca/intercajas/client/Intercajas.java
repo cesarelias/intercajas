@@ -7,6 +7,8 @@ import org.fusesource.restygwt.client.Defaults;
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
@@ -44,11 +46,13 @@ public class Intercajas implements EntryPoint {
 	    new Mail().mostrar();
 
 		//Abrimos solicitud al iniciar.
-	
-//		  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow(eventBus);
-//		  b.title = "Nueva solicitud titular";
-//		  b.mostrarDialog();
-//		  b.create();
+		  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
+		  b.titulo = "Nueva solicitud titular";
+		  b.mostrarDialog();
+		  b.create();
+		  
+		  
+		  
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
 		}

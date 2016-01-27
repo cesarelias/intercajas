@@ -17,34 +17,32 @@ public class UIBase  extends Composite {
 	
 	protected DialogBox d;
 	boolean modoDialog = false;
-	public String title;
-	public SimpleEventBus eventBus;
+	public String titulo;
 	
 	Widget anterior;
 
 	public void mostrar() {
+
 		
-		MenuMail.getMain().remove(0);
+		if (MenuMail.getMain().getWidget(0).getClass().getName().equals(this.getClass().getName())) {
+			return;
+		}
 		
-		if (title != null) {
-			MenuMail.getMain().addNorth(new HTML("<h2>" + title + "</h2>"), 40);
+		
+		if (titulo != null) {
+			MenuMail.getMain().addNorth(new HTML("<h2>" + titulo + "</h2>"), 40);
 		} 
-		try {
-				
+
+		MenuMail.getMain().remove(0);
 //		String nombre1 = this.getClass().getName();
 //		String nombre2 = MenuMail.getMain().getWidget(0).getClass().getName();
 //		if (!nombre1.equals(nombre2)) {
 //			this.anterior = MenuMail.getMain().getWidget(0);
-			MenuMail.getMain().add(this);
+		MenuMail.getMain().add(this);
 //		}			MenuMail.getMain().remove(0);
 			
-
-		} catch (Exception e) {
-			Window.alert("*               *: " + e.getMessage());
-		}
-
-		if (title != null) {
-			MenuMail.getMain().addNorth(new HTML("<h2>" + title + "</h2>"), 40);
+		if (titulo != null) {
+			MenuMail.getMain().addNorth(new HTML("<h2>" + titulo + "</h2>"), 40);
 		} 
 	}
 	
@@ -56,8 +54,8 @@ public class UIBase  extends Composite {
 		d.center();
 		d.show();
 		
-		if (title != null) {
-			d.setText(title);
+		if (titulo != null) {
+			d.setText(titulo);
 		} 
 		
 		

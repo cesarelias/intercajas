@@ -6,6 +6,7 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -46,10 +47,9 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 	
 	TiempoServicioDeclarado tiempoServicioDeclarado;
 
-	public TiempoServicioDeclaradoEditor(SimpleEventBus eventBus, TiempoServicioDeclarado periodoAporteDeclaradoEdit) {
+	public TiempoServicioDeclaradoEditor(TiempoServicioDeclarado periodoAporteDeclaradoEdit) {
 		
 		this.tiempoServicioDeclarado = periodoAporteDeclaradoEdit;
-		this.eventBus = eventBus;
 		
 		oracle = new MultiWordSuggestOracle();
 		lugar = new SuggestBox(oracle);	
@@ -145,7 +145,7 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 		tiempoServicioDeclarado.setLugar(lugar.getValue());
 		
 		
-		eventBus.fireEvent(new PeriodoAporteDeclaradoChangedEvent(tiempoServicioDeclarado));
+		AppUtils.EVENT_BUS.fireEvent(new PeriodoAporteDeclaradoChangedEvent(tiempoServicioDeclarado));
 		close();
 		
 	}

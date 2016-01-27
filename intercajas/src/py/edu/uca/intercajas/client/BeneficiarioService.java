@@ -20,7 +20,6 @@ import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Empleador;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
 

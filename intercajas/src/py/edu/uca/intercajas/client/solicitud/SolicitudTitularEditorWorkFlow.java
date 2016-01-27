@@ -10,8 +10,10 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
+import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
@@ -30,7 +32,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
 public class SolicitudTitularEditorWorkFlow extends UIBase {
 
@@ -51,11 +52,10 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 
-	public SolicitudTitularEditorWorkFlow(SimpleEventBus eventBus) {
+	public SolicitudTitularEditorWorkFlow() {
 //		title = "Solicitud Titular";
-		this.eventBus = eventBus;
-		tablaTiempoServicioDeclarado = new TablaTiempoServicioDeclarado(eventBus);
-		solicitudTitularEditor = new SolicitudTitularEditor(eventBus);
+		tablaTiempoServicioDeclarado = new TablaTiempoServicioDeclarado();
+		solicitudTitularEditor = new SolicitudTitularEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
 		MultiUploader defaultUploader = new MultiUploader();
@@ -78,7 +78,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			Window.alert("Es obligatorio enviar al menos un adjunto");
 			return;
 		}
-		
+				
 		//TODO falta agregar la validacion del formulario
 		/* 1. Beneficiario seleccionado (no nulo)
 		 * 2. Fecha de solicitud no puede ser futura, ni menor a la fecha de la ley de intercajas
@@ -98,22 +98,21 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 //		List<Mensaje> mensajes = new ArrayList<Mensaje>();
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.NuevaSolicitud);
-		mensaje.setReferencia("Referencia del mensaje");
+		mensaje.setReferencia(solicitudTitular.getNumero() + " " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
 //		mensaje.setAdjuntos(adjuntos);
 		mensaje.setSolicitud(solicitudTitular);
 //		mensajes.add(mensaje);
 //		solicitudTitular.setMensajes(mensajes);
 
-		
 		NuevaSolicitudTitular nuevaSolicitudTitular = new NuevaSolicitudTitular(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, adjuntos);
 		
 		BeneficiarioService.Util.get().nuevoSolicitudTitular(nuevaSolicitudTitular, new MethodCallback<Void>() {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
-				close();
+//				close();
+				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(solicitudTitular));
 				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! Se crearon: Solicitud, SolicitudTituilar, Mensaje, Adjunto, Destino");
-				
 			}
 
 			@Override

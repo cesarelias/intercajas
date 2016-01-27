@@ -93,8 +93,8 @@ public class Solicitudes extends Composite {
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//new UISolicitudTitular().mostrar();
-				  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow(eventBus);
-				  b.title = "Nueva solicitud titular";
+				  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
+				  b.titulo = "Nueva solicitud titular";
 				  b.mostrarDialog();
 				  b.create();
 			}
@@ -110,7 +110,7 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				ListaBeneficiarios beneficiarios = 	new ListaBeneficiarios(eventBus, 10);
+				ListaBeneficiarios beneficiarios = 	new ListaBeneficiarios(10);
 				beneficiarios.mostrarDialog();
 				beneficiarios.hideSelectButton();
 			}

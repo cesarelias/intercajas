@@ -78,4 +78,9 @@ public class Beneficiario extends EntityBase {
 		this.documento = documento;
 	}
 	
+	@Override
+	public String toString() {
+		return nombres + " " + apellidos;
+	}
+	
 }

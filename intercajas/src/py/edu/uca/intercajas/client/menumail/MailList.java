@@ -21,8 +21,11 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -68,6 +71,7 @@ public class MailList extends ResizeComposite {
   private Listener listener;
   private int startIndex, selectedRow = -1;
   private NavBar navBar;
+  private boolean onLoad = true;
 
   public MailList() {
 	  
@@ -76,9 +80,19 @@ public class MailList extends ResizeComposite {
     
     initTable();
     update();
-    
+    registerEvent();
+
   }
 
+  
+  public void registerEvent() {
+	    AppUtils.EVENT_BUS.addHandler(SolicitudCreatedEvent.TYPE, new SolicitudCreatedEvent.Handler() {
+				@Override
+				public void created(Solicitud solicitud) {
+					update();
+				}
+			});
+  }
   /**
    * Sets the listener that will be notified when an item is selected.
    */
@@ -86,13 +100,13 @@ public class MailList extends ResizeComposite {
     this.listener = listener;
   }
 
-  @Override
-  protected void onLoad() {
-    // Select the first row if none is selected.
-    if (selectedRow == -1) {
-      selectRow(0);
-    }
-  }
+//  @Override
+//  protected void onLoad() {
+//    // Select the first row if none is selected.
+//    if (selectedRow == -1) {
+//      selectRow(0);
+//    }
+//  }
 
   void newer() {
     // Move back a page.
@@ -160,10 +174,11 @@ public class MailList extends ResizeComposite {
     // selected, display its associated MailItem.
     		//MailItems.getMailItem(startIndex + row);
 	  
-	  		if (row < 0) {
-	  			Window.alert(String.valueOf(row))	;
+	  		if (row < 0 || mensajes.size() == 0) {
+	  			Window.alert("aqui nomas estaba el problem ");
 	  			return; 
 	  		};
+	  		
 			selectedItem = mensajes.get(row);
 		     
 		     if (selectedItem == null) {
@@ -221,6 +236,12 @@ public class MailList extends ResizeComposite {
 			}
 			
 			mensajes = response;
+			
+			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
+			if (onLoad && mensajes.size() > 1) {
+				selectRow(0);
+				onLoad = false;
+			}
 		}
 		
 		@Override

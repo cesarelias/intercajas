@@ -79,8 +79,7 @@ public class Mailboxes extends Composite {
 //  	    TreeItem item = event.getSelectedItem();
   		
   	    if (event.getSelectedItem().getText().trim().equals("Entrada")) {
-  	    	
-//  	    	new Mail(eventBus).mostrar();
+  	    	new Mail().mostrar();
   	    }
   	  }
   	});

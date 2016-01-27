@@ -47,7 +47,7 @@ public class MailDetail extends ResizeComposite {
     subject.setInnerText(item.getReferencia());
     sender.setInnerText(item.getRemitente().getSiglas());
     //TODO falta
-    recipient.setInnerHTML("IPS (debe venir del session");
+    recipient.setInnerHTML("IPS (debe venir del session)");
 
     // WARNING: For the purposes of this demo, we're using HTML directly, on
     // the assumption that the "server" would have appropriately scrubbed the
