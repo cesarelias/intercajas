@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -53,7 +54,10 @@ public class MyCustomizedUploadServlet extends UploadAction {
           // File file = File.createTempFile("upload-", ".bin", new File("/tmp"));
           
           /// Create a temporary file placed in the default system temp folder
-          File file = File.createTempFile("upload-", ".bin");
+        	
+        	String newFileName = "/home/cesar/imgs/intercajas-" + new Date().getTime() + ".bin";
+          File file = new File(newFileName);
+          
           item.write(file);
           
           /// Save a list with the received files
@@ -92,7 +96,7 @@ public class MyCustomizedUploadServlet extends UploadAction {
   public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String fieldName = request.getParameter(UConsts.PARAM_SHOW);
     
-    File f = new File("/tmp/"+fieldName);
+    File f = new File("/home/cesar/imgs/"+fieldName);
     
     if (f.exists()) {
       response.setContentType(receivedContentTypes.get(fieldName));
