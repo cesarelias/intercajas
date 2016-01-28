@@ -36,9 +36,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,23 +56,23 @@ public class MailDetail extends ResizeComposite {
   interface Binder extends UiBinder<Widget, MailDetail> { }
   private static final Binder binder = GWT.create(Binder.class);
 
-  @UiField Element subject;
-  @UiField Element sender;
-  @UiField Element recipient;
+  @UiField Label subject;
+  @UiField Label sender;
+  @UiField Label recipient;
   @UiField HTML body;
-  @UiField FlowPanel panelAdjuntos;
+  @UiField HorizontalPanel panelAdjuntos;
+  @UiField FlowPanel opciones;
 
   public MailDetail() {
     initWidget(binder.createAndBindUi(this));
 //    panelAdjuntos.getElement().getStyle().setPadding(20, Unit.PX);
-    
   }
 
   public void setItem(Destino item) {
-    subject.setInnerText(item.getMensaje().getReferencia());
-    sender.setInnerText(item.getMensaje().getRemitente().getSiglas());
+    subject.setText(item.getMensaje().getReferencia());
+    sender.setText(item.getMensaje().getRemitente().getSiglas());
     //TODO falta
-    recipient.setInnerHTML(item.getDestinatario().getSiglas());
+    recipient.setText(item.getDestinatario().getSiglas());
 
     // WARNING: For the purposes of this demo, we're using HTML directly, on
     // the assumption that the "server" would have appropriately scrubbed the
@@ -76,8 +81,7 @@ public class MailDetail extends ResizeComposite {
 
     
     
-    
-    
+    //Obtenemos los adjuntos del mensaje
     BeneficiarioService.Util.get().adjuntoFindByMensajeId(item.getMensaje().getId(), new MethodCallback<List<Adjunto>>() {
 		@Override
 		public void onSuccess(Method method, List<Adjunto> response) {
@@ -90,15 +94,32 @@ public class MailDetail extends ResizeComposite {
 		public void onFailure(Method method, Throwable exception) {
 			// TODO Auto-generated method stub
 		}
+		
 	});
+
+    opciones.clear();
+    //Acutalizamos las opciones posibles con el mensaje
+    HorizontalPanel optionsButtons = new HorizontalPanel();
+    optionsButtons.add(new Button("Reconocer Antiguedad"));
+    optionsButtons.add(new Button("Finiquitar"));
+
+    // Add advanced options to form in a disclosure panel
+    DisclosurePanel optionPanel = new DisclosurePanel("Acciones");
+    optionPanel.setAnimationEnabled(true);
+//    optionPanel.ensureDebugId("cwDisclosurePanel");
+    optionPanel.setContent(optionsButtons);
+
+    opciones.add(optionPanel);
     
-	
-	
+    
+	//Actualizamos el cuerpo del mensaje
     if (item.getMensaje().getCuerpo() == null || item.getMensaje().getCuerpo().isEmpty()) {
     	body.setHTML("");
     } else {
     	body.setHTML(new SafeHtmlBuilder().appendEscapedLines(item.getMensaje().getCuerpo()).toSafeHtml());
     }
+
+    
     
     
   }
@@ -119,6 +140,7 @@ public class MailDetail extends ResizeComposite {
 		});
 
 		link.getElement().getStyle().setProperty("margin", "4px");
+		link.getElement().getStyle().setProperty("color", "blue");
 		return link;
   }
 }

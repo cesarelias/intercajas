@@ -46,17 +46,11 @@ public class AdjuntoRest   {
 	@GET
 	@Produces("application/json")
 	public List<Adjunto> findByMensajeId(@QueryParam("mensaje_id") Long mensaje_id) {
-		List<Adjunto> retorno = em.createQuery("select b from Adjunto b"
-				+ "  where b.mensaje.id = :mensaje_id", Adjunto.class)
+		return em.createQuery("select b"
+				+ "              from Adjunto b"
+				+ "             where b.mensaje.id = :mensaje_id", Adjunto.class)
 				.setParameter("mensaje_id", mensaje_id)
 				.getResultList();
-//		for (Mensaje m : retorno) {
-//			m.getAdjuntos().size(); //lazy
-//		}
-		
-		System.out.println("mensaje_id: " + mensaje_id);
-		System.out.println("rest retorno size: " + retorno.size());
-		return retorno; 
 	}
 
 }
