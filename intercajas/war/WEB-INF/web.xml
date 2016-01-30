@@ -5,16 +5,37 @@
 	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
 	<!-- Servlets -->
+
+
 	<servlet>
 		<servlet-name>greetServlet</servlet-name>
 		<servlet-class>py.edu.uca.intercajas.server.GreetingServiceImpl</servlet-class>
-
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>greetServlet</servlet-name>
 		<url-pattern>/intercajas/greet</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>LoginService</servlet-name>
+		<servlet-class>py.edu.uca.intercajas.server.LoginServiceImpl</servlet-class>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LoginService</servlet-name>
+		<url-pattern>/intercajas/LoginService</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet-mapping>
+		<servlet-name>greetServlet</servlet-name>
+		<url-pattern>/intercajas/login</url-pattern>
+	</servlet-mapping>
+
+
 
 
 	<!-- Default page to serve -->

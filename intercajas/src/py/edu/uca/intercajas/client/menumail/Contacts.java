@@ -17,6 +17,8 @@ package py.edu.uca.intercajas.client.menumail;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
@@ -26,6 +28,7 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -89,6 +92,10 @@ public class Contacts extends Composite {
   public Contacts() {
     initWidget(binder.createAndBindUi(this));
 
+    Label usuariosLabel = new Label("Usuarios");
+    usuariosLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+    
+    panel.add(usuariosLabel);
     // Add all the contacts to the list.
     for (int i = 0; i < contacts.length; ++i) {
       addContact(contacts[i]);

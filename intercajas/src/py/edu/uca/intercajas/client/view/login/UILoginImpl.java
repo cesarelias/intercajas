@@ -1,9 +1,18 @@
 package py.edu.uca.intercajas.client.view.login;
 
+import java.util.Date;
+
+import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -14,31 +23,38 @@ public class UILoginImpl extends UILogin{
 	
 	public UILoginImpl() {
 		super();
-		txtUsuario.setText("cc");
-		txtPassword.setText("cc");
+		
+		txtUsuario.setText("cesar");
+		txtPassword.setText("323698");
+		
 	}
 
 	@Override
 	public void login() {
 		
-		
-//		context.login(this.txtUsuario.getText(), this.txtPassword.getText()).fire(new Receiver<UsuarioProxy>() {
-//
-//			@Override
-//			public void onSuccess(UsuarioProxy response) {
-//				// TODO Auto-generated method stub
-////				Window.alert("Bienvenido a Intercajas " + 	response.getNombre());
-////				String idSession = RequestFactoryServlet.getThreadLocalRequest().getSession().getId();
-////				response.setIdSesion(idSession);
-//				irSesion(response);
-//			}
-//
-//			public void onFailure(ServerFailure error) {
-//				// TODO Auto-generated method stub
-//				Window.alert("Usuario o contraseña no valido");
-//			}
-//			
-//		});
+		LoginService.Util.getInstance().loginServer(txtUsuario.getValue(), txtPassword.getValue(), new AsyncCallback<UserDTO>()
+                {
+                    @Override
+                    public void onSuccess(UserDTO result)
+                    {
+                        if (result != null && result.getLoggedIn())
+                        {
+                            String sessionID = result.getSessionId();
+                            Cookies.setCookie("sid", sessionID, result.getExpire(), null, "/", false);
+                            AppUtils.mostrarMenuPrincipal();
+                        } else
+                        {
+                            Window.alert("Usuario / Contraseña invalido!");
+                        }
+ 
+                    }
+ 
+                    @Override
+                    public void onFailure(Throwable caught)
+                    {
+                        Window.alert("Ocurrio un error al verificar el Usuario y Contraseña");
+                    }
+                });
 
 	}
 	

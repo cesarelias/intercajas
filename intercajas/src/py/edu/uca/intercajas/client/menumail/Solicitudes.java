@@ -18,6 +18,7 @@ package py.edu.uca.intercajas.client.menumail;
 import java.util.logging.Logger;
 
 import py.edu.uca.intercajas.client.Intercajas;
+import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 
@@ -28,6 +29,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -127,6 +129,19 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+				LoginService.Util.getInstance().changePassword("cesar", "323698", new AsyncCallback<Boolean>() {
+					@Override
+					public void onSuccess(Boolean result) {
+						Window.alert("password cambiado");
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Error al cambiar password: " + caught.getMessage());
+					}
+				});
+				
 //				new DynaTableRf().mostrar();
 			}
 		});

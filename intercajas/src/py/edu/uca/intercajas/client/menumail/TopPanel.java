@@ -15,14 +15,22 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.view.login.UILoginImpl;
+import py.edu.uca.intercajas.shared.UserDTO;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -35,9 +43,23 @@ public class TopPanel extends Composite {
 
   @UiField Anchor signOutLink;
   @UiField Anchor aboutLink;
+  @UiField Label bienvenidoLabel;
 
   public TopPanel() {
     initWidget(binder.createAndBindUi(this));
+    
+    LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
+		@Override
+		public void onSuccess(UserDTO result) {
+			bienvenidoLabel.setText("Bienvenido " + result.getDescription() + " - " + result.getCaja().getSiglas());
+		}
+		
+		@Override
+		public void onFailure(Throwable caught) {
+			//TODO falta atrapar el error aqui
+		}
+	});
+    
   }
 
   @UiHandler("aboutLink")
@@ -52,6 +74,16 @@ public class TopPanel extends Composite {
 
   @UiHandler("signOutLink")
   void onSignOutClicked(ClickEvent event) {
-    Window.alert("Aqui deberia de cerrar la sesion, pero no hace nada aun :-)");
+		LoginService.Util.getInstance().logout(new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				AppUtils.mostrarLogin();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("logout error: " + caught.getMessage());
+			}
+		});
   }
 }

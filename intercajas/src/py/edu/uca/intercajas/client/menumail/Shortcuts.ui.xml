@@ -107,13 +107,13 @@ background: #1e5799; /* Old browsers */
     </g:stack>
 
     <g:stack>
-      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/> Contactos</div></g:header>
-      <mail:Contacts ui:field='contacts'/>
-    </g:stack>
-    
-    <g:stack>
       <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/> Solicitudes</div></g:header>
       <mail:Solicitudes ui:field='solicitudes'/>
+    </g:stack>
+
+    <g:stack>
+      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/>Administación</div></g:header>
+      <mail:Contacts ui:field='contacts'/>
     </g:stack>
     
   </g:StackLayoutPanel>

@@ -1,39 +1,34 @@
 package py.edu.uca.intercajas.server.ejb;
 
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.Consumes;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
-import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
-import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Caja;
-import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Destino;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 @Path("/destino")
 @Stateless
 public class DestinoRest   {
 
-	private static final Logger LOG = Logger.getLogger(DestinoRest.class.getName());
-	
 
 	@PersistenceContext
 	EntityManager em;
+	
+	@EJB
+	UserLogin userLoign;
 
 	@Path("/test")
 	@GET
@@ -61,8 +56,14 @@ public class DestinoRest   {
 	@GET
 	@Produces("application/json")
 	public List<Destino> findAllPending(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults) {
+										@QueryParam("maxResults") int maxResults,
+										@Context HttpServletRequest req) {
 		
+		UserDTO user = userLoign.getValidUser(req.getSession().getId());
+        if (user == null) {
+       	   return null;
+       }
+
 		if (maxResults > 500) {
 			maxResults = 500;
 		}
@@ -71,12 +72,14 @@ public class DestinoRest   {
 				+ "              from Mensaje a, Solicitud b, Destino c"
 				+ "             where a.solicitud = b "
 				+ "               and a = c.mensaje "
-				+ "               and b.estado = :estado"
+				+ "               and b.estado = :estado "
+				+ "               and c.destinatario.id = :caja_id "
 				+ " order by a.fecha desc "
 				,Destino.class)
 				.setParameter("estado", Solicitud.Estado.Nuevo)
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)
+				.setParameter("caja_id", user.getCaja().getId())
 				.getResultList();
 	}
 	

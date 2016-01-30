@@ -3,26 +3,23 @@ package py.edu.uca.intercajas.shared.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 
 @Entity
 public class Usuario extends EntityBase implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	
 	private String correo;
 	private String clave;
 	private String nombre;
-	private String apellidos;
-	@Transient
-	private String operacion;
-	@Transient
-	private String idSesion;
+	private String descripcion;
 	
+	@ManyToOne
+	private Caja caja;
 	public String getCorreo() {
 		return correo;
 	}
@@ -41,23 +38,19 @@ public class Usuario extends EntityBase implements Serializable{
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public String getApellidos() {
-		return apellidos;
+	public String getDescripcion() {
+		return descripcion;
 	}
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
-	public String getOperacion() {
-		return operacion;
+	public Caja getCaja() {
+		return caja;
 	}
-	public void setOperacion(String operacion) {
-		this.operacion = operacion;
+	public void setCaja(Caja caja) {
+		this.caja = caja;
 	}
-	public String getIdSesion() {
-		return idSesion;
-	}
-	public void setIdSesion(String idSesion) {
-		this.idSesion = idSesion;
-	}
+	
+		
 	
 }

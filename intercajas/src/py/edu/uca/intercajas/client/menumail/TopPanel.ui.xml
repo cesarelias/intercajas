@@ -22,6 +22,11 @@
     text-align: right;
   }
 
+  .negrita {
+	margin-right:3px;
+	font-weight: bold;
+  }
+  
   @if user.agent ie6 {
     @url logoIe6 logoIe6Data;
     .logo {
@@ -43,7 +48,8 @@
 
     <div class="{style.statusDiv}">
       <div>
-        <b>Bienvenido, Cesar Sanabria, IPS</b>
+<!--         <b>Bienvenido, Cesar Sanabria, IPS</b> -->
+		<g:Label ui:field="bienvenidoLabel" styleName='{style.negrita}'/>
       </div>
 
       <div class='{style.linksDiv}'>
