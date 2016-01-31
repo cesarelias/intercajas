@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
@@ -39,10 +40,10 @@ public class SolicitudRest   {
 		return "rest working";
 	}
 	
-	@Path("/{id}")
+	@Path("/")
 	@GET
 	@Produces("application/json")
-	public Solicitud find(@PathParam("id") Long id) {
+	public Solicitud find(@QueryParam("id") Long id) {
 		System.out.println("**************************************id :"+id);
 		return em.find(Solicitud.class, id);
 	}
@@ -53,5 +54,6 @@ public class SolicitudRest   {
 	public List<Solicitud> findAll() {
 		return em.createQuery("select b from Solicitud b", Solicitud.class).getResultList();
 	}
+	
 	
 }

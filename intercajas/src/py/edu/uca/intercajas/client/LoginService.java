@@ -33,4 +33,5 @@ public interface LoginService extends RemoteService
     boolean changePassword(String name, String newPassword);
  
     void logout();
+    
 }

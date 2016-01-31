@@ -19,9 +19,11 @@ import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Empleador;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.GWT;
 
@@ -84,6 +86,17 @@ public interface BeneficiarioService extends RestService {
 	@GET
 	@Produces("application/json")
 	public void adjuntoFindByMensajeId(@QueryParam("mensaje_id") Long mensaje_id, MethodCallback<List<Adjunto>> adjuntos);
+
+	@Path("solicitud/")
+	@GET
+	@Produces("application/json")
+	public void findSolicitudById(@QueryParam("id") Long id, MethodCallback<Solicitud > solicitud);
+
+	
+	@Path("cajaDeclarada/findBySolicitudId")
+	@GET
+	@Produces("application/json")
+	public void findCajaDeclaradaBySolicitudId(@QueryParam("solicitud_id") Long solicitud_id, MethodCallback<List<CajaDeclarada>> cajasDeclaradas);
 	
 	/**
      * Utility class to get the instance of the Rest Service

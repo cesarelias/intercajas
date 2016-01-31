@@ -1,11 +1,7 @@
 package py.edu.uca.intercajas.client;
 
-import java.util.logging.Logger;
-
 import org.fusesource.restygwt.client.Defaults;
 
-import py.edu.uca.intercajas.client.menumail.Mail;
-import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.EntryPoint;

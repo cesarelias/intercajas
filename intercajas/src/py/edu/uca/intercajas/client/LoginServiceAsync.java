@@ -19,5 +19,6 @@ public interface LoginServiceAsync {
 
 	void loginServer(String name, String password,
 			AsyncCallback<UserDTO> callback);
+
 	
 }

@@ -4,11 +4,15 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.UILoginImpl;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -25,15 +29,25 @@ public class AppUtils {
             new MenuMail();
             new Mail().mostrar();
             try {
-            	Window.alert("a");
-            	TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow();
-            	Window.alert("b");
-				  b.titulo = "Reconocimiento de Tiempo de Servicio";
-				  Window.alert("c");
-				  b.mostrarDialog();
-				  Window.alert("d");
-				  b.create();
-				  Window.alert("e");
+            	
+            	BeneficiarioService.Util.get().findSolicitudById(1L, new MethodCallback<Solicitud>() {
+
+					@Override
+					public void onFailure(Method method, Throwable exception) {
+						//TODO mejorar el mensaje de error si hay
+						Window.alert(exception.getMessage());
+						
+					}
+
+					@Override
+					public void onSuccess(Method method, Solicitud response) {
+						TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow(response);
+						b.titulo = "Reconocimiento de Tiempo de Servicio";
+						b.mostrarDialog();
+						b.create();
+						
+					}
+				});
 				  
             } catch (Exception e) {
             	Window.alert(e.getMessage());

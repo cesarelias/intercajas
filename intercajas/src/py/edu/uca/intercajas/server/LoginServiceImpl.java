@@ -1,14 +1,12 @@
 package py.edu.uca.intercajas.server;
 
 import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.server.ejb.UserLogin;
 import py.edu.uca.intercajas.shared.UserDTO;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService
 {
@@ -16,8 +14,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
  
     @EJB
     UserLogin userLoign;
-    
-    
+
     @Override
     public UserDTO loginServer(String name, String password)
     {
@@ -56,5 +53,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     {
     	userLoign.logout(this.getThreadLocalRequest().getSession().getId());
     }
+
  
 }

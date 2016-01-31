@@ -184,7 +184,6 @@ public class MailList extends ResizeComposite {
     		//MailItems.getMailItem(startIndex + row);
 	  
 	  		if (row < 0 || destinos.size() == 0) {
-	  			Window.alert("aqui nomas estaba el problem ");
 	  			return; 
 	  		};
 	  		
@@ -196,11 +195,9 @@ public class MailList extends ResizeComposite {
 
 		     styleRow(selectedRow, false);
 		     styleRow(row, true);
-//
-//		     //TODO aqui marcar como leido
-////		     item.set read = true;
+
 		     selectedRow = row;
-//
+
 		     if (listener != null) {
 		       listener.onItemSelected(selectedItem);
 		     }
@@ -210,7 +207,6 @@ public class MailList extends ResizeComposite {
   private void styleRow(int row, boolean selected) {
     if (row != -1) {
       String style = selectionStyle.selectedRow();
-
       if (selected) {
         table.getRowFormatter().addStyleName(row, style);
       } else {

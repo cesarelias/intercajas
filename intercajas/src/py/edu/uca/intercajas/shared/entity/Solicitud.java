@@ -17,7 +17,7 @@ import com.sun.istack.internal.NotNull;
 public class Solicitud extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private Date fecha;
 	private String numero;
 	@NotNull
@@ -31,6 +31,11 @@ public class Solicitud extends EntityBase {
 	@JsonIgnore
 	private List<Mensaje> mensajes;
 
+	@OneToMany(mappedBy="solicitud")
+	@JsonIgnore
+	private List<CajaDeclarada>  cajasDeclaradas;
+	
+	
 	public enum Estado {
 		// estado inicial al crear la solicitud, enviada, con las
 		// documentaciones a todas las cajas intervinientes
@@ -41,6 +46,10 @@ public class Solicitud extends EntityBase {
 		Finiquitado
 	}
 
+	public Solicitud () {
+		super();
+	}
+	
 	public Date getFecha() {
 		return fecha;
 	}
@@ -80,6 +89,14 @@ public class Solicitud extends EntityBase {
 
 	public void setMensajes(List<Mensaje> mensajes) {
 		this.mensajes = mensajes;
+	}
+
+	public List<CajaDeclarada> getCajasDeclaradas() {
+		return cajasDeclaradas;
+	}
+
+	public void setCajasDeclaradas(List<CajaDeclarada> cajasDeclaradas) {
+		this.cajasDeclaradas = cajasDeclaradas;
 	}
 
 }

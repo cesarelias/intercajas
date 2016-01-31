@@ -15,7 +15,7 @@ import javax.persistence.Version;
 @MappedSuperclass
 public abstract class EntityBase implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8834347344694007534L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
