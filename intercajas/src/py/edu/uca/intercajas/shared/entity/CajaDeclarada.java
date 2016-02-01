@@ -14,9 +14,10 @@ public class CajaDeclarada extends EntityBase {
 	private Solicitud solicitud;
 	@ManyToOne
 	private Caja caja;
+	private Estado estado;
 	
 	public enum Estado {
-		Solicitado,
+		Nuevo,
 		ConAntiguedad,
 		Finiquitado
 	}
@@ -51,6 +52,14 @@ public class CajaDeclarada extends EntityBase {
 
 	public void setCaja(Caja caja) {
 		this.caja = caja;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 	
 	

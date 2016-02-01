@@ -4,17 +4,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
@@ -33,6 +38,9 @@ public class SolicitudTitularRest   {
 	@PersistenceContext
 	EntityManager em;
 
+	@EJB
+	UserLogin userLogin;
+	
 	@Path("/test")
 	@GET
 	public String test() {
@@ -61,7 +69,13 @@ public class SolicitudTitularRest   {
 	@Path("/nuevo")
 	@POST
 	@Consumes("application/json")
-	public void nuevo(NuevaSolicitudTitular nuevaSolicitudTitular) {
+	public void nuevo(NuevaSolicitudTitular nuevaSolicitudTitular, @Context HttpServletRequest req) {
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	System.out.println("usuario no valido para el llamado rest!");
+       	   return;
+       }
 		
 		if (nuevaSolicitudTitular.getMensaje() == null) {
 				throw new IllegalArgumentException("Al insertar una nueva solitidu, debe adjuntarle un unico mensaje");
@@ -77,7 +91,7 @@ public class SolicitudTitularRest   {
 		
 		m.setSolicitud(solicitudTitular);
 		m.setFecha(new Date());
-		m.setRemitente(em.find(Caja.class, 1L)); //TODO Esto debe ser la caja asociada al inicio de sesion
+		m.setRemitente(em.find(Caja.class, user.getCaja().getId())); //La caja remitemte, corresponde a la caja asociada al usuario de inicio de sesion
 		for (Adjunto a : nuevaSolicitudTitular.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -91,9 +105,10 @@ public class SolicitudTitularRest   {
 		
 		//Creamos las CajasDeclaradas en base a los TiemposServiciosDeclarados
 		//Tambien creamos los detinatarios del mensaje
-		List<CajaDeclarada> cajaDeclaradas = CalculoTiempo.tx_calculado(nuevaSolicitudTitular.getListaTiempoServicioDeclarado());
+		List<CajaDeclarada> cajaDeclaradas = CalculoTiempo.tx_declarado(nuevaSolicitudTitular.getListaTiempoServicioDeclarado());
 		for (CajaDeclarada c : cajaDeclaradas ) {
 			c.setSolicitud(solicitudTitular);
+			c.setEstado(CajaDeclarada.Estado.Nuevo);
 			em.persist(c);
 			
 			Destino d = new Destino();
@@ -105,6 +120,7 @@ public class SolicitudTitularRest   {
 			
 		}
 		
+		solicitudTitular.setTxCalculado(0); //iniciamos con 0 meses
 		em.persist(solicitudTitular);
 		LOG.info("Solicitud titular persisted");
 	}

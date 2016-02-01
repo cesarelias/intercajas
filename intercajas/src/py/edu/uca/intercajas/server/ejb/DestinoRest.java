@@ -72,11 +72,11 @@ public class DestinoRest   {
 				+ "              from Mensaje a, Solicitud b, Destino c"
 				+ "             where a.solicitud = b "
 				+ "               and a = c.mensaje "
-				+ "               and b.estado = :estado "
+				+ "               and b.estado <> :estado "
 				+ "               and c.destinatario.id = :caja_id "
 				+ " order by a.fecha desc "
 				,Destino.class)
-				.setParameter("estado", Solicitud.Estado.Nuevo)
+				.setParameter("estado", Solicitud.Estado.Finiquitado)
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)
 				.setParameter("caja_id", user.getCaja().getId())

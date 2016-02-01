@@ -10,12 +10,17 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
+import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
@@ -27,6 +32,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,7 +48,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	@UiField Label resumenUpload;
 	@UiField TextArea cuerpoMensaje;
 	
-	Solicitud solicitd;
+	Solicitud solicitud;
 	
 	Images images = GWT.create(Images.class);
 	
@@ -50,7 +56,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 
 	public TiempoServicioReconocidoEditorWorkFlow(Solicitud solicitud) {
 		
-		this.solicitd = solicitud;
+		this.solicitud = solicitud;
 		
 		tablaTiempoServicioReconocido = new TablaTiempoServicioReconocido();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
@@ -69,18 +75,47 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
-		BeneficiarioService.Util.get().findCajaDeclaradaBySolicitudId(1L, new MethodCallback<List<CajaDeclarada>>() {
+
+		if (adjuntos.isEmpty()) {
+			Window.alert("Es obligatorio enviar al menos un adjunto");
+			return;
+		}
+		
+		Mensaje mensaje = new Mensaje();
+		mensaje.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
+		mensaje.setCuerpo(cuerpoMensaje.getValue());
+		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
+		mensaje.setSolicitud(solicitud);
+
+		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, adjuntos);
+
+		BeneficiarioService.Util.get().nuevoReconocimientoTiempoServicio(n, new MethodCallback<Void>() {
+			@Override
+			public void onSuccess(Method method, Void response) {
+				close();
+				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(null)); //esto refresca el MailList;
+			}
+			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				Window.alert(exception.getMessage());
-			}
-			@Override
-			public void onSuccess(Method method, List<CajaDeclarada> response) {
-				for (CajaDeclarada e : response) {
-					Window.alert(e.getCaja().getSiglas());
-				}
+				new UIDialog("Error",new HTML(method.getResponse().getText()));
 			}
 		});
+		
+		
+//		BeneficiarioService.Util.get().findCajaDeclaradaBySolicitudId(1L, new MethodCallback<List<CajaDeclarada>>() {
+//			@Override
+//			public void onFailure(Method method, Throwable exception) {
+//				Window.alert(exception.getMessage());
+//			}
+//			@Override
+//			public void onSuccess(Method method, List<CajaDeclarada> response) {
+//				for (CajaDeclarada e : response) {
+//					Window.alert(e.getCaja().getSiglas());
+//				}
+//			}
+//		});
 	}
 
 	public void create() {

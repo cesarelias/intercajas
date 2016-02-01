@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
+import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
@@ -68,17 +70,6 @@ public class TablaTiempoServicioReconocido extends UIBase {
 
 		initWidget(uiBinder.createAndBindUi(this));
 		initTable();
-		
-		//sacar este codigo luego hasta el final del contructor
-		TiempoServicioReconocido r;
-		r = new TiempoServicioReconocido();
-		r.setInicio(new Date());
-		r.setFin(new Date());
-		listaTiempoServicioReconocido.add(r);
-		listaTiempoServicioReconocido.add(r);
-		listaTiempoServicioReconocido.add(r);
-		refreshTable();
-		
 	}
 
 	@UiHandler("create")
@@ -139,15 +130,28 @@ public class TablaTiempoServicioReconocido extends UIBase {
 			table.setText(i, 0, "Empleador tal tal");
 			table.setText(i, 1, dateFormat.format(t.getInicio()).toString());
 			table.setText(i, 2, dateFormat.format(t.getFin()).toString());
-			table.setText(i, 3, "2 años 3 meses");
+			
+			List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
+			rangos.add(new RangoTiempo(t.getInicio(), t.getFin()));
+			int meses = CalculoTiempo.calculoMeses(rangos);
+			String mesesLetra = CalculoTiempo.leeMeses(meses);
+			
+			table.setText(i, 3, mesesLetra);
+			
 		}
 		if (listaTiempoServicioReconocido.size() > 0 ) {
+
+			List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
+			for (TiempoServicioReconocido r : listaTiempoServicioReconocido) {
+				rangos.add(new RangoTiempo(r.getInicio(), r.getFin()));
+			}
+			
+			int meses = CalculoTiempo.calculoMeses(rangos);
+			String mesesLetra = CalculoTiempo.leeMeses(meses);
+			
 			selectRow(0);
 			table.setWidget(listaTiempoServicioReconocido.size(), 2, new HTML("<b>Totalización</b>"));
-			table.setWidget(listaTiempoServicioReconocido.size(), 3, new HTML("<b>12 años 3 meses</b>"));
-			
-			
-			
+			table.setWidget(listaTiempoServicioReconocido.size(), 3, new HTML("<b>" + mesesLetra + "</b>"));
 		}
 		
 	}
@@ -195,6 +199,9 @@ public class TablaTiempoServicioReconocido extends UIBase {
 //		       return;
 //		     }
 
+		  	if ( row == listaTiempoServicioReconocido.size()) {  //la ultima fila es un total)
+		  		return;
+		  	}
 		     styleRow(selectedRow, false);
 		     styleRow(row, true);
 

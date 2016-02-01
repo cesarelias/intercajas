@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import org.eclipse.jetty.server.Authentication.User;
 
 import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 @Singleton
@@ -60,6 +61,18 @@ public class UserLogin {
 	}
 	
 	public UserDTO getValidUser(String sessionId) {
+		
+		
+//		UserDTO user = new UserDTO();
+//		Caja c = em.find(Caja.class, 1L);
+//		user.setCaja(c);
+//		user.setLoggedIn(true);
+//		user.setName("cesar");
+//		user.setDescription("Cesar Sanabria");
+//		user.setExpire(new Date());
+//
+//		return user;
+		
 		Date ahora = new Date();
 		Iterator<UserDTO> i = usuarios.iterator();
 		while (i.hasNext()) {

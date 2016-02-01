@@ -1,0 +1,72 @@
+package py.edu.uca.intercajas.shared;
+
+import java.io.Serializable;
+import java.util.List;
+
+import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
+
+
+/*
+ * Esta clase usamos para registar un nuevo Reconocimiento de Tiempo de Servicio.
+ * Restgwt solo recive una clase como parametro REST, por eso es necesario esta clase
+ */
+public class NuevoReconocimientoTiempoServicio  {
+
+	Solicitud solicitud;
+	List<TiempoServicioReconocido> listaTiempoServicioReconocido;
+	Mensaje mensaje;
+	List<Adjunto> adjuntos;
+
+	public NuevoReconocimientoTiempoServicio() {
+
+	}
+
+	public Solicitud getSolicitud() {
+		return solicitud;
+	}
+
+	public void setSolicitud(Solicitud solicitud) {
+		this.solicitud = solicitud;
+	}
+
+	public List<TiempoServicioReconocido> getListaTiempoServicioReconocido() {
+		return listaTiempoServicioReconocido;
+	}
+
+	public void setListaTiempoServicioReconocido(
+			List<TiempoServicioReconocido> listaTiempoServicioReconocido) {
+		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
+	}
+
+	public Mensaje getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(Mensaje mensaje) {
+		this.mensaje = mensaje;
+	}
+
+	public List<Adjunto> getAdjuntos() {
+		return adjuntos;
+	}
+
+	public void setAdjuntos(List<Adjunto> adjuntos) {
+		this.adjuntos = adjuntos;
+	}
+
+	public NuevoReconocimientoTiempoServicio(Solicitud solicitud,
+			List<TiempoServicioReconocido> listaTiempoServicioReconocido,
+			Mensaje mensaje, List<Adjunto> adjuntos) {
+		this.solicitud = solicitud;
+		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
+		this.mensaje = mensaje;
+		this.adjuntos = adjuntos;
+	}
+
+
+}

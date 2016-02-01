@@ -22,36 +22,14 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 public class AppUtils {
+	
+	
 	    public static EventBus EVENT_BUS = GWT.create(SimpleEventBus.class);
 	    
 	    public static void mostrarMenuPrincipal() {
 			RootLayoutPanel.get().clear();
             new MenuMail();
             new Mail().mostrar();
-            try {
-            	
-            	BeneficiarioService.Util.get().findSolicitudById(1L, new MethodCallback<Solicitud>() {
-
-					@Override
-					public void onFailure(Method method, Throwable exception) {
-						//TODO mejorar el mensaje de error si hay
-						Window.alert(exception.getMessage());
-						
-					}
-
-					@Override
-					public void onSuccess(Method method, Solicitud response) {
-						TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow(response);
-						b.titulo = "Reconocimiento de Tiempo de Servicio";
-						b.mostrarDialog();
-						b.create();
-						
-					}
-				});
-				  
-            } catch (Exception e) {
-            	Window.alert(e.getMessage());
-            }
 	    }
 	    
 	    public static  void mostrarLogin() {

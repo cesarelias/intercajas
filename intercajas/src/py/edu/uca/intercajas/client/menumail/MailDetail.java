@@ -21,10 +21,16 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 import javafx.scene.layout.FlowPane;
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.Solicitud.Estado;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -63,6 +69,8 @@ public class MailDetail extends ResizeComposite {
   @UiField HorizontalPanel panelAdjuntos;
   @UiField FlowPanel opciones;
 
+  HorizontalPanel optionsButtons = new HorizontalPanel();
+  
   public MailDetail() {
     initWidget(binder.createAndBindUi(this));
 //    panelAdjuntos.getElement().getStyle().setPadding(20, Unit.PX);
@@ -97,11 +105,56 @@ public class MailDetail extends ResizeComposite {
 		
 	});
 
+    
+    final Solicitud s = item.getMensaje().getSolicitud();
     opciones.clear();
-    //Acutalizamos las opciones posibles con el mensaje
-    HorizontalPanel optionsButtons = new HorizontalPanel();
-    optionsButtons.add(new Button("Reconocer Antiguedad"));
-    optionsButtons.add(new Button("Finiquitar"));
+    optionsButtons.clear();
+    
+    //Obtenemos la cajaDeclarada correspondiente al usuario
+    BeneficiarioService.Util.get().findCajaDeclaraadBySolicitudIdAndCurrentUser(item.getMensaje().getSolicitud().getId(), new MethodCallback<CajaDeclarada>() {
+		@Override
+		public void onFailure(Method method, Throwable exception) {
+			//TODO mejorar esto
+			Window.alert(exception.getMessage());
+		}
+
+		@Override
+		public void onSuccess(Method method, CajaDeclarada response) {
+			if (response.getEstado() == CajaDeclarada.Estado.Nuevo) {
+				
+			    Button rts = new Button("Reconocer Tiempo de Servicio");
+			    rts.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+								TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow(s);
+								b.titulo = "Reconocimiento de Tiempo de Servicio";
+								b.mostrarDialog();
+								b.create();
+					}
+				});
+			    optionsButtons.add(rts);
+
+			} else 	if (response.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
+				
+			    Button fin = new Button("Finiquitar");
+			    fin.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.alert("aqui abrimos la venta de finiquito, que aun no existe! :-)");
+					}
+				});
+			    optionsButtons.add(fin);
+
+			}
+
+			
+			
+			
+		}
+	});
+    
+    
+    
 
     // Add advanced options to form in a disclosure panel
     DisclosurePanel optionPanel = new DisclosurePanel("Acciones");

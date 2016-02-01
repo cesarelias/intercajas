@@ -155,7 +155,7 @@ public class MailList extends ResizeComposite {
     // Initialize the header.
     header.getColumnFormatter().setWidth(0, "120px");
     header.getColumnFormatter().setWidth(1, "120px");
-    header.getColumnFormatter().setWidth(2, "120px");
+    header.getColumnFormatter().setWidth(2, "210px");
 //    header.getColumnFormatter().setWidth(3, "300x");
     
 
@@ -169,7 +169,7 @@ public class MailList extends ResizeComposite {
     // Initialize the table.
     table.getColumnFormatter().setWidth(0, "120px");
     table.getColumnFormatter().setWidth(1, "120px");
-    table.getColumnFormatter().setWidth(2, "120px");
+    table.getColumnFormatter().setWidth(2, "210px");
 //    table.getColumnFormatter().setWidth(3, "300px");
   }
 

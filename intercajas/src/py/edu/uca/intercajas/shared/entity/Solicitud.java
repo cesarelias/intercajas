@@ -23,6 +23,8 @@ public class Solicitud extends EntityBase {
 	@NotNull
 	private Estado estado;
 
+	private Integer txCalculado;
+	
 	@OneToMany(mappedBy="solicitud")
 	@JsonIgnore
 	private List<TiempoServicioDeclarado> listaTiempoServicioDeclarado = new ArrayList<TiempoServicioDeclarado>();
@@ -97,6 +99,14 @@ public class Solicitud extends EntityBase {
 
 	public void setCajasDeclaradas(List<CajaDeclarada> cajasDeclaradas) {
 		this.cajasDeclaradas = cajasDeclaradas;
+	}
+
+	public Integer getTxCalculado() {
+		return txCalculado;
+	}
+
+	public void setTxCalculado(Integer txCalculado) {
+		this.txCalculado = txCalculado;
 	}
 
 }

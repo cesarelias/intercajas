@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.client;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
@@ -16,6 +18,7 @@ import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
@@ -97,6 +100,19 @@ public interface BeneficiarioService extends RestService {
 	@GET
 	@Produces("application/json")
 	public void findCajaDeclaradaBySolicitudId(@QueryParam("solicitud_id") Long solicitud_id, MethodCallback<List<CajaDeclarada>> cajasDeclaradas);
+	
+	
+	@Path("solicitud/nuevoReconocimientoTiempoServicio")
+	@POST
+	@Consumes("application/json")
+	public void nuevoReconocimientoTiempoServicio(NuevoReconocimientoTiempoServicio nuevoReconocimientoTiempoServicio, MethodCallback<Void> callback);
+		
+
+	@Path("cajaDeclarada/findCajaDeclaraadBySolicitudIdAndCurrentUser")
+	@GET
+	@Produces("application/json")
+	public void findCajaDeclaraadBySolicitudIdAndCurrentUser(@QueryParam("solicitud_id") Long solicitud_id, MethodCallback<CajaDeclarada> cajaDeclarada);
+	
 	
 	/**
      * Utility class to get the instance of the Rest Service
