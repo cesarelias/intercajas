@@ -61,6 +61,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
 		MultiUploader defaultUploader = new MultiUploader();
+		defaultUploader.setAvoidRepeatFiles(false);
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
 		upload.add(defaultUploader);
@@ -114,9 +115,10 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
-//				close();
 				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(solicitudTitular));
 				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! Se crearon: Solicitud, SolicitudTituilar, Mensaje, Adjunto, Destino");
+				close();
+				
 			}
 
 			@Override

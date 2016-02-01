@@ -28,7 +28,7 @@ public class UserLogin {
 	
 	private Collection<UserDTO> usuarios = new ArrayList<UserDTO>();
 
-	final long DURATION = 1000 * 60 * 60 * 1 * 1; //1 hora dura una sesion
+	final long DURATION = 1000 * 60 * 60 * 24 * 1; //1 hora dura una sesion
 	
 	public UserDTO login(String name, String password, String sessionId) { 
 

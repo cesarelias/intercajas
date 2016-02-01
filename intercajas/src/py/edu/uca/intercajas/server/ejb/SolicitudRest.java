@@ -119,7 +119,6 @@ public class SolicitudRest   {
 		
 		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
 		
-		//TODO falta controlar que el usuario que registrarTiempoSericio, corresponda a la caja declarada en cuestion! solo por seguridad
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
 			rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
 			tsr.setEmpleador(null); //TODO Esto falta !!!!
@@ -151,7 +150,12 @@ public class SolicitudRest   {
 		m.setSolicitud(s);
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
-		m.setReferencia(s.getNumero() + " falta el nombre del titular " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txMeses) + " de servicios");
+		
+		//TODO sacar o mejorar esto!!!
+		//esto esta mientras nomas 
+		SolicitudTitular ss = (SolicitudTitular) s;
+		
+		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txMeses) + " de servicios");
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);

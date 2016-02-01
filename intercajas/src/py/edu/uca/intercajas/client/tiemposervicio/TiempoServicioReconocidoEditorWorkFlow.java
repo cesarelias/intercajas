@@ -62,6 +62,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
 		MultiUploader defaultUploader = new MultiUploader();
+		defaultUploader.setAvoidRepeatFiles(false);
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
 		upload.add(defaultUploader);
