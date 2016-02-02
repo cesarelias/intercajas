@@ -103,7 +103,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.NuevaSolicitud);
 		mensaje.setCuerpo(cuerpoMensaje.getValue());
-		mensaje.setReferencia(solicitudTitular.getNumero() + " " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
+		mensaje.setReferencia(solicitudTitular.getNumero() + " - " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
 //		mensaje.setAdjuntos(adjuntos);
 		mensaje.setSolicitud(solicitudTitular);
 //		mensajes.add(mensaje);

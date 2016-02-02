@@ -17,7 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
-import py.edu.uca.intercajas.shared.CalculoTiempo;
+import py.edu.uca.intercajas.server.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -120,7 +120,7 @@ public class SolicitudTitularRest   {
 			
 		}
 		
-		solicitudTitular.setTxCalculado(0); //iniciamos con 0 meses
+		solicitudTitular.setTxFinal(0); //iniciamos con 0 meses
 		em.persist(solicitudTitular);
 		LOG.info("Solicitud titular persisted");
 	}

@@ -23,7 +23,7 @@ public class Solicitud extends EntityBase {
 	@NotNull
 	private Estado estado;
 
-	private Integer txCalculado;
+	private Integer txFinal;
 	
 	@OneToMany(mappedBy="solicitud")
 	@JsonIgnore
@@ -101,12 +101,13 @@ public class Solicitud extends EntityBase {
 		this.cajasDeclaradas = cajasDeclaradas;
 	}
 
-	public Integer getTxCalculado() {
-		return txCalculado;
+	public Integer getTxFinal() {
+		return txFinal;
 	}
 
-	public void setTxCalculado(Integer txCalculado) {
-		this.txCalculado = txCalculado;
+	public void setTxFinal(Integer txFinal) {
+		this.txFinal = txFinal;
 	}
+
 
 }

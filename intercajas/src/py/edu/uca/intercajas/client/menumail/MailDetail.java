@@ -78,7 +78,11 @@ public class MailDetail extends ResizeComposite {
 
   public void setItem(Destino item) {
     subject.setText(item.getMensaje().getReferencia());
-    sender.setText(item.getMensaje().getRemitente().getSiglas());
+    if (item.getMensaje().getRemitente() == null) {
+    	sender.setText("SistemaIntercajas");
+    } else {
+    	sender.setText(item.getMensaje().getRemitente().getSiglas());
+    }
     //TODO falta
     recipient.setText(item.getDestinatario().getSiglas());
 
@@ -134,7 +138,7 @@ public class MailDetail extends ResizeComposite {
 				});
 			    optionsButtons.add(rts);
 
-			} else 	if (response.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
+			} else 	if (response.getSolicitud().getEstado() == Solicitud.Estado.ConAntiguedad) {
 				
 			    Button fin = new Button("Finiquitar");
 			    fin.addClickHandler(new ClickHandler() {

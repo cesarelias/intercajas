@@ -21,7 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import py.edu.uca.intercajas.client.LoginService;
-import py.edu.uca.intercajas.shared.CalculoTiempo;
+import py.edu.uca.intercajas.server.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.RangoTiempo;
@@ -35,6 +35,7 @@ import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
+import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
 
 @Path("/solicitud")
 @Stateless
@@ -52,14 +53,6 @@ public class SolicitudRest   {
 	@GET
 	public String test() {
 		System.out.println("rest working");
-		
-		List<Solicitud> lista = em.createQuery("select b from Solicitud b", Solicitud.class).getResultList();
-//		for (Solicitud s : lista) {
-//			for (TiempoServicioDeclarado p : s.getListaTiempoServicioDeclarado()) {
-//				System.out.println(p.getLugar());
-//			}
-//		}
-		
 		return "rest working";
 	}
 	
@@ -126,11 +119,12 @@ public class SolicitudRest   {
 			em.persist(tsr);
 		}
 		
-		usuarioCajaDeclarada.setTx_calculado(CalculoTiempo.calculoMeses(rangos)); 
+		int txBruto = CalculoTiempo.txBruto(rangos);
+		usuarioCajaDeclarada.setTxBruto(txBruto); 
 		
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 		
-
+		
 		List<TiempoServicioReconocido> lista = em.createQuery("select t"
 				                                + "              from TiempoServicioReconocido t "
 				                                + "             where cajaDeclarada.solicitud.id = :solicitud_id",
@@ -138,12 +132,8 @@ public class SolicitudRest   {
 				                                .setParameter("solicitud_id", s.getId())
 				                                .getResultList();
 		
-		int txMeses = CalculoTiempo.tx_calculado(lista);
-		s.setTxCalculado(txMeses); 
 		
 		em.persist(usuarioCajaDeclarada);
-
-		
 		
 		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
 		
@@ -155,7 +145,7 @@ public class SolicitudRest   {
 		//esto esta mientras nomas 
 		SolicitudTitular ss = (SolicitudTitular) s;
 		
-		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txMeses) + " de servicios");
+		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -164,16 +154,12 @@ public class SolicitudRest   {
 
 		//Enviamos a todas las cajas declaradas
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
-			
 			Destino d = new Destino();
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
 			em.persist(d);
-			
 		}
-		
-
 		
 //		//Verificamos si todas las cajas tiene estado ConAntiguedad, para pasar el estado de la solicitud a ConAntiguedad 
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
@@ -181,15 +167,56 @@ public class SolicitudRest   {
 				txCompleto = false;
 			}
 		}
-		
+		// estee no es el caso
 		if (txCompleto) {
 			s.setEstado(Solicitud.Estado.ConAntiguedad);
+			//calculamos cada el txNeto de cada CajaDeclarada y el txFinal guardamos en la solicitud
+			s = CalculoTiempo.txNetoFinal(s);
 			em.persist(s);
+			
+			//Esto envia un mensaje a las cajas con el reporte de totalizacion
+			envioTotalizacion(s);
+			
 		}
 		
 		LOG.info("Solicitud titular persisted");
 
 	}
 	
+	
+	
+	void envioTotalizacion(Solicitud s) {
+		
+		//TODO sacar o mejorar esto!!!
+		//esto esta mientras nomas 
+		SolicitudTitular ss = (SolicitudTitular) s;
+		
+		
+		Mensaje m = new Mensaje();
+
+		m.setRemitente(null);
+		m.setAsunto(Asunto.TotalizacionTiempoServicio);
+		m.setSolicitud(s);
+		m.setFecha(new Date());
+		m.setCuerpo("Este es un mensaje automatico, se envia la totalizacion de aportes:_vamos a mejorar el contenido del mimo.");
+		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(ss.getTxFinal()) + " de servicios");
+
+		//TODO enviar como adjunto un reporte en PDF del sistema
+//		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
+//			a.setMensaje(m);
+//			em.persist(a);
+//		}
+		em.persist(m);
+		
+		//Enviamos a todas las cajas declaradas
+		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
+			Destino d = new Destino();
+			d.setMensaje(m);
+			d.setDestinatario(c.getCaja());
+			d.setLeido(false);
+			em.persist(d);
+		}
+
+	}
 	
 }

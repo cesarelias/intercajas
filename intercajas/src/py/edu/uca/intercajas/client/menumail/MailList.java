@@ -235,7 +235,11 @@ public class MailList extends ResizeComposite {
 		      // email's sender and subject values.
 						
 			for (int i=0; i<response.size(); i++) {
-		      table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
+			  if (response.get(i).getMensaje().getRemitente() == null) {
+				  table.setText(i, 0, "SistemaIntercajas");
+			  } else {
+				  table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
+			  }
 		      table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
 		      table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
 		      table.setText(i, 3, response.get(i).getMensaje().getReferencia());

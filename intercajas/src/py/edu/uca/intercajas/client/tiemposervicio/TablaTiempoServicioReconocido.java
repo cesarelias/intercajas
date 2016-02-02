@@ -133,7 +133,7 @@ public class TablaTiempoServicioReconocido extends UIBase {
 			
 			List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
 			rangos.add(new RangoTiempo(t.getInicio(), t.getFin()));
-			int meses = CalculoTiempo.calculoMeses(rangos);
+			int meses = CalculoTiempo.txBruto(rangos);
 			String mesesLetra = CalculoTiempo.leeMeses(meses);
 			
 			table.setText(i, 3, mesesLetra);
@@ -146,7 +146,7 @@ public class TablaTiempoServicioReconocido extends UIBase {
 				rangos.add(new RangoTiempo(r.getInicio(), r.getFin()));
 			}
 			
-			int meses = CalculoTiempo.calculoMeses(rangos);
+			int meses = CalculoTiempo.txBruto(rangos);
 			String mesesLetra = CalculoTiempo.leeMeses(meses);
 			
 			selectRow(0);

@@ -68,19 +68,21 @@ public class DestinoRest   {
 			maxResults = 500;
 		}
 		
+		
 		return em.createQuery("select c "
 				+ "              from Mensaje a, Solicitud b, Destino c"
-				+ "             where a.solicitud = b "
-				+ "               and a = c.mensaje "
+				+ "             where a.solicitud.id = b.id "
+				+ "               and a.id = c.mensaje.id "
 				+ "               and b.estado <> :estado "
 				+ "               and c.destinatario.id = :caja_id "
 				+ " order by a.fecha desc "
-				,Destino.class)
+				, Destino.class)
 				.setParameter("estado", Solicitud.Estado.Finiquitado)
 				.setFirstResult(startRow)
 				.setMaxResults(maxResults)
 				.setParameter("caja_id", user.getCaja().getId())
 				.getResultList();
+		
 	}
 	
 }
