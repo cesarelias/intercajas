@@ -15,14 +15,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
-import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.server.CalculoTiempo;
-import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UserDTO;
@@ -31,11 +29,11 @@ import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
-import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 @Path("/solicitud")
 @Stateless
@@ -125,12 +123,12 @@ public class SolicitudRest   {
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 		
 		
-		List<TiempoServicioReconocido> lista = em.createQuery("select t"
-				                                + "              from TiempoServicioReconocido t "
-				                                + "             where cajaDeclarada.solicitud.id = :solicitud_id",
-				                                TiempoServicioReconocido.class)
-				                                .setParameter("solicitud_id", s.getId())
-				                                .getResultList();
+//		List<TiempoServicioReconocido> lista = em.createQuery("select t"
+//				                                + "              from TiempoServicioReconocido t "
+//				                                + "             where cajaDeclarada.solicitud.id = :solicitud_id",
+//				                                TiempoServicioReconocido.class)
+//				                                .setParameter("solicitud_id", s.getId())
+//				                                .getResultList();
 		
 		
 		em.persist(usuarioCajaDeclarada);
@@ -141,11 +139,7 @@ public class SolicitudRest   {
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		
-		//TODO sacar o mejorar esto!!!
-		//esto esta mientras nomas 
-		SolicitudTitular ss = (SolicitudTitular) s;
-		
-		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -187,10 +181,6 @@ public class SolicitudRest   {
 	
 	void envioTotalizacion(Solicitud s) {
 		
-		//TODO sacar o mejorar esto!!!
-		//esto esta mientras nomas 
-		SolicitudTitular ss = (SolicitudTitular) s;
-		
 		
 		Mensaje m = new Mensaje();
 
@@ -199,7 +189,7 @@ public class SolicitudRest   {
 		m.setSolicitud(s);
 		m.setFecha(new Date());
 		m.setCuerpo("Este es un mensaje automatico, se envia la totalizacion de aportes:_vamos a mejorar el contenido del mimo.");
-		m.setReferencia(s.getNumero() + " - " + ss.getBeneficiario().getNombres() + " " + ss.getBeneficiario().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(ss.getTxFinal()) + " de servicios");
+		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(s.getTxFinal()) + " de servicios");
 
 		//TODO enviar como adjunto un reporte en PDF del sistema
 //		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
@@ -218,5 +208,80 @@ public class SolicitudRest   {
 		}
 
 	}
+	
+	/*
+	 * Este metodo, crea la solicitud, el adjunto(s), las cajas declaras (al menos dos), y hace el envio (mensaje + destino(s))
+	 */
+	@Path("/nuevo")
+	@POST
+	@Consumes("application/json")
+	public void nuevo(NuevaSolicitud nuevaSolicitud, @Context HttpServletRequest req) {
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	System.out.println("usuario no valido para el llamado rest!");
+       	   return;
+       }
+		
+		if (nuevaSolicitud.getMensaje() == null) {
+				throw new IllegalArgumentException("Al insertar una nueva solitidu, debe adjuntarle un unico mensaje");
+		}
+		
+		//TODO controlar que existan al menos dos cajas declaradas
+		if (nuevaSolicitud.getListaTiempoServicioDeclarado() == null || nuevaSolicitud.getListaTiempoServicioDeclarado().size() <= 0 ) {
+			throw new IllegalArgumentException("Al insertar una nueva solitidu, debe adjuntarle los tiempos de servicios");
+		}
+		
+		Solicitud solicitud = nuevaSolicitud.getSolicitud();
+		Mensaje m = nuevaSolicitud.getMensaje();
+		
+		m.setSolicitud(solicitud);
+		m.setFecha(new Date());
+		m.setRemitente(em.find(Caja.class, user.getCaja().getId())); //La caja remitemte, corresponde a la caja asociada al usuario de inicio de sesion
+		for (Adjunto a : nuevaSolicitud.getAdjuntos()) {
+			a.setMensaje(m);
+			em.persist(a);
+		}
+		em.persist(m);
+		
+		for (TiempoServicioDeclarado pad : nuevaSolicitud.getListaTiempoServicioDeclarado()) {
+			pad.setSolicitud(solicitud);
+			em.persist(pad);
+		}
+		
+		//Creamos las CajasDeclaradas en base a los TiemposServiciosDeclarados
+		//Tambien creamos los detinatarios del mensaje
+		List<CajaDeclarada> cajaDeclaradas = CalculoTiempo.tx_declarado(nuevaSolicitud.getListaTiempoServicioDeclarado());
+		for (CajaDeclarada c : cajaDeclaradas ) {
+			c.setSolicitud(solicitud);
+			c.setEstado(CajaDeclarada.Estado.Nuevo);
+			em.persist(c);
+			
+			Destino d = new Destino();
+			d.setMensaje(m);
+			d.setDestinatario(c.getCaja());
+			d.setLeido(false);
+			em.persist(d);
+			
+			
+		}
+		
+		solicitud.setTxFinal(0); //iniciamos con 0 meses
+		em.persist(solicitud);
+		LOG.info("Solicitud titular persisted");
+	}
+
+	@Path("/findSolicitudBeneficioBySolicitudId")
+	@GET
+	@Produces("application/json")
+	public List<SolicitudBeneficiario> findSolicitudBeneficioBySolicitudId(@QueryParam("id") Long id) {
+		Solicitud s = em.find(Solicitud.class, id);
+		if (s==null) {
+			return null;
+		}
+		s.getBeneficiarios().size(); //si no hacemos esto, da lazy exception en con json
+		return s.getBeneficiarios();
+	}
+
 	
 }

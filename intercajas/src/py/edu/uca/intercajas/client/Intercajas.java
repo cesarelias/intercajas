@@ -1,11 +1,18 @@
 package py.edu.uca.intercajas.client;
 
 import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.finiquito.UIDenegar;
 import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.Denegado;
+import py.edu.uca.intercajas.shared.entity.Finiquito;
+import py.edu.uca.intercajas.shared.entity.Concedido;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class Intercajas implements EntryPoint {

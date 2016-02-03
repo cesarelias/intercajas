@@ -2,7 +2,6 @@ package py.edu.uca.intercajas.server;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,14 +11,8 @@ import javax.persistence.PersistenceContext;
 
 import py.edu.uca.intercajas.shared.CajaRango;
 import py.edu.uca.intercajas.shared.RangoTiempo;
-import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
-import py.edu.uca.intercajas.shared.entity.Destino;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
-import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 

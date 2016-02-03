@@ -1,13 +1,10 @@
 package py.edu.uca.intercajas.shared;
 
-import java.io.Serializable;
 import java.util.List;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 

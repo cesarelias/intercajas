@@ -12,11 +12,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 @Path("/mensaje")
 @Stateless
@@ -74,7 +71,7 @@ public class MensajeRest   {
 		
 		
 		return  em.createQuery("select a "
-				+ "              from Mensaje a FETCH ALL PROPERTIES, Solicitud b"
+				+ "              from Mensaje a, Solicitud b"
 				+ "             where a.solicitud = b "
 				+ "               and b.estado = :estado"
 				+ " order by a.fecha desc "

@@ -5,15 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Solicitud extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
@@ -22,7 +20,8 @@ public class Solicitud extends EntityBase {
 	private String numero;
 	@NotNull
 	private Estado estado;
-
+	@ManyToOne
+	Beneficiario cotizante;
 	private Integer txFinal;
 	
 	@OneToMany(mappedBy="solicitud")
@@ -37,6 +36,9 @@ public class Solicitud extends EntityBase {
 	@JsonIgnore
 	private List<CajaDeclarada>  cajasDeclaradas;
 	
+	@OneToMany(mappedBy="solicitud")
+	@JsonIgnore
+	private List<SolicitudBeneficiario> beneficiarios;
 	
 	public enum Estado {
 		// estado inicial al crear la solicitud, enviada, con las
@@ -109,5 +111,20 @@ public class Solicitud extends EntityBase {
 		this.txFinal = txFinal;
 	}
 
+	public List<SolicitudBeneficiario> getBeneficiarios() {
+		return beneficiarios;
+	}
+
+	public void setBeneficiarios(List<SolicitudBeneficiario> beneficiarios) {
+		this.beneficiarios = beneficiarios;
+	}
+
+	public Beneficiario getCotizante() {
+		return cotizante;
+	}
+
+	public void setCotizante(Beneficiario cotizante) {
+		this.cotizante = cotizante;
+	}
 
 }

@@ -6,16 +6,21 @@ import java.security.NoSuchAlgorithmException;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
 
+import py.edu.uca.intercajas.client.finiquito.UIDenegar;
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.UILoginImpl;
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -30,6 +35,12 @@ public class AppUtils {
 			RootLayoutPanel.get().clear();
             new MenuMail();
             new Mail().mostrar();
+            
+            
+    		//test
+//    		new UIDenegar().mostrarDialog();
+    		//
+
 	    }
 	    
 	    public static  void mostrarLogin() {
@@ -40,5 +51,7 @@ public class AppUtils {
 			RootLayoutPanel.get().add(panel);
 	    }
 	    
+    
+
 	    
 }

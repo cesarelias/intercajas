@@ -73,7 +73,7 @@ public class DestinoRest   {
 				+ "              from Mensaje a, Solicitud b, Destino c"
 				+ "             where a.solicitud.id = b.id "
 				+ "               and a.id = c.mensaje.id "
-				+ "               and b.estado <> :estado "
+				+ "               and (b.estado <> :estado or c.leido is false) "
 				+ "               and c.destinatario.id = :caja_id "
 				+ " order by a.fecha desc "
 				, Destino.class)

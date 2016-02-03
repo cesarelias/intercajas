@@ -1,8 +1,8 @@
-package py.edu.uca.intercajas.client.tiemposervicio;
+package py.edu.uca.intercajas.client.finiquito;
 
-import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
+import gwtupload.client.IUploadStatus.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +10,12 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
-import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
-import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
-import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
-import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
+import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
-import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.Denegado;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,96 +23,51 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
-public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
+public class UIDenegar extends UIBase {
 
-	interface Binder extends UiBinder<Widget, TiempoServicioReconocidoEditorWorkFlow> {
+	private static UIDenegarUiBinder uiBinder = GWT
+			.create(UIDenegarUiBinder.class);
+
+	interface UIDenegarUiBinder extends UiBinder<Widget, UIDenegar> {
 	}
+
 	
-//	@UiField SolicitudTitularEditor solicitudTitularEditor;
-	@UiField(provided = true) TablaTiempoServicioReconocido tablaTiempoServicioReconocido;
 	@UiField FlowPanel upload;
 	@UiField Label resumenUpload;
 	@UiField TextArea cuerpoMensaje;
 	
-	Solicitud solicitud;
+	@UiField DateBox fechaResolucion;
+	@UiField TextBox numeroResolucion;
+	@UiField TextArea motivo;
 	
-	Images images = GWT.create(Images.class);
 	
 	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
-
-	public TiempoServicioReconocidoEditorWorkFlow(Solicitud solicitud) {
+	
+	SolicitudBeneficiario solicitudBeneficiario;
+	
+	
+	public UIDenegar(SolicitudBeneficiario solicitudBeneficiario) {
+		initWidget(uiBinder.createAndBindUi(this));
 		
-		this.solicitud = solicitud;
-		
-		tablaTiempoServicioReconocido = new TablaTiempoServicioReconocido();
-		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
+		this.solicitudBeneficiario = solicitudBeneficiario;
 		
 		MultiUploader defaultUploader = new MultiUploader();
 		defaultUploader.setAvoidRepeatFiles(false);
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
 		upload.add(defaultUploader);
+		titulo = "Denegar Beneficio";
 		
-	}
-
-	@UiHandler("cancelar")
-	void onCancel(ClickEvent event) {
-		close();
-	}
-	
-	@UiHandler("enviar")
-	void onSave(ClickEvent event) {
-
-		if (adjuntos.isEmpty()) {
-			Window.alert("Es obligatorio enviar al menos un adjunto");
-			return;
-		}
-		
-		Mensaje mensaje = new Mensaje();
-		mensaje.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
-		mensaje.setCuerpo(cuerpoMensaje.getValue());
-		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
-		mensaje.setSolicitud(solicitud);
-
-		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, adjuntos);
-
-		BeneficiarioService.Util.get().nuevoReconocimientoTiempoServicio(n, new MethodCallback<Void>() {
-			@Override
-			public void onSuccess(Method method, Void response) {
-				close();
-				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(null)); //esto refresca el MailList;
-			}
-			
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-				Window.alert(exception.getMessage());
-				new UIDialog("Error",new HTML(method.getResponse().getText()));
-			}
-		});
-		
-		
-//		BeneficiarioService.Util.get().findCajaDeclaradaBySolicitudId(1L, new MethodCallback<List<CajaDeclarada>>() {
-//			@Override
-//			public void onFailure(Method method, Throwable exception) {
-//				Window.alert(exception.getMessage());
-//			}
-//			@Override
-//			public void onSuccess(Method method, List<CajaDeclarada> response) {
-//				for (CajaDeclarada e : response) {
-//					Window.alert(e.getCaja().getSiglas());
-//				}
-//			}
-//		});
-	}
-
-	public void create() {
-
 	}
 	
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
@@ -165,6 +116,45 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		} else {
 			resumenUpload.setText(adjuntos.size() + " archivos listos");
 		}
+	}
+	
+	@UiHandler("cancelar")
+	void onCancel(ClickEvent event){
+		close();
+	}
+
+	
+	@UiHandler("enviar")
+	void onSave(ClickEvent event) {
+
+		if (adjuntos.isEmpty()) {
+			Window.alert("Es obligatorio enviar al menos un adjunto");
+			return;
+		}
+
+		NuevoDenegado nuevoDenegado = new NuevoDenegado();
+
+		nuevoDenegado.setNumeroResolucion(numeroResolucion.getValue());
+		nuevoDenegado.setFechaResolucion(fechaResolucion.getValue());
+		nuevoDenegado.setMovito(motivo.getValue());
+		nuevoDenegado.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
+		nuevoDenegado.setAdjuntos(adjuntos);
+		nuevoDenegado.setCuerpoMensaje(cuerpoMensaje.getValue());
+
+		BeneficiarioService.Util.get().denegar(nuevoDenegado, new MethodCallback<Void>() {
+			@Override
+			public void onSuccess(Method method, Void response) {
+				Window.alert("Enviado!");
+				close();
+			}
+			
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO mejorar error
+				Window.alert(exception.getMessage());
+			}
+		});
+		
 	}
 
 }

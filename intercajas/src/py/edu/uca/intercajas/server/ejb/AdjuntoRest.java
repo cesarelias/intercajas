@@ -13,11 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Beneficiario;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
-import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 @Path("/adjunto")
 @Stateless

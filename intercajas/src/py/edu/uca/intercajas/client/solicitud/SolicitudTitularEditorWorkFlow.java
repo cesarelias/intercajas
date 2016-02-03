@@ -14,13 +14,12 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
-import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.SolicitudTitular;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,7 +45,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField TextArea cuerpoMensaje;
 	
 	
-	SolicitudTitular solicitudTitular;
+	Solicitud solicitudTitular;
 	
 	Images images = GWT.create(Images.class);
 	
@@ -94,7 +93,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
-		solicitudTitular.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
+		solicitudTitular.setCotizante(solicitudTitularEditor.beneficiario.getBeneficiario());
 		
 //		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
@@ -109,9 +108,9 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 //		mensajes.add(mensaje);
 //		solicitudTitular.setMensajes(mensajes);
 
-		NuevaSolicitudTitular nuevaSolicitudTitular = new NuevaSolicitudTitular(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, adjuntos);
+		NuevaSolicitud nuevaSolicitudTitular = new NuevaSolicitud(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, adjuntos);
 		
-		BeneficiarioService.Util.get().nuevoSolicitudTitular(nuevaSolicitudTitular, new MethodCallback<Void>() {
+		BeneficiarioService.Util.get().nuevoSolicitud(nuevaSolicitudTitular, new MethodCallback<Void>() {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
@@ -131,12 +130,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	}
 
 	public void create() {
-		try {
-			solicitudTitular = new SolicitudTitular();
-		} catch (Exception e) {
-			Window.alert("este es el error?: " + e.getMessage());
-		}
-
+		solicitudTitular = new Solicitud();
 	}
 	
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
@@ -176,7 +170,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			}
 		}
 	};
-	
+
 	private void refreshResumenUpload() {
 		if (adjuntos.isEmpty()) {
 			resumenUpload.setText("");

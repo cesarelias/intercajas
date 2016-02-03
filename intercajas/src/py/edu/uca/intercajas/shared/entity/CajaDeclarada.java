@@ -29,7 +29,8 @@ public class CajaDeclarada extends EntityBase {
 	public enum Estado {
 		Nuevo,
 		ConAntiguedad,
-		Finiquitado
+		Concedido,
+		Denegado
 	}
 
 

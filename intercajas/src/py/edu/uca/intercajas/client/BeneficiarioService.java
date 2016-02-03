@@ -17,7 +17,9 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
-import py.edu.uca.intercajas.shared.NuevaSolicitudTitular;
+import py.edu.uca.intercajas.shared.NuevaSolicitud;
+import py.edu.uca.intercajas.shared.NuevoConcedido;
+import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
@@ -25,8 +27,11 @@ import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.Finiquito;
+import py.edu.uca.intercajas.shared.entity.Concedido;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
 
@@ -56,10 +61,10 @@ public interface BeneficiarioService extends RestService {
 			@QueryParam("maxResults") int maxResults,
 			MethodCallback<List<Beneficiario>> callback);
 	
-	@Path("solicitudTitular/nuevo")
+	@Path("solicitud/nuevo")
 	@POST
 	@Consumes("application/json")
-	public void nuevoSolicitudTitular(NuevaSolicitudTitular nuevaSolicitudTitular, MethodCallback<Void> callback);
+	public void nuevoSolicitud(NuevaSolicitud nuevaSolicitud, MethodCallback<Void> callback);
 	
 	
 	//esto es para otro lado
@@ -113,6 +118,21 @@ public interface BeneficiarioService extends RestService {
 	@Produces("application/json")
 	public void findCajaDeclaraadBySolicitudIdAndCurrentUser(@QueryParam("solicitud_id") Long solicitud_id, MethodCallback<CajaDeclarada> cajaDeclarada);
 	
+	@Path("finiquito/denegar")
+	@POST
+	@Consumes("application/json")
+	public void denegar(NuevoDenegado nuevoDenegado, MethodCallback<Void> callback);
+
+
+	@Path("solicitud/findSolicitudBeneficioBySolicitudId")
+	@GET
+	@Produces("application/json")
+	public void findSolicitudBeneficioBySolicitudId(@QueryParam("id") Long id, MethodCallback<List<SolicitudBeneficiario>> ballback);
+
+	@Path("finiquito/conceder")
+	@POST
+	@Consumes("application/json")
+	public void conceder(NuevoConcedido nuevoConcedido, MethodCallback<Void> callback);	
 	
 	/**
      * Utility class to get the instance of the Rest Service
@@ -134,5 +154,6 @@ public interface BeneficiarioService extends RestService {
         }
         
     }
+
 	
 }

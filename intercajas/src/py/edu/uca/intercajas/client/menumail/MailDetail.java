@@ -24,6 +24,8 @@ import javafx.scene.layout.FlowPane;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.finiquito.UIConceder;
+import py.edu.uca.intercajas.client.finiquito.UIDenegar;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -31,6 +33,7 @@ import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.Solicitud.Estado;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -70,6 +73,8 @@ public class MailDetail extends ResizeComposite {
   @UiField FlowPanel opciones;
 
   HorizontalPanel optionsButtons = new HorizontalPanel();
+  
+  CajaDeclarada cajaDeclarada;
   
   public MailDetail() {
     initWidget(binder.createAndBindUi(this));
@@ -140,15 +145,67 @@ public class MailDetail extends ResizeComposite {
 
 			} else 	if (response.getSolicitud().getEstado() == Solicitud.Estado.ConAntiguedad) {
 				
-			    Button fin = new Button("Finiquitar");
-			    fin.addClickHandler(new ClickHandler() {
+				cajaDeclarada = response;
+				//Aqui traer los beneficiarios de la solicitud, para agrgarle el boton finiquitar a cada uno de ello!
+				//o sino, en la ventana finiquitar, aparecen los beneficarios y a cada uno se le finiquita con oootra ventana
+				
+				BeneficiarioService.Util.get().findSolicitudBeneficioBySolicitudId(response.getSolicitud().getId(), new MethodCallback<List<SolicitudBeneficiario>>() {
 					@Override
-					public void onClick(ClickEvent event) {
-						Window.alert("aqui abrimos la venta de finiquito, que aun no existe! :-)");
+					public void onFailure(Method method, Throwable exception) {
+					}
+
+					@Override
+					public void onSuccess(Method method, List<SolicitudBeneficiario> response) {
+						
+						final VerticalPanel vp = new VerticalPanel();
+						final HorizontalPanel hp = new HorizontalPanel();
+						
+						for (final SolicitudBeneficiario sb : response) {
+
+							if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.Concedido) {
+								hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio concedido, no mas acciones diponibles"));
+							} else if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.Denegado) {
+								hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio denegado, no mas acciones diponibles"));
+							} else if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
+							
+								Anchor conceder = new Anchor("conceder");
+								conceder.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										UIConceder c = new UIConceder(sb);
+										c.titulo = "Conceder beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos();
+										c.mostrarDialog();
+									}
+								});
+								
+								Anchor denegar = new Anchor("denegar");
+								denegar.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										UIDenegar d = new UIDenegar(sb);
+										d.titulo = "Denegar beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos();
+										d.mostrarDialog();
+									}
+								});
+								
+								conceder.getElement().getStyle().setProperty("margin", "4px");
+								conceder.getElement().getStyle().setProperty("color", "blue");
+								denegar.getElement().getStyle().setProperty("margin", "4px");
+								denegar.getElement().getStyle().setProperty("color", "blue");
+								hp.add(conceder);
+								hp.add(new Label("o"));
+								hp.add(denegar);
+								hp.add(new Label(" el beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos()));
+							}
+							vp.add(hp);
+						}
+						
+						optionsButtons.add(vp);
+
 					}
 				});
-			    optionsButtons.add(fin);
-
+				
+				
 			}
 
 			

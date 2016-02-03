@@ -1,0 +1,67 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+	
+	<ui:style>
+	.important {
+		font-weight: bold;
+	}
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
+		<g:center>
+			<g:DockLayoutPanel height="100%" width="100%">
+				<g:north size="110">
+					<g:HorizontalPanel width="100%">
+						<!-- <gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" /> -->
+						<g:DecoratorPanel title="Adjuntos">
+							<g:VerticalPanel>
+								<g:Label>Adjuntos</g:Label>
+								<g:ScrollPanel width="350px" height="70px">
+									<g:FlowPanel ui:field="upload" />
+								</g:ScrollPanel>
+								<g:Label ui:field="resumenUpload" />
+							</g:VerticalPanel>
+						</g:DecoratorPanel>
+					</g:HorizontalPanel>
+				</g:north>
+				<g:center>
+					<g:VerticalPanel>
+						<g:HTMLPanel>
+							<table>
+								<tr>
+									<td width="120px">Numero Resolucion</td>
+									<td>
+										<g:TextBox ui:field="numeroResolucion" />
+									</td>
+								</tr>
+								<tr>
+									<td>Fecha Resolucion</td>
+									<td>
+										<dp:DateBox ui:field="fechaResolucion" />
+									</td>
+								</tr>
+								<tr>
+									<td>Motivo</td>
+									<td>
+										<g:TextArea ui:field="motivo" />
+									</td>
+								</tr>
+							</table>
+						</g:HTMLPanel>
+					</g:VerticalPanel>
+				</g:center>
+				<g:south size="110">
+					<g:TextArea ui:field="cuerpoMensaje"></g:TextArea>
+				</g:south>
+			</g:DockLayoutPanel>
+		</g:center>
+		<g:south size="40">
+			<g:HorizontalPanel>
+				<g:Button ui:field="cancelar">Cancelar</g:Button>
+				<g:Button ui:field="enviar">Enviar</g:Button>
+			</g:HorizontalPanel>
+		</g:south>
+	</g:DockLayoutPanel>
+
+</ui:UiBinder> 

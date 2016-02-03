@@ -29,7 +29,7 @@ public class Mensaje extends EntityBase {
 	private List<Adjunto> adjuntos;
 
 	public enum Asunto {
-		NuevaSolicitud, ReconocimientoTiempoServicio, TotalizacionTiempoServicio, Finiquito
+		NuevaSolicitud, ReconocimientoTiempoServicio, TotalizacionTiempoServicio, Concedido, Denegado
 	}
 
 	public Caja getRemitente() {
