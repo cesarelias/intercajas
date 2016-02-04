@@ -90,12 +90,14 @@ public class UserLogin {
 	}
 	
 	public void logout(String sessionId) {
+		System.out.println("logout!");
 		Iterator<UserDTO> i = usuarios.iterator();
 		UserDTO u;
 		while (i.hasNext()) {
 			u = i.next();
 			if (u.getSessionId().equals(sessionId)) {
 				i.remove();
+				System.out.println("logout de : " + u.getName());
 				return;
 			}
 		}
@@ -103,7 +105,7 @@ public class UserLogin {
 
 	//TODO, falta recibir el sessionID para controlar quien esta haciendo el llamado, y que la sesion este activa 
 	// y solo los Usuarios administradores pueden cambiar contraseñas de otros usuarios 
-	public boolean changePassword(String name, String newPassword) {
+	public boolean changePassword(String name, String oldPassword, String newPassword) {
 		
 		try {
 			Usuario u = em.createQuery(
@@ -113,11 +115,13 @@ public class UserLogin {
 					.setParameter("nombre", name)
 					.getSingleResult();
 			
-			u.setClave(MD5(newPassword));
+			if (MD5(oldPassword).equals(u.getClave())) {
+				u.setClave(MD5(newPassword));
+				em.persist(u);
+				return true;
+			}
 			
-			em.persist(u);
-			
-			return true;
+			return false;
 			
 		} catch (NoResultException e) {
 			return false;

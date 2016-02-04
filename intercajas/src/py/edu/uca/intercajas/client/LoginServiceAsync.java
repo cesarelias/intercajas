@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface LoginServiceAsync {
 	
 
-	void changePassword(String name, String newPassword,
+	void changePassword(String name, String oldPassword, String newPassword,
 			AsyncCallback<Boolean> callback);
 
 	void loginFromSessionServer(AsyncCallback<UserDTO> callback);

@@ -38,9 +38,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     }
  
     @Override
-    public boolean changePassword(String name, String newPassword)
+    public boolean changePassword(String name, String oldPassword, String newPassword)
     {
-        return userLoign.changePassword(name, newPassword);
+        return userLoign.changePassword(name, oldPassword, newPassword);
     }
  
     private UserDTO getUserAlreadyFromSession()

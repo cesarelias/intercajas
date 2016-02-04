@@ -31,7 +31,7 @@ public interface LoginService extends RemoteService
  
     UserDTO loginFromSessionServer();
      
-    boolean changePassword(String name, String newPassword);
+    boolean changePassword(String name, String oldPassword, String newPassword);
  
     void logout();
     

@@ -191,7 +191,20 @@ public class SolicitudRest   {
 		m.setAsunto(Asunto.TotalizacionTiempoServicio);
 		m.setSolicitud(s);
 		m.setFecha(new Date());
-		m.setCuerpo("Este es un mensaje automatico, se envia la totalizacion de aportes:_vamos a mejorar el contenido del mimo.");
+
+		//Escribimos el cuerto del mensaje
+		String cuerpo = "";
+		cuerpo += "Totalizacion de Tiempo de Servicio\r\n\r\n";
+		
+		
+		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
+			cuerpo += c.getCaja().getSiglas() + " txNeto: " + CalculoTiempo.leeMeses(c.getTxNeto()) + "\r\n";
+		}
+		
+		cuerpo += "txFinal : " + CalculoTiempo.leeMeses(s.getTxFinal());
+
+		m.setCuerpo(cuerpo);
+		//Fin cuerpo mensaje
 		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(s.getTxFinal()) + " de servicios");
 
 		//TODO enviar como adjunto un reporte en PDF del sistema

@@ -13,6 +13,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
+import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -90,7 +91,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 			@Override
 			public void onSuccess(Method method, Void response) {
 				close();
-				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(null)); //esto refresca el MailList;
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 			}
 			
 			@Override

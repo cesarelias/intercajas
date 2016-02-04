@@ -17,7 +17,6 @@ package py.edu.uca.intercajas.client.menumail;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -118,4 +117,7 @@ public class Contacts extends Composite {
       }
     });
   }
+  
+
+  
 }

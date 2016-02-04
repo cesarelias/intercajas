@@ -17,10 +17,13 @@ package py.edu.uca.intercajas.client.menumail;
 
 import java.util.logging.Logger;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.client.view.login.UICambioContrasena;
+import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -78,7 +81,7 @@ public class Solicitudes extends Composite {
 		
 		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
 		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
-		addItemDynaTable(new ItemMenu("DynaTable","DynnaTable Test"));
+		addItemCambioContrasena(new ItemMenu("Cambiar mi contraseña","Cambiar Contraseña"));
 		
 //		addItem(new ItemMenu("Solicitud Derechohabiente",
 //				"Solicitud Derechohabiente"));
@@ -120,7 +123,7 @@ public class Solicitudes extends Composite {
 
 	}	
 	
-	private void addItemDynaTable(final ItemMenu itemMenu) {
+	private void addItemCambioContrasena(final ItemMenu itemMenu) {
 		final Anchor link = new Anchor(itemMenu.nombre);
 		link.setStyleName(style.item());
 
@@ -130,19 +133,19 @@ public class Solicitudes extends Composite {
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-				LoginService.Util.getInstance().changePassword("cesar", "323698", new AsyncCallback<Boolean>() {
+				LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
 					@Override
-					public void onSuccess(Boolean result) {
-						Window.alert("password cambiado");
+					public void onSuccess(UserDTO result) {
+						new UICambioContrasena(result).mostrarDialog();
 					}
 					
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Error al cambiar password: " + caught.getMessage());
+						//TODO mejorar esto
+						Window.alert(caught.getMessage());
 					}
-				});
+				});				
 				
-//				new DynaTableRf().mostrar();
 			}
 		});
 	}	

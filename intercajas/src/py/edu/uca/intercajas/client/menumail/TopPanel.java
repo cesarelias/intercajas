@@ -17,7 +17,6 @@ package py.edu.uca.intercajas.client.menumail;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.LoginService;
-import py.edu.uca.intercajas.client.view.login.UILoginImpl;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.GWT;
@@ -30,7 +29,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**

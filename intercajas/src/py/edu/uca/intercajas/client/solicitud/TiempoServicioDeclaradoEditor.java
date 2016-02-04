@@ -9,10 +9,12 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Empleador;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -24,6 +26,7 @@ import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.ValueListBox;
@@ -37,6 +40,10 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 	interface Binder extends UiBinder<Widget, TiempoServicioDeclaradoEditor> {
 	}
 	
+	public interface Listener {
+		void onChanged(TiempoServicioDeclarado tiempoServicioDeclarado);
+	}
+	
 	@UiField DateBox inicio;
 	@UiField DateBox fin;
 	@UiField(provided = true) ValueListBox<Caja> caja;
@@ -46,10 +53,12 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 	@Editor.Ignore	MultiWordSuggestOracle oracle;
 	
 	TiempoServicioDeclarado tiempoServicioDeclarado;
+	
+	Listener listener;
 
-	public TiempoServicioDeclaradoEditor(TiempoServicioDeclarado periodoAporteDeclaradoEdit) {
+	public TiempoServicioDeclaradoEditor(TiempoServicioDeclarado periodoAporteDeclarado) {
 		
-		this.tiempoServicioDeclarado = periodoAporteDeclaradoEdit;
+	
 		
 		oracle = new MultiWordSuggestOracle();
 		lugar = new SuggestBox(oracle);	
@@ -145,7 +154,10 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 		tiempoServicioDeclarado.setLugar(lugar.getValue());
 		
 		
-		AppUtils.EVENT_BUS.fireEvent(new PeriodoAporteDeclaradoChangedEvent(tiempoServicioDeclarado));
+		//AppUtils.EVENT_BUS.fireEvent(new PeriodoAporteDeclaradoChangedEvent(tiempoServicioDeclarado));
+		if (listener!=null) {
+			listener.onChanged(tiempoServicioDeclarado);
+		}
 		close();
 		
 	}
@@ -168,6 +180,10 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 			public void onFailure(Method method, Throwable exception) {
 			}
 		});
+	}
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 	
 }
