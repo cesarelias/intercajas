@@ -1,11 +1,10 @@
 package py.edu.uca.intercajas.client.finiquito;
 
+import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
-import gwtupload.client.IUploadStatus.Status;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +17,22 @@ import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
-import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
-import py.edu.uca.intercajas.shared.entity.Denegado;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -67,6 +60,7 @@ public class UIConceder extends UIBase {
 	@UiField IntegerBox bt;
 	@UiField Label tmin;
 	@UiField Button enviar;
+	@UiField Button calcularBx;
 	
 	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 	
@@ -231,16 +225,14 @@ public class UIConceder extends UIBase {
 
 		BigDecimal x = new BigDecimal((float)txInt/(float)tminInt);
 		
-		Window.alert("x: " + x.toString());
 		
 		bxBig = btBig.multiply(x).setScale(0, RoundingMode.HALF_UP);
 		
-		
-		bx.setText(bxBig.toString());
+		bx.setText(NumberFormat.getFormat("0,000").format(bxBig));
 				
 		bt.setEnabled(false);
 		enviar.setEnabled(true);
-		
+		calcularBx.setEnabled(false);
 		
 	}
 	

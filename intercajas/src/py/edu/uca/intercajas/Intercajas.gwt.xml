@@ -21,6 +21,7 @@
 <inherits name="org.fusesource.restygwt.RestyGWT"/>
 <inherits name='com.google.gwt.logging.Logging'/>
 <inherits name="gwtupload.GWTUpload"/>
+<inherits name="com.google.gwt.i18n.I18N"/>
 
 <!-- Specify the app entry point class.                         -->
   <entry-point class='py.edu.uca.intercajas.client.Intercajas'/>
@@ -29,7 +30,8 @@
   <source path='client'/>
   <source path='shared'/>
 
-  <extend-property name="locale" values="es" />
+  <extend-property name="locale" values="es_PY" />
+  <set-property name="locale" value="es_PY" />
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>
 </module>

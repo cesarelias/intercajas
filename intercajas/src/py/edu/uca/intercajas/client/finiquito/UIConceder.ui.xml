@@ -41,21 +41,27 @@
 									</td>
 								</tr>
 								<tr>
-									<td>bx</td>
+									<td>tx</td>
 									<td>
-										<g:Label ui:field="bx" />
+										<g:Label ui:field="tx" />
 									</td>
+								</tr>
+								<tr>
+									<td>tmin</td>
+									<td>
+										<g:Label ui:field="tmin" />
+									</td>
+								</tr>
+								<tr>
 									<td>bt</td>
 									<td>
 										<g:IntegerBox ui:field="bt" />
 									</td>
-									<td>tx</td>	
+								</tr>								
+								<tr>
+									<td>bx</td>
 									<td>
-										<g:Label ui:field="tx" />
-									</td>
-									<td>tmin</td>	
-									<td>
-										<g:Label ui:field="tmin" />
+										<g:Label ui:field="bx" />
 									</td>
 								</tr>
 							</table>
