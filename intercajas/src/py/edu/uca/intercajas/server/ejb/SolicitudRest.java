@@ -74,6 +74,9 @@ public class SolicitudRest   {
 	@Consumes("application/json")
 	public void nuevoReconocimientoTiempoServicio(NuevoReconocimientoTiempoServicio nuevoReconocimientoTiempoServicio, @Context HttpServletRequest req) {
 		
+		//TODO 
+		//falta controlar que no se pueda reconocer mas tiempo del tmin 
+		
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
         	System.out.println("usuario no valido para el llamado rest!");
@@ -268,6 +271,15 @@ public class SolicitudRest   {
 		
 		solicitud.setTxFinal(0); //iniciamos con 0 meses
 		em.persist(solicitud);
+		
+		//Como la solicitud es del titular, hacemos SolicitudBenefiario = al cotizante
+		SolicitudBeneficiario sb = new SolicitudBeneficiario();
+		sb.setBeneficiario(solicitud.getCotizante());
+		sb.setSolicitud(solicitud);
+		
+		em.persist(sb);
+		
+		
 		LOG.info("Solicitud titular persisted");
 	}
 

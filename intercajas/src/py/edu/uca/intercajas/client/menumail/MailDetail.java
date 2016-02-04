@@ -202,10 +202,13 @@ public class MailDetail extends ResizeComposite {
 						
 						optionsButtons.add(vp);
 
-					}
+					} 
+					
 				});
 				
 				
+			} else {
+				optionsButtons.add(new Label("No hay acciones disponibles"));
 			}
 
 			

@@ -90,12 +90,13 @@ public class MailList extends ResizeComposite {
 
   
   public void registerEvent() {
-	    AppUtils.EVENT_BUS.addHandler(SolicitudCreatedEvent.TYPE, new SolicitudCreatedEvent.Handler() {
-				@Override
-				public void created(Solicitud solicitud) {
-					update();
-				}
-			});
+	    
+	    AppUtils.EVENT_BUS.addHandler(RefreshMailEvent.TYPE, new RefreshMailEvent.Handler() {
+			@Override
+			public void refresh() {
+				update();
+			}
+		});
   }
   /**
    * Sets the listener that will be notified when an item is selected.
@@ -128,7 +129,7 @@ public class MailList extends ResizeComposite {
   void older() {
     // Move forward a page.
     startIndex += VISIBLE_EMAIL_COUNT;
-    if (startIndex >= MailItems.getMailItemCount()) {
+    if (table.getRowCount() < VISIBLE_EMAIL_COUNT) {
       startIndex -= VISIBLE_EMAIL_COUNT;
     } else {
       styleRow(selectedRow, false);

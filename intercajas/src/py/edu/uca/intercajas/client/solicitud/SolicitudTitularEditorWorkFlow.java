@@ -13,7 +13,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
-import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
@@ -114,8 +114,8 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
-				AppUtils.EVENT_BUS.fireEvent(new SolicitudCreatedEvent(solicitudTitular));
-				Window.alert("Solicuitud GENERADA! .... Pero faltan las validaciones del formularo, no olvidar...!! Se crearon: Solicitud, SolicitudTituilar, Mensaje, Adjunto, Destino");
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+				Window.alert("Solicuitud GENERADA!");
 				close();
 				
 			}

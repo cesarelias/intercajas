@@ -10,7 +10,9 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -144,6 +146,7 @@ public class UIDenegar extends UIBase {
 		BeneficiarioService.Util.get().denegar(nuevoDenegado, new MethodCallback<Void>() {
 			@Override
 			public void onSuccess(Method method, Void response) {
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 				Window.alert("Enviado!");
 				close();
 			}

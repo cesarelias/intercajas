@@ -16,6 +16,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -200,6 +201,7 @@ public class UIConceder extends UIBase {
 		BeneficiarioService.Util.get().conceder(nuevoConcedido, new MethodCallback<Void>() {
 			@Override
 			public void onSuccess(Method method, Void response) {
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 				Window.alert("Enviado!");
 				close();
 			}

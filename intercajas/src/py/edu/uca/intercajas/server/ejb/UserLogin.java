@@ -42,7 +42,7 @@ public class UserLogin {
 	    			.setParameter("nombre", name)
 	    			.setParameter("clave", MD5(password))
 	    			.getSingleResult();
-    	
+
 	    	UserDTO user = new UserDTO();
 	    	user.setId(u.getId());
 	    	user.setLoggedIn(true);
@@ -53,15 +53,14 @@ public class UserLogin {
     		user.setCaja(u.getCaja());
     		usuarios.add(user);
     		return user;
-	    	
+
     	} catch (NoResultException e) {
     		return null;
     	}
     	
 	}
-	
+
 	public UserDTO getValidUser(String sessionId) {
-		
 		
 //		UserDTO user = new UserDTO();
 //		Caja c = em.find(Caja.class, 1L);
