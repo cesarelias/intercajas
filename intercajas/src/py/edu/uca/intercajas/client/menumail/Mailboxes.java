@@ -15,15 +15,22 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import py.edu.uca.intercajas.client.AppUtils;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -68,6 +75,9 @@ public class Mailboxes extends Composite {
 	  
     Images images = GWT.create(Images.class);
 
+
+    
+    
     tree = new Tree(images);
     TreeItem root = new TreeItem(
         imageItemHTML(images.home(), "Cesar Sanabria"));
@@ -80,6 +90,7 @@ public class Mailboxes extends Composite {
   		
   	    if (event.getSelectedItem().getText().trim().equals("Entrada")) {
   	    	new Mail().mostrar();
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
   	    }
   	  }
   	});
@@ -105,11 +116,10 @@ public class Mailboxes extends Composite {
   private TreeItem addImageItem(TreeItem root, String title,
       ImageResource imageProto) {
     TreeItem item = new TreeItem(imageItemHTML(imageProto, title));
-    
-
-    
+       
     root.addItem(item);
     return item;
+
   }
 
   /**

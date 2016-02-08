@@ -30,7 +30,7 @@ public class AppUtils {
             
             
     		//test
-            new UIEditarUsuario(null).mostrarDialog();
+//            new UIEditarUsuario(null).mostrarDialog();
     		//
 
 	    }
