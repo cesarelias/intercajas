@@ -2,7 +2,6 @@ package py.edu.uca.intercajas.shared.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -12,11 +11,16 @@ public class Adjunto extends EntityBase {
 
 	private String nombreArchivo;
 	private String rutaArchivo;
-
+	private Tipo tipo;
+	
 	@ManyToOne
 	@JsonIgnore
 	private Mensaje mensaje;
-
+	
+	public enum Tipo {
+		DocumentoIdentidad, Solicitud, ReconocimientoTiempoServicio, Resolucion, Otro
+	}
+	
 	public String getNombreArchivo() {
 		return nombreArchivo;
 	}
@@ -41,4 +45,12 @@ public class Adjunto extends EntityBase {
 		this.rutaArchivo = rutaArchivo;
 	}
 
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+	
 }

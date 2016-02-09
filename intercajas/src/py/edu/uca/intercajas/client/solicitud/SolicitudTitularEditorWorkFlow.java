@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.client.solicitud;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
+import gwtupload.client.SingleUploader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -41,9 +44,9 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
 	@UiField FlowPanel upload;
+	@UiField FlexTable uploadTable;
 	@UiField Label resumenUpload;
 	@UiField TextArea cuerpoMensaje;
-	
 	
 	Solicitud solicitudTitular;
 	
@@ -51,25 +54,32 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	//Map<String, String> adjuntos = new HashMap<String, String>();
 	
+	SingleUploader defaultUploader = new SingleUploader();
 	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 
 	public SolicitudTitularEditorWorkFlow() {
+		
 //		title = "Solicitud Titular";
 		tablaTiempoServicioDeclarado = new TablaTiempoServicioDeclarado();
 		solicitudTitularEditor = new SolicitudTitularEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
-		MultiUploader defaultUploader = new MultiUploader();
+		
+		defaultUploader.setValidExtensions("pdf");
+		defaultUploader.setMultipleSelection(false);
+		defaultUploader.setAutoSubmit(true);
 		defaultUploader.setAvoidRepeatFiles(false);
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
+		
 		upload.add(defaultUploader);
 		
 	}
 
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
-		close();
+		
+		//close();
 	}
 	
 	@UiHandler("enviar")
@@ -92,7 +102,6 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		
 		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
-		solicitudTitular.setFecha(solicitudTitularEditor.fecha.getValue());
 		solicitudTitular.setCotizante(solicitudTitularEditor.beneficiario.getBeneficiario());
 		
 //		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
@@ -142,6 +151,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	    		  a.setNombreArchivo(archivos[i]);
 	    		  a.setRutaArchivo(archivos[i+1]);
 	    		  adjuntos.add(a);
+	    		  
 	    	  }
 	    	  refreshResumenUpload();
 	      }
@@ -179,6 +189,15 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		} else {
 			resumenUpload.setText(adjuntos.size() + " archivos listos");
 		}
+		
+		uploadTable.clear(true);
+		for (int i=0; i < adjuntos.size(); i++) {
+			uploadTable.setText(i, 0, adjuntos.get(i).getNombreArchivo());
+			Anchor a = new Anchor("eliminar");
+			a.addStyleName("anchorLink");
+			uploadTable.setWidget(i, 1, a);
+		}
+		
 	}
 
 }

@@ -279,10 +279,10 @@ public class SolicitudRest   {
 			d.setLeido(false);
 			em.persist(d);
 			
-			
 		}
 		
 		solicitud.setTxFinal(0); //iniciamos con 0 meses
+		solicitud.setFecha(new Date()); //fecha del dia
 		em.persist(solicitud);
 		
 		//Como la solicitud es del titular, hacemos SolicitudBenefiario = al cotizante
@@ -292,8 +292,8 @@ public class SolicitudRest   {
 		
 		em.persist(sb);
 		
-		
 		LOG.info("Solicitud titular persisted");
+		
 	}
 
 	@Path("/findSolicitudBeneficioBySolicitudId")

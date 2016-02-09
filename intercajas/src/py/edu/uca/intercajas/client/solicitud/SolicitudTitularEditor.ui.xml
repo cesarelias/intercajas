@@ -9,15 +9,9 @@
 	<g:HTMLPanel>
 		<table>
 			<tr>
-				<td width="120px">Numero</td>
+				<td width="120px">Expediente N°</td>
 				<td>
 					<g:TextBox ui:field="numero" />
-				</td>
-			</tr>
-			<tr>
-				<td>Fecha</td>
-				<td>
-					<dp:DateBox ui:field="fecha" />
 				</td>
 			</tr>
 			<tr>

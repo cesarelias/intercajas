@@ -25,7 +25,6 @@ public class SolicitudTitularEditor extends UIBase  {
 	SimpleEventBus eventBus;
 
 	@UiField TextBox numero;
-	@UiField DateBox fecha;
 	@UiField (provided = true) BeneficiarioSelector beneficiario;
 
 	public SolicitudTitularEditor() {
@@ -44,9 +43,9 @@ public class SolicitudTitularEditor extends UIBase  {
 //		});
 
 		DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-		fecha.setFormat(new DateBox.DefaultFormat(dateFormat));
-		fecha.getDatePicker().setYearAndMonthDropdownVisible(true);
-		fecha.getDatePicker().setVisibleYearCount(99);
+//		fecha.setFormat(new DateBox.DefaultFormat(dateFormat));
+//		fecha.getDatePicker().setYearAndMonthDropdownVisible(true);
+//		fecha.getDatePicker().setVisibleYearCount(99);
 
 	}
 	

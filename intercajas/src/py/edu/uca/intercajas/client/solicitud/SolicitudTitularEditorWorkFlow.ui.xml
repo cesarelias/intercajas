@@ -13,8 +13,9 @@
 						<g:DecoratorPanel title="Adjuntos">
 							<g:VerticalPanel>
 								<g:Label>Adjuntos</g:Label>
+								<g:FlowPanel ui:field="upload" />
 								<g:ScrollPanel width="350px" height="70px">
-									<g:FlowPanel ui:field="upload" />
+									<g:FlexTable ui:field="uploadTable" />
 								</g:ScrollPanel>
 								<g:Label ui:field="resumenUpload"/>
 							</g:VerticalPanel>

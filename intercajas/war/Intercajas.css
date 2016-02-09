@@ -22,7 +22,6 @@ h1 {
 	color: red;
 }
 
-
 .selectedRow {
 	background: #adcce7;
 }
@@ -30,6 +29,11 @@ h1 {
 .selectedRow td {
 	border-top: 1px solid #88a4d6;
 	border-bottom: 1px solid #7b97d0;
+}
+
+.anchorLink {
+	margin-left: 10px;
+	color: blue;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
