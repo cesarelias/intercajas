@@ -1,8 +1,8 @@
 package py.edu.uca.intercajas.client.solicitud;
 
+import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
-import gwtupload.client.MultiUploader;
 import gwtupload.client.SingleUploader;
 
 import java.util.ArrayList;
@@ -43,19 +43,13 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
-	@UiField FlowPanel upload;
-	@UiField FlexTable uploadTable;
-	@UiField Label resumenUpload;
+	@UiField UploadAdjuntos upload;
 	@UiField TextArea cuerpoMensaje;
 	
 	Solicitud solicitudTitular;
 	
 	Images images = GWT.create(Images.class);
 	
-	//Map<String, String> adjuntos = new HashMap<String, String>();
-	
-	SingleUploader defaultUploader = new SingleUploader();
-	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 
 	public SolicitudTitularEditorWorkFlow() {
 		
@@ -63,16 +57,6 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		tablaTiempoServicioDeclarado = new TablaTiempoServicioDeclarado();
 		solicitudTitularEditor = new SolicitudTitularEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
-		
-		
-		defaultUploader.setValidExtensions("pdf");
-		defaultUploader.setMultipleSelection(false);
-		defaultUploader.setAutoSubmit(true);
-		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
-		
-		upload.add(defaultUploader);
 		
 	}
 
@@ -86,7 +70,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	void onSave(ClickEvent event) {
 		
 		
-		if (adjuntos.isEmpty()) {
+		if (upload.adjuntos.length == 0) {
 			Window.alert("Es obligatorio enviar al menos un adjunto");
 			return;
 		}
@@ -117,7 +101,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 //		mensajes.add(mensaje);
 //		solicitudTitular.setMensajes(mensajes);
 
-		NuevaSolicitud nuevaSolicitudTitular = new NuevaSolicitud(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, adjuntos);
+		NuevaSolicitud nuevaSolicitudTitular = new NuevaSolicitud(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, upload.adjuntos);
 		
 		BeneficiarioService.Util.get().nuevoSolicitud(nuevaSolicitudTitular, new MethodCallback<Void>() {
 
@@ -142,62 +126,4 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitular = new Solicitud();
 	}
 	
-	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-	    public void onFinish(IUploader uploader) {
-	      if (uploader.getStatus() == Status.SUCCESS) {
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  adjuntos.add(a);
-	    		  
-	    	  }
-	    	  refreshResumenUpload();
-	      }
-	    }
-	};
-
-	private IUploader.OnStatusChangedHandler onStatusChangedHandler = new IUploader.OnStatusChangedHandler() {
-		
-		@Override
-		public void onStatusChanged(IUploader uploader) {
-			if (uploader.getStatus() == Status.DELETED) {
-				if (uploader.getServerMessage().getMessage() == null) { 
-					return;
-				}
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
-	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i])) {
-	    				  adjuntos.remove(ii);
-	    				  break;
-	    			  }
-	    		  }
-	    		  //adjuntos.remove(archivos[i]);
-	    	  }
-	    	  refreshResumenUpload();
-			}
-		}
-	};
-
-	private void refreshResumenUpload() {
-		if (adjuntos.isEmpty()) {
-			resumenUpload.setText("");
-		} else if (adjuntos.size() == 1) {
-			resumenUpload.setText(adjuntos.size() + " archivo listo");
-		} else {
-			resumenUpload.setText(adjuntos.size() + " archivos listos");
-		}
-		
-		uploadTable.clear(true);
-		for (int i=0; i < adjuntos.size(); i++) {
-			uploadTable.setText(i, 0, adjuntos.get(i).getNombreArchivo());
-			Anchor a = new Anchor("eliminar");
-			a.addStyleName("anchorLink");
-			uploadTable.setWidget(i, 1, a);
-		}
-		
-	}
-
 }

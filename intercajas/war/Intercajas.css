@@ -31,10 +31,11 @@ h1 {
 	border-bottom: 1px solid #7b97d0;
 }
 
-.anchorLink {
+.gwt-Anchor {
 	margin-left: 10px;
-	color: blue;
 }
+
+.gwt-Anchor:link {color:#0000ff;}
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {

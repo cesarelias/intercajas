@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.client;
 
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
+import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.UICambioContrasena;
 import py.edu.uca.intercajas.client.view.login.UIEditarUsuario;
 import py.edu.uca.intercajas.client.view.login.UILogin;
@@ -30,7 +31,14 @@ public class AppUtils {
             
             
     		//test
-//            new UIEditarUsuario(null).mostrarDialog();
+            try {
+			  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
+			  b.titulo = "Nueva solicitud titular";
+			  b.mostrarDialog();
+			  b.create();
+            }catch (Exception e) {
+            	Window.alert(e.getMessage());
+            }
     		//
 
 	    }

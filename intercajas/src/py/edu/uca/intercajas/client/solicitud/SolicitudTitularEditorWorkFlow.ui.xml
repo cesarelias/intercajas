@@ -11,14 +11,7 @@
 					<g:HorizontalPanel width="100%">
 						<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
 						<g:DecoratorPanel title="Adjuntos">
-							<g:VerticalPanel>
-								<g:Label>Adjuntos</g:Label>
-								<g:FlowPanel ui:field="upload" />
-								<g:ScrollPanel width="350px" height="70px">
-									<g:FlexTable ui:field="uploadTable" />
-								</g:ScrollPanel>
-								<g:Label ui:field="resumenUpload"/>
-							</g:VerticalPanel>
+							<gt:UploadAdjuntos ui:field="upload"/>
 						</g:DecoratorPanel>
 					</g:HorizontalPanel>
 				</g:north>
