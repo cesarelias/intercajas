@@ -104,7 +104,7 @@ public class MailDetail extends ResizeComposite {
 		public void onSuccess(Method method, List<Adjunto> response) {
 			panelAdjuntos.clear();
 			for (Adjunto a : response) {
-				panelAdjuntos.add(createDownloadLink(a.getNombreArchivo(), a.getRutaArchivo()));
+				panelAdjuntos.add(createDownloadLink(a.getTipo().toString(), a.getRutaArchivo()));
 			}
 		}
 		@Override

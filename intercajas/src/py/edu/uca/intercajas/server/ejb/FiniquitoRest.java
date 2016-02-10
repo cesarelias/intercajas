@@ -117,14 +117,15 @@ public class FiniquitoRest {
 		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();
+		
+		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(sb.getSolicitud());
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Deniega Beneficio ");
-		m.setAdjuntos(nuevoDenegado.getAdjuntos());
 		m.setCuerpo(nuevoDenegado.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Denegado);
-		for (Adjunto a : m.getAdjuntos()) {
+		for (Adjunto a : nuevoDenegado.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
@@ -202,22 +203,21 @@ public class FiniquitoRest {
 
 		
 		em.persist(c);
-
 		
 		cd.setEstado(CajaDeclarada.Estado.Concedido);
 		em.persist(cd);
 		
-		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();
+		
+		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(sb.getSolicitud());
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Concede Beneficio ");
-		m.setAdjuntos(nuevoConcedido.getAdjuntos());
 		m.setCuerpo(nuevoConcedido.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Concedido);
-		for (Adjunto a : m.getAdjuntos()) {
+		for (Adjunto a : nuevoConcedido.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
@@ -233,9 +233,6 @@ public class FiniquitoRest {
 			em.persist(d);
 		}
 
-		
-		
-		
 	}
 	
 }

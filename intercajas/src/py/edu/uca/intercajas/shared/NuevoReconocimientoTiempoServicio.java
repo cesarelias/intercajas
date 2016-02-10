@@ -17,7 +17,7 @@ public class NuevoReconocimientoTiempoServicio  {
 	Solicitud solicitud;
 	List<TiempoServicioReconocido> listaTiempoServicioReconocido;
 	Mensaje mensaje;
-	List<Adjunto> adjuntos;
+	Adjunto[] adjuntos;
 
 	public NuevoReconocimientoTiempoServicio() {
 
@@ -48,17 +48,17 @@ public class NuevoReconocimientoTiempoServicio  {
 		this.mensaje = mensaje;
 	}
 
-	public List<Adjunto> getAdjuntos() {
+	public Adjunto[] getAdjuntos() {
 		return adjuntos;
 	}
 
-	public void setAdjuntos(List<Adjunto> adjuntos) {
+	public void setAdjuntos(Adjunto[] adjuntos) {
 		this.adjuntos = adjuntos;
 	}
 
 	public NuevoReconocimientoTiempoServicio(Solicitud solicitud,
 			List<TiempoServicioReconocido> listaTiempoServicioReconocido,
-			Mensaje mensaje, List<Adjunto> adjuntos) {
+			Mensaje mensaje, Adjunto[] adjuntos) {
 		this.solicitud = solicitud;
 		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
 		this.mensaje = mensaje;

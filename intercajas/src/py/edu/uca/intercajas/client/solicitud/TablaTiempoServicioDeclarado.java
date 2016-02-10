@@ -18,6 +18,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -41,7 +42,6 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	@UiField
 	FlexTable header;
 
-	HandlerRegistration h;
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 
 	ListDataProvider<TiempoServicioDeclarado> model;
@@ -80,6 +80,16 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 
 	}
 
+	@UiHandler("table")
+	void onTableClicked(ClickEvent event) {
+		// Select the row that was clicked (-1 to account for header row).
+		Cell cell = table.getCellForEvent(event);
+		if (cell != null) {
+			int row = cell.getRowIndex();
+			selectRow(row);
+		}
+	}
+	  
 	@UiHandler("create")
 	void onCreate(ClickEvent event) {
 
@@ -116,7 +126,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	}
 
 	@UiHandler("delete")
-	void onDekete(ClickEvent event){
+	void onDelete(ClickEvent event){
 
 		styleRow(selectedRow, false);
 		listaTiempoServicioDeclarado.remove(selectedRow);

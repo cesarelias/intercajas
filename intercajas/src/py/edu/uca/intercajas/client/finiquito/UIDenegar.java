@@ -44,16 +44,13 @@ public class UIDenegar extends UIBase {
 	}
 
 	
-	@UiField FlowPanel upload;
-	@UiField Label resumenUpload;
+	@UiField UploadDenegar upload;
 	@UiField TextArea cuerpoMensaje;
 	
 	@UiField DateBox fechaResolucion;
 	@UiField TextBox numeroResolucion;
 	@UiField TextArea motivo;
 	
-	
-	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
 	
 	SolicitudBeneficiario solicitudBeneficiario;
 	
@@ -63,61 +60,8 @@ public class UIDenegar extends UIBase {
 		
 		this.solicitudBeneficiario = solicitudBeneficiario;
 		
-		MultiUploader defaultUploader = new MultiUploader();
-		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
-		upload.add(defaultUploader);
 		titulo = "Denegar Beneficio";
 		
-	}
-	
-	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-	    public void onFinish(IUploader uploader) {
-	      if (uploader.getStatus() == Status.SUCCESS) {
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  adjuntos.add(a);
-	    	  }
-	    	  refreshResumenUpload();
-	      }
-	    }
-	};
-
-	private IUploader.OnStatusChangedHandler onStatusChangedHandler = new IUploader.OnStatusChangedHandler() {
-		
-		@Override
-		public void onStatusChanged(IUploader uploader) {
-			if (uploader.getStatus() == Status.DELETED) {
-				if (uploader.getServerMessage().getMessage() == null) { 
-					return;
-				}
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
-	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i])) {
-	    				  adjuntos.remove(ii);
-	    				  break;
-	    			  }
-	    		  }
-	    		  //adjuntos.remove(archivos[i]);
-	    	  }
-	    	  refreshResumenUpload();
-			}
-		}
-	};
-	
-	private void refreshResumenUpload() {
-		if (adjuntos.isEmpty()) {
-			resumenUpload.setText("");
-		} else if (adjuntos.size() == 1) {
-			resumenUpload.setText(adjuntos.size() + " archivo listo");
-		} else {
-			resumenUpload.setText(adjuntos.size() + " archivos listos");
-		}
 	}
 	
 	@UiHandler("cancelar")
@@ -129,10 +73,13 @@ public class UIDenegar extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		if (adjuntos.isEmpty()) {
-			Window.alert("Es obligatorio enviar al menos un adjunto");
-			return;
+		for(Adjunto a : upload.adjuntos) {
+			if (a == null) {
+				Window.alert("Es obligatorio enviar adjunto");
+				return;
+			}
 		}
+
 
 		NuevoDenegado nuevoDenegado = new NuevoDenegado();
 
@@ -140,7 +87,7 @@ public class UIDenegar extends UIBase {
 		nuevoDenegado.setFechaResolucion(fechaResolucion.getValue());
 		nuevoDenegado.setMovito(motivo.getValue());
 		nuevoDenegado.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
-		nuevoDenegado.setAdjuntos(adjuntos);
+		nuevoDenegado.setAdjuntos(upload.adjuntos);
 		nuevoDenegado.setCuerpoMensaje(cuerpoMensaje.getValue());
 
 		BeneficiarioService.Util.get().denegar(nuevoDenegado, new MethodCallback<Void>() {

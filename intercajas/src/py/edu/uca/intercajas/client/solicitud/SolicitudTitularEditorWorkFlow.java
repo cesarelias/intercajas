@@ -43,7 +43,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	
 	@UiField(provided = true) SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
-	@UiField UploadAdjuntos upload;
+	@UiField UploadSolicitud upload;
 	@UiField TextArea cuerpoMensaje;
 	
 	Solicitud solicitudTitular;
@@ -62,17 +62,18 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event) {
-		
-		//close();
+		close();
 	}
 	
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 		
 		
-		if (upload.adjuntos.length == 0) {
-			Window.alert("Es obligatorio enviar al menos un adjunto");
-			return;
+		for(Adjunto a : upload.adjuntos) {
+			if (a == null) {
+				Window.alert("Es obligatorio enviar adjunto");
+				return;
+			}
 		}
 				
 		//TODO falta agregar la validacion del formulario

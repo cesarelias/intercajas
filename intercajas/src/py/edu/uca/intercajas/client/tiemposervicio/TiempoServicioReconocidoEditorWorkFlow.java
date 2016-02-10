@@ -41,28 +41,19 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	
 //	@UiField SolicitudTitularEditor solicitudTitularEditor;
 	@UiField(provided = true) TablaTiempoServicioReconocido tablaTiempoServicioReconocido;
-	@UiField FlowPanel upload;
-	@UiField Label resumenUpload;
+	@UiField UploadReconocimientoTiempoServicio upload;
 	@UiField TextArea cuerpoMensaje;
 	
 	Solicitud solicitud;
 	
 	Images images = GWT.create(Images.class);
 	
-	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
-
 	public TiempoServicioReconocidoEditorWorkFlow(Solicitud solicitud) {
 		
 		this.solicitud = solicitud;
 		
 		tablaTiempoServicioReconocido = new TablaTiempoServicioReconocido();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
-		
-		MultiUploader defaultUploader = new MultiUploader();
-		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
-		upload.add(defaultUploader);
 		
 	}
 
@@ -74,10 +65,13 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		if (adjuntos.isEmpty()) {
-			Window.alert("Es obligatorio enviar al menos un adjunto");
-			return;
+		for(Adjunto a : upload.adjuntos) {
+			if (a == null) {
+				Window.alert("Es obligatorio enviar adjunto");
+				return;
+			}
 		}
+		
 		
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
@@ -85,7 +79,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
 		mensaje.setSolicitud(solicitud);
 
-		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, adjuntos);
+		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
 
 		BeneficiarioService.Util.get().nuevoReconocimientoTiempoServicio(n, new MethodCallback<Void>() {
 			@Override
@@ -118,54 +112,6 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 
 	public void create() {
 
-	}
-	
-	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-	    public void onFinish(IUploader uploader) {
-	      if (uploader.getStatus() == Status.SUCCESS) {
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  adjuntos.add(a);
-	    	  }
-	    	  refreshResumenUpload();
-	      }
-	    }
-	};
-
-	private IUploader.OnStatusChangedHandler onStatusChangedHandler = new IUploader.OnStatusChangedHandler() {
-		
-		@Override
-		public void onStatusChanged(IUploader uploader) {
-			if (uploader.getStatus() == Status.DELETED) {
-				if (uploader.getServerMessage().getMessage() == null) { 
-					return;
-				}
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
-	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i])) {
-	    				  adjuntos.remove(ii);
-	    				  break;
-	    			  }
-	    		  }
-	    		  //adjuntos.remove(archivos[i]);
-	    	  }
-	    	  refreshResumenUpload();
-			}
-		}
-	};
-	
-	private void refreshResumenUpload() {
-		if (adjuntos.isEmpty()) {
-			resumenUpload.setText("");
-		} else if (adjuntos.size() == 1) {
-			resumenUpload.setText(adjuntos.size() + " archivo listo");
-		} else {
-			resumenUpload.setText(adjuntos.size() + " archivos listos");
-		}
 	}
 
 }

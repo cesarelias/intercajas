@@ -23,10 +23,15 @@ public class Mensaje extends EntityBase {
 	@ManyToOne
 	@JsonIgnoreProperties({"beneficiario"})
 	private Solicitud solicitud;
+	private Estado estado;
 	private Date fecha;	
 	@OneToMany(mappedBy = "mensaje")
 	@JsonIgnore
 	private List<Adjunto> adjuntos;
+	
+	public enum Estado {
+		Pendiente, Autorizado, Anulado 
+	}
 
 	public enum Asunto {
 		NuevaSolicitud, ReconocimientoTiempoServicio, TotalizacionTiempoServicio, Concedido, Denegado
@@ -86,6 +91,14 @@ public class Mensaje extends EntityBase {
 
 	public void setCuerpo(String cuerpo) {
 		this.cuerpo = cuerpo;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 
 }

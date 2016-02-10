@@ -18,7 +18,7 @@ public class Adjunto extends EntityBase {
 	private Mensaje mensaje;
 	
 	public enum Tipo {
-		DocumentoIdentidad, Solicitud, ReconocimientoTiempoServicio, Resolucion, Otro
+		DocumentoIdentidad, Solicitud, ReconocimientoTiempoServicio, Resolucion, Liquidacion, Otro
 	}
 	
 	public String getNombreArchivo() {

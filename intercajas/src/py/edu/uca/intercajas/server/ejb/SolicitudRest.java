@@ -138,6 +138,7 @@ public class SolicitudRest   {
 		
 		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
 		
+		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(s);
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
@@ -251,6 +252,7 @@ public class SolicitudRest   {
 		Solicitud solicitud = nuevaSolicitud.getSolicitud();
 		Mensaje m = nuevaSolicitud.getMensaje();
 		
+		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(solicitud);
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId())); //La caja remitemte, corresponde a la caja asociada al usuario de inicio de sesion

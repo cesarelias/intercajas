@@ -49,8 +49,7 @@ public class UIConceder extends UIBase {
 	}
 
 	
-	@UiField FlowPanel upload;
-	@UiField Label resumenUpload;
+	@UiField UploadConceder upload;
 	@UiField TextArea cuerpoMensaje;
 	
 	@UiField DateBox fechaResolucion;
@@ -62,8 +61,6 @@ public class UIConceder extends UIBase {
 	@UiField Button enviar;
 	@UiField Button calcularBx;
 	
-	List<Adjunto> adjuntos = new ArrayList<Adjunto>();
-	
 	SolicitudBeneficiario solicitudBeneficiario;
 
 	int txInt, tminInt;
@@ -74,11 +71,6 @@ public class UIConceder extends UIBase {
 		
 		this.solicitudBeneficiario = solicitudBeneficiario;
 		
-		MultiUploader defaultUploader = new MultiUploader();
-		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
-		upload.add(defaultUploader);
 		titulo = "Denegar Beneficio";
 		
 		
@@ -118,54 +110,6 @@ public class UIConceder extends UIBase {
 		
 	}
 	
-	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-	    public void onFinish(IUploader uploader) {
-	      if (uploader.getStatus() == Status.SUCCESS) {
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  adjuntos.add(a);
-	    	  }
-	    	  refreshResumenUpload();
-	      }
-	    }
-	};
-
-	private IUploader.OnStatusChangedHandler onStatusChangedHandler = new IUploader.OnStatusChangedHandler() {
-		
-		@Override
-		public void onStatusChanged(IUploader uploader) {
-			if (uploader.getStatus() == Status.DELETED) {
-				if (uploader.getServerMessage().getMessage() == null) { 
-					return;
-				}
-	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  for (int ii=0; ii< adjuntos.size(); ii++) {
-	    			  if (adjuntos.get(ii).getNombreArchivo().equals(archivos[i])) {
-	    				  adjuntos.remove(ii);
-	    				  break;
-	    			  }
-	    		  }
-	    		  //adjuntos.remove(archivos[i]);
-	    	  }
-	    	  refreshResumenUpload();
-			}
-		}
-	};
-	
-	private void refreshResumenUpload() {
-		if (adjuntos.isEmpty()) {
-			resumenUpload.setText("");
-		} else if (adjuntos.size() == 1) {
-			resumenUpload.setText(adjuntos.size() + " archivo listo");
-		} else {
-			resumenUpload.setText(adjuntos.size() + " archivos listos");
-		}
-	}
-	
 	@UiHandler("cancelar")
 	void onCancel(ClickEvent event){
 		close();
@@ -175,14 +119,16 @@ public class UIConceder extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		if (adjuntos.isEmpty()) {
-			Window.alert("Es obligatorio enviar al menos un adjunto");
-			return;
+		for(Adjunto a : upload.adjuntos) {
+			if (a == null) {
+				Window.alert("Es obligatorio enviar adjunto");
+				return;
+			}
 		}
 
 		NuevoConcedido nuevoConcedido = new NuevoConcedido();
 
-		nuevoConcedido.setAdjuntos(adjuntos);
+		nuevoConcedido.setAdjuntos(upload.adjuntos);
 		nuevoConcedido.setCuerpoMensaje(cuerpoMensaje.getValue());
 		nuevoConcedido.setNumeroResolucion(numeroResolucion.getValue());
 		nuevoConcedido.setFechaResolucion(fechaResolucion.getValue());

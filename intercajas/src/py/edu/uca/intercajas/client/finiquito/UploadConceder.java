@@ -1,48 +1,55 @@
-package py.edu.uca.intercajas.client.solicitud;
+package py.edu.uca.intercajas.client.finiquito;
 
 import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 
-public class UploadAdjuntos extends UIBase {
+public class UploadConceder extends UIBase {
 
 	FlexTable uploadTable;
 	Label resumenUpload;
 
 	Images images = GWT.create(Images.class);
 	
-	Adjunto[] adjuntos = new Adjunto[2]; 
+	Adjunto[] adjuntos = new Adjunto[2];
+	
+	Anchor eliminarResolucion = new Anchor("eliminar");
+	Anchor eliminarLiquidacion = new Anchor("eliminar");
 
-	public UploadAdjuntos() {
-		
+	SingleUploader resolucion;
+	SingleUploader liquidacion;
+	
+	public UploadConceder() {
+
 		uploadTable = new FlexTable();
-		
-		SingleUploader solicitud = createUploaderSolicutud();
-		SingleUploader documentoIdentidad = createUploaderDocumentoIdentidad();
-				
-		uploadTable.setText(0, 0, "Solicitud");
-		uploadTable.setWidget(0, 1, solicitud);
-		uploadTable.setText(1, 0, "Dicumento de Identidad");
-		uploadTable.setWidget(1, 1, documentoIdentidad);
-		
+
+		resolucion = createUploaderResolucion();
+		liquidacion = createUploaderLiquidacion();
+
+		uploadTable.setText(0, 0, "Resolucion");
+		uploadTable.setWidget(0, 1, resolucion);
+		uploadTable.setText(1, 0, "Liquidacion");
+		uploadTable.setWidget(1, 1, liquidacion);
+
 		initWidget(uploadTable);
 		
+		addEliminarHander();
+
 	}
 
-	private IUploader.OnFinishUploaderHandler onFinishSolicitud = new IUploader.OnFinishUploaderHandler() {
+	private IUploader.OnFinishUploaderHandler onFinishResolucion = new IUploader.OnFinishUploaderHandler() {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
@@ -50,18 +57,18 @@ public class UploadAdjuntos extends UIBase {
 	    		  Adjunto a = new Adjunto();
 	    		  a.setNombreArchivo(archivos[i]);
 	    		  a.setRutaArchivo(archivos[i+1]);
+	    		  a.setTipo(Adjunto.Tipo.Resolucion);
 	    		  adjuntos[0] = a;
 	    		  
 	    	  }
 	    	  
 	    	  uploadTable.setText(0, 1, adjuntos[0].getNombreArchivo());
-	    	  Anchor a = new Anchor("eliminar");
-	    	  uploadTable.setWidget(0, 2, a);
+	    	  uploadTable.setWidget(0, 2, eliminarResolucion);
 	      }
 	    }
 	};
 
-	private IUploader.OnFinishUploaderHandler onFinishDocumentoIdentidad = new IUploader.OnFinishUploaderHandler() {
+	private IUploader.OnFinishUploaderHandler onFinishLiquidacion = new IUploader.OnFinishUploaderHandler() {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
@@ -69,39 +76,60 @@ public class UploadAdjuntos extends UIBase {
 	    		  Adjunto a = new Adjunto();
 	    		  a.setNombreArchivo(archivos[i]);
 	    		  a.setRutaArchivo(archivos[i+1]);
+	    		  a.setTipo(Adjunto.Tipo.Liquidacion);
 	    		  adjuntos[1] = a;
 	    		  
 	    	  }
 	    	  uploadTable.setText(1, 1, adjuntos[1].getNombreArchivo());
-	    	  Anchor a = new Anchor("eliminar");
-	    	  uploadTable.setWidget(1, 1, a);
+	    	  uploadTable.setWidget(1, 2, eliminarLiquidacion);
 
 	      }
 	    }
 	};
 	
 
-	SingleUploader createUploaderSolicutud() {
+	SingleUploader createUploaderLiquidacion() {
 		SingleUploader defaultUploader = new SingleUploader(FileInputType.LABEL);
 		defaultUploader.setValidExtensions("pdf");
 		defaultUploader.setMultipleSelection(false);
 		defaultUploader.setAutoSubmit(true);
 		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishSolicitud);
-//		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
+		defaultUploader.addOnFinishUploadHandler(onFinishLiquidacion);
 		return defaultUploader;
 	}
 
-	SingleUploader createUploaderDocumentoIdentidad() {
+	SingleUploader createUploaderResolucion() {
 		SingleUploader defaultUploader = new SingleUploader(FileInputType.LABEL);
 		defaultUploader.setValidExtensions("pdf");
 		defaultUploader.setMultipleSelection(false);
 		defaultUploader.setAutoSubmit(true);
 		defaultUploader.setAvoidRepeatFiles(false);
-		defaultUploader.addOnFinishUploadHandler(onFinishDocumentoIdentidad);
-//		defaultUploader.addOnStatusChangedHandler(onStatusChangedHandler);
+		defaultUploader.addOnFinishUploadHandler(onFinishResolucion);
 		return defaultUploader;
 	}
+	
+	private void addEliminarHander() {
+		eliminarLiquidacion.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				adjuntos[1] = null;
+				uploadTable.getWidget(1, 2).removeFromParent();
+				uploadTable.setText(1, 1, "");
+				uploadTable.setWidget(1, 2, liquidacion);
+			}
+		});
+		
+		eliminarResolucion.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				adjuntos[0] = null;
+				uploadTable.getWidget(0, 2).removeFromParent();
+				uploadTable.setText(0, 1, "");
+				uploadTable.setWidget(0, 2, resolucion);
+			}
+		});
+	}
+
 	
 	
 }

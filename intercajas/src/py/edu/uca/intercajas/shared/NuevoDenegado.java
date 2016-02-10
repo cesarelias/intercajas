@@ -7,7 +7,7 @@ import py.edu.uca.intercajas.shared.entity.Adjunto;
 
 public class NuevoDenegado {
 
-	List<Adjunto> adjuntos;
+	Adjunto[] adjuntos;
 	String cuerpoMensaje;
 	String numeroResolucion;
 	Date fechaResolucion;
@@ -58,11 +58,11 @@ public class NuevoDenegado {
 		this.movito = movito;
 	}
 
-	public List<Adjunto> getAdjuntos() {
+	public Adjunto[] getAdjuntos() {
 		return adjuntos;
 	}
 
-	public void setAdjuntos(List<Adjunto> adjuntos) {
+	public void setAdjuntos(Adjunto[] adjuntos) {
 		this.adjuntos = adjuntos;
 	}
 

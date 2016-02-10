@@ -11,7 +11,7 @@
 					<g:HorizontalPanel width="100%">
 						<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
 						<g:DecoratorPanel title="Adjuntos">
-							<gt:UploadAdjuntos ui:field="upload"/>
+							<gt:UploadSolicitud ui:field="upload"/>
 						</g:DecoratorPanel>
 					</g:HorizontalPanel>
 				</g:north>
