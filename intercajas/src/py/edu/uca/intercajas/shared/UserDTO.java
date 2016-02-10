@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 public class UserDTO implements Serializable {
 
@@ -17,6 +18,8 @@ public class UserDTO implements Serializable {
 	private String sessionId;
 	private Date expire;
 	private Caja caja;
+	private Usuario.Tipo tipo;
+	
 
 	public UserDTO() {
 
@@ -112,5 +115,14 @@ public class UserDTO implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	public Usuario.Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Usuario.Tipo tipo) {
+		this.tipo = tipo;
+	}
+
 
 }

@@ -24,13 +24,14 @@ public class Mensaje extends EntityBase {
 	@JsonIgnoreProperties({"beneficiario"})
 	private Solicitud solicitud;
 	private Estado estado;
+	private String observacion; //guardamos el motivo en la descripcion al Autorizar o al Anular
 	private Date fecha;	
 	@OneToMany(mappedBy = "mensaje")
 	@JsonIgnore
 	private List<Adjunto> adjuntos;
 	
 	public enum Estado {
-		Pendiente, Autorizado, Anulado 
+		Pendiente, Enviado, Anulado 
 	}
 
 	public enum Asunto {
@@ -99,6 +100,14 @@ public class Mensaje extends EntityBase {
 
 	public void setEstado(Estado estado) {
 		this.estado = estado;
+	}
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
 	}
 
 }

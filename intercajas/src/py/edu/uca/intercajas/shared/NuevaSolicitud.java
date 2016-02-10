@@ -3,10 +3,10 @@ package py.edu.uca.intercajas.shared;
 import java.util.List;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
-
 
 /*
  * Esta clase usamos para registar una nueva Solicuitud.

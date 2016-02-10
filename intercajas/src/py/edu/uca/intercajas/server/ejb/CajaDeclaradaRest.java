@@ -69,8 +69,12 @@ public class CajaDeclaradaRest   {
         	System.out.println("usuario no valido para el llamado rest!");
        	   return null;
        }
+        
+        
         try {
-			return em.createQuery("select b "
+        	
+        	return        	
+        			em.createQuery("select b "
 					+ "              from CajaDeclarada b "
 					+ "             where b.solicitud.id = :solicitud_id "
 					+ "               and b.caja.id = :caja_id"
@@ -78,10 +82,14 @@ public class CajaDeclaradaRest   {
 	                           .setParameter("solicitud_id", solicitud_id)
 	                           .setParameter("caja_id", user.getCaja().getId())
 	                           .getSingleResult();
+        	
+        	
+        	
         } catch (Exception e) {
         	e.printStackTrace();
         	return null;
         }
+
 	}
 	
 	

@@ -6,6 +6,7 @@ import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.server.ejb.UserLogin;
 import py.edu.uca.intercajas.shared.UserDTO;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService

@@ -51,6 +51,7 @@ public class UserLogin {
     		user.setSessionId(sessionId);
     		user.setExpire(new Date(System.currentTimeMillis() + DURATION));
     		user.setCaja(u.getCaja());
+    		user.setTipo(u.getTipo());
     		usuarios.add(user);
     		return user;
 

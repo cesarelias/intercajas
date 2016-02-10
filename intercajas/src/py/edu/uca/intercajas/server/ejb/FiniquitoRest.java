@@ -204,8 +204,8 @@ public class FiniquitoRest {
 		
 		em.persist(c);
 		
-		cd.setEstado(CajaDeclarada.Estado.Concedido);
-		em.persist(cd);
+//		cd.setEstado(CajaDeclarada.Estado.Concedido);
+//		em.persist(cd);
 		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();

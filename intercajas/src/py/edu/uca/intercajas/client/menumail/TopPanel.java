@@ -49,7 +49,7 @@ public class TopPanel extends Composite {
     LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
 		@Override
 		public void onSuccess(UserDTO result) {
-			bienvenidoLabel.setText("Bienvenido " + result.getDescription() + " - " + result.getCaja().getSiglas());
+			bienvenidoLabel.setText("Bienvenido " + result.getDescription() + " - " +  result.getTipo().toString() + " - "+ result.getCaja().getSiglas());
 		}
 		
 		@Override
@@ -75,6 +75,7 @@ public class TopPanel extends Composite {
 		LoginService.Util.getInstance().logout(new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
+				LoginService.Util.currentUser = null; //a probar
 				AppUtils.mostrarLogin();
 			}
 			

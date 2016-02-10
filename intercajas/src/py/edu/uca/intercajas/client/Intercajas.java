@@ -47,6 +47,7 @@ public class Intercajas implements EntryPoint {
 							AppUtils.mostrarLogin();
 						} else {
 							if (result.getLoggedIn()) {
+								LoginService.Util.currentUser = result;
 								AppUtils.mostrarMenuPrincipal();
 							} else {
 								AppUtils.mostrarLogin();

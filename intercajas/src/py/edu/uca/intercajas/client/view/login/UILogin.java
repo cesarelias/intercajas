@@ -94,6 +94,7 @@ public class UILogin extends Composite implements ClickHandler {
                         {
                             String sessionID = result.getSessionId();
                             Cookies.setCookie("sid", sessionID, result.getExpire(), null, "/", false);
+                            LoginService.Util.currentUser = result;
                             AppUtils.mostrarMenuPrincipal();
                         } else
                         {

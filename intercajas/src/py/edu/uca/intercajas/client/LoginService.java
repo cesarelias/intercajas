@@ -16,6 +16,7 @@ public interface LoginService extends RemoteService
     public static class Util
     {
         private static LoginServiceAsync instance;
+        public static UserDTO currentUser;
  
         public static LoginServiceAsync getInstance()
         {

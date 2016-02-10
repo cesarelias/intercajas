@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.shared;
 import java.util.List;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
@@ -15,9 +16,21 @@ import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 public class NuevoReconocimientoTiempoServicio  {
 
 	Solicitud solicitud;
+	Destino destino;
 	List<TiempoServicioReconocido> listaTiempoServicioReconocido;
 	Mensaje mensaje;
 	Adjunto[] adjuntos;
+	
+	public NuevoReconocimientoTiempoServicio(Solicitud solicitud,
+			Destino destino,
+			List<TiempoServicioReconocido> listaTiempoServicioReconocido,
+			Mensaje mensaje, Adjunto[] adjuntos) {
+		this.solicitud = solicitud;
+		this.destino = destino;
+		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
+		this.mensaje = mensaje;
+		this.adjuntos = adjuntos;
+	}
 
 	public NuevoReconocimientoTiempoServicio() {
 
@@ -29,6 +42,14 @@ public class NuevoReconocimientoTiempoServicio  {
 
 	public void setSolicitud(Solicitud solicitud) {
 		this.solicitud = solicitud;
+	}
+
+	public Destino getDestino() {
+		return destino;
+	}
+
+	public void setDestino(Destino destino) {
+		this.destino = destino;
 	}
 
 	public List<TiempoServicioReconocido> getListaTiempoServicioReconocido() {
@@ -56,14 +77,5 @@ public class NuevoReconocimientoTiempoServicio  {
 		this.adjuntos = adjuntos;
 	}
 
-	public NuevoReconocimientoTiempoServicio(Solicitud solicitud,
-			List<TiempoServicioReconocido> listaTiempoServicioReconocido,
-			Mensaje mensaje, Adjunto[] adjuntos) {
-		this.solicitud = solicitud;
-		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
-		this.mensaje = mensaje;
-		this.adjuntos = adjuntos;
-	}
-
-
+	
 }

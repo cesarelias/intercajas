@@ -17,6 +17,7 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
+import py.edu.uca.intercajas.shared.NuevaAutorizacion;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
@@ -133,6 +134,17 @@ public interface BeneficiarioService extends RestService {
 	@POST
 	@Consumes("application/json")
 	public void conceder(NuevoConcedido nuevoConcedido, MethodCallback<Void> callback);	
+
+	
+	@Path("mensaje/autorizar")
+	@POST
+	@Consumes("application/json")
+	public void autorizar(NuevaAutorizacion nuevaAutorizacion, MethodCallback<Void> callback);
+	
+	@Path("mensaje/anular")
+	@POST
+	@Consumes("application/json")
+	public void anular(Mensaje mensaje, MethodCallback<Void> callback);	
 	
 	/**
      * Utility class to get the instance of the Rest Service

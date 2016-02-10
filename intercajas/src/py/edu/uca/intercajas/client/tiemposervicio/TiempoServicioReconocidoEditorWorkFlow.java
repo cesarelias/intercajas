@@ -1,12 +1,5 @@
 package py.edu.uca.intercajas.client.tiemposervicio;
 
-import gwtupload.client.IUploadStatus.Status;
-import gwtupload.client.IUploader;
-import gwtupload.client.MultiUploader;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -14,11 +7,11 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
-import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 
@@ -28,9 +21,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,12 +36,14 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	@UiField TextArea cuerpoMensaje;
 	
 	Solicitud solicitud;
+	Destino destino;
 	
 	Images images = GWT.create(Images.class);
 	
-	public TiempoServicioReconocidoEditorWorkFlow(Solicitud solicitud) {
+	public TiempoServicioReconocidoEditorWorkFlow(Destino destino) {
 		
-		this.solicitud = solicitud;
+		this.solicitud = destino.getMensaje().getSolicitud();
+		this.destino   = destino; //usamos la fila del maillist (destino) para pasar al estado Atendido
 		
 		tablaTiempoServicioReconocido = new TablaTiempoServicioReconocido();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
@@ -79,7 +72,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
 		mensaje.setSolicitud(solicitud);
 
-		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
+		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, destino, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
 
 		BeneficiarioService.Util.get().nuevoReconocimientoTiempoServicio(n, new MethodCallback<Void>() {
 			@Override

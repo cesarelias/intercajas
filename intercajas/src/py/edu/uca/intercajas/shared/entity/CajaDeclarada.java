@@ -33,8 +33,6 @@ public class CajaDeclarada extends EntityBase {
 		Denegado
 	}
 
-
-
 	public Solicitud getSolicitud() {
 		return solicitud;
 	}
@@ -92,6 +90,4 @@ public class CajaDeclarada extends EntityBase {
 		this.listaTiempoServicioReconocido = listaTiempoServicioReconocido;
 	}
 
-	
-	
 }

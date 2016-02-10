@@ -83,8 +83,6 @@ public class SolicitudRest   {
        	   return;
        }
 
-        Boolean txCompleto = true;
-        
         CajaDeclarada usuarioCajaDeclarada = null;
         try {
 	        usuarioCajaDeclarada = em.createQuery("select c"
@@ -107,43 +105,38 @@ public class SolicitudRest   {
 		}
 		
 		if (nuevoReconocimientoTiempoServicio.getMensaje() == null) {
-				throw new IllegalArgumentException("Al reconocer timepo de servicio , debe adjuntarle un unico mensaje");
+				throw new IllegalArgumentException("Al reconocer tiempo de servicio , debe adjuntarle un unico mensaje");
 		}
 		
+		Destino destino = em.find(Destino.class, nuevoReconocimientoTiempoServicio.getDestino().getId());
+		if (destino == null) {
+			throw new IllegalArgumentException("No existe el detino");
+		}
 		
-		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
+		destino.setEstado(Destino.Estado.Atendido);
+		em.persist(destino);
+		
 		
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
-			rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
 			tsr.setEmpleador(null); //TODO Esto falta !!!!
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
 			em.persist(tsr);
 		}
 		
-		int txBruto = CalculoTiempo.txBruto(rangos);
-		usuarioCajaDeclarada.setTxBruto(txBruto); 
 		
-		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
-		
-		
-//		List<TiempoServicioReconocido> lista = em.createQuery("select t"
-//				                                + "              from TiempoServicioReconocido t "
-//				                                + "             where cajaDeclarada.solicitud.id = :solicitud_id",
-//				                                TiempoServicioReconocido.class)
-//				                                .setParameter("solicitud_id", s.getId())
-//				                                .getResultList();
-		
-		
-		em.persist(usuarioCajaDeclarada);
+//		Esto lo hacemos ahora al Autorizar, no al crear el nuevo reconocimiento de tiempo de servicio
+//		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
+//		em.persist(usuarioCajaDeclarada);
 		
 		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
 		
 		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(s);
-		m.setFecha(new Date());
+		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		
-		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		//la referencia cargamos al autorizar
+//		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -156,25 +149,8 @@ public class SolicitudRest   {
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
+			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
-		}
-		
-//		//Verificamos si todas las cajas tiene estado ConAntiguedad, para pasar el estado de la solicitud a ConAntiguedad 
-		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
-			if (c.getEstado() != CajaDeclarada.Estado.ConAntiguedad) {
-				txCompleto = false;
-			}
-		}
-		// estee no es el caso
-		if (txCompleto) {
-			s.setEstado(Solicitud.Estado.ConAntiguedad);
-			//calculamos cada el txNeto de cada CajaDeclarada y el txFinal guardamos en la solicitud
-			s = CalculoTiempo.txNetoFinal(s);
-			em.persist(s);
-			
-			//Esto envia un mensaje a las cajas con el reporte de totalizacion
-			envioTotalizacion(s);
-			
 		}
 		
 		LOG.info("Solicitud titular persisted");
@@ -183,48 +159,6 @@ public class SolicitudRest   {
 	
 	
 	
-	void envioTotalizacion(Solicitud s) {
-		
-		
-		Mensaje m = new Mensaje();
-
-		m.setRemitente(null);
-		m.setAsunto(Asunto.TotalizacionTiempoServicio);
-		m.setSolicitud(s);
-		m.setFecha(new Date());
-
-		//Escribimos el cuerto del mensaje
-		String cuerpo = "";
-		cuerpo += "Totalizacion de Tiempo de Servicio\r\n\r\n";
-		
-		
-		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
-			cuerpo += c.getCaja().getSiglas() + " txNeto: " + CalculoTiempo.leeMeses(c.getTxNeto()) + "\r\n";
-		}
-		
-		cuerpo += "txFinal : " + CalculoTiempo.leeMeses(s.getTxFinal());
-
-		m.setCuerpo(cuerpo);
-		//Fin cuerpo mensaje
-		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(s.getTxFinal()) + " de servicios");
-
-		//TODO enviar como adjunto un reporte en PDF del sistema
-//		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
-//			a.setMensaje(m);
-//			em.persist(a);
-//		}
-		em.persist(m);
-		
-		//Enviamos a todas las cajas declaradas
-		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
-			Destino d = new Destino();
-			d.setMensaje(m);
-			d.setDestinatario(c.getCaja());
-			d.setLeido(false);
-			em.persist(d);
-		}
-
-	}
 	
 	/*
 	 * Este metodo, crea la solicitud, el adjunto(s), las cajas declaras (al menos dos), y hace el envio (mensaje + destino(s))
@@ -279,6 +213,7 @@ public class SolicitudRest   {
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
+			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 			
 		}
