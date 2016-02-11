@@ -15,7 +15,10 @@ public class TiempoServicioReconocido extends EntityBase {
 	private Date inicio;
 	private Date fin;
 	@ManyToOne
+	private Mensaje mensaje;
+	@ManyToOne
 	private CajaDeclarada cajaDeclarada;
+	private boolean autorizado;
 
 	public Empleador getEmpleador() {
 		return empleador;
@@ -48,5 +51,24 @@ public class TiempoServicioReconocido extends EntityBase {
 	public void setCajaDeclarada(CajaDeclarada cajaDeclarada) {
 		this.cajaDeclarada = cajaDeclarada;
 	}
+	public boolean getAutorizado() {
+		return autorizado;
+	}
+	
+	public boolean isAutorizado() {
+		return autorizado;
+	}
 
+	public void setAutorizado(boolean autorizado) {
+		this.autorizado = autorizado;
+	}
+
+	public Mensaje getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(Mensaje mensaje) {
+		this.mensaje = mensaje;
+	}
+	
 }

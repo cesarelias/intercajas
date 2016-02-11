@@ -11,61 +11,75 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=As.PROPERTY, property="@class")
-@JsonSubTypes({
-      @JsonSubTypes.Type(value=Denegado.class, name="denegado"),
-      @JsonSubTypes.Type(value=Concedido.class, name="concedido")
-  }) 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "@class")
+@JsonSubTypes({ @JsonSubTypes.Type(value = Denegado.class, name = "denegado"),
+		@JsonSubTypes.Type(value = Concedido.class, name = "concedido") })
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public  class Finiquito extends EntityBase {
+public class Finiquito extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne
-	CajaDeclarada cajaDeclarada;
+	private CajaDeclarada cajaDeclarada;
 	@ManyToOne
-	SolicitudBeneficiario solicitudBeneficiario;
+	private SolicitudBeneficiario solicitudBeneficiario;
+	@ManyToOne
+	private Mensaje mensaje;
 	private String numeroResolucion;
 	private Date fechaResolucion;
+	private boolean autorizado;
 
 	public SolicitudBeneficiario getSolicitudBeneficiario() {
 		return solicitudBeneficiario;
 	}
 
-
-	public void setSolicitudBeneficiario(SolicitudBeneficiario solicitudBeneficiario) {
+	public void setSolicitudBeneficiario(
+			SolicitudBeneficiario solicitudBeneficiario) {
 		this.solicitudBeneficiario = solicitudBeneficiario;
 	}
-
 
 	public String getNumeroResolucion() {
 		return numeroResolucion;
 	}
 
-
 	public void setNumeroResolucion(String numeroResolucion) {
 		this.numeroResolucion = numeroResolucion;
 	}
-
 
 	public Date getFechaResolucion() {
 		return fechaResolucion;
 	}
 
-
 	public void setFechaResolucion(Date fechaResolucion) {
 		this.fechaResolucion = fechaResolucion;
 	}
-
 
 	public CajaDeclarada getCajaDeclarada() {
 		return cajaDeclarada;
 	}
 
-
 	public void setCajaDeclarada(CajaDeclarada cajaDeclarada) {
 		this.cajaDeclarada = cajaDeclarada;
 	}
 
+	public boolean getAutorizado() {
+		return autorizado;
+	}
+
+	public boolean isAutorizado() {
+		return autorizado;
+	}
+
+	public void setAutorizado(boolean autorizado) {
+		this.autorizado = autorizado;
+	}
+
+	public Mensaje getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(Mensaje mensaje) {
+		this.mensaje = mensaje;
+	}
 }

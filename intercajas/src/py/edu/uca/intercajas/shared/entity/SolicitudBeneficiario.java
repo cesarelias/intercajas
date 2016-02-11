@@ -1,7 +1,12 @@
 package py.edu.uca.intercajas.shared.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class SolicitudBeneficiario extends EntityBase  {
@@ -9,9 +14,14 @@ public class SolicitudBeneficiario extends EntityBase  {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
-	Solicitud solicitud;
+	private Solicitud solicitud;
 	@ManyToOne
-	Beneficiario beneficiario;
+	private Beneficiario beneficiario;
+	
+	@OneToMany(mappedBy="solicitudBeneficiario")
+	@JsonIgnore
+	private List<Finiquito> finiquitos;
+
 //	Estado estado;
 //	
 //	public enum Estado {
@@ -39,6 +49,14 @@ public class SolicitudBeneficiario extends EntityBase  {
 
 	public void setSolicitud(Solicitud solicitud) {
 		this.solicitud = solicitud;
+	}
+
+	public List<Finiquito> getFiniquitos() {
+		return finiquitos;
+	}
+
+	public void setFiniquitos(List<Finiquito> finiquitos) {
+		this.finiquitos = finiquitos;
 	}
 
 //	public Estado getEstado() {

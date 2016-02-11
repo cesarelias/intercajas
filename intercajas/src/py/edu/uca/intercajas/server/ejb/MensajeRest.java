@@ -3,7 +3,6 @@ package py.edu.uca.intercajas.server.ejb;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,26 +20,25 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
-import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Destino.Estado;
+import py.edu.uca.intercajas.shared.entity.Finiquito;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
+import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 import py.edu.uca.intercajas.shared.entity.Usuario;
-import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
 
 @Path("/mensaje")
 @Stateless
 public class MensajeRest   {
-
-	private static final Logger LOG = Logger.getLogger(MensajeRest.class.getName());
 
 	@PersistenceContext
 	EntityManager em;
@@ -94,7 +92,6 @@ public class MensajeRest   {
 			maxResults = 500;
 		}
 		
-		
 		return  em.createQuery("select a "
 				+ "              from Mensaje a, Solicitud b"
 				+ "             where a.solicitud = b "
@@ -131,10 +128,10 @@ public class MensajeRest   {
         	return;
         }        
         
-        //TODO esto falta
-        //El Destino marcamos como Atendido para NuevaSolicitud o RTS, Para concedido o Denegado, una vez finiquitado todos los solicitantes.
-        d.setEstado(Destino.Estado.Atendido);
-        em.persist(d);
+//        //TODO esto falta
+//        //El Destino marcamos como Atendido para NuevaSolicitud o RTS, Para concedido o Denegado, una vez finiquitado todos los solicitantes.
+//        d.setEstado(Destino.Estado.Atendido);
+//        em.persist(d);
         
         Mensaje m = d.getMensaje();
         if (m==null || m.getEstado() != Mensaje.Estado.Pendiente) {
@@ -142,16 +139,11 @@ public class MensajeRest   {
         	return;
         }
 
-        CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(m.getSolicitud(), user);
-		
-        
         //Guardamos el o los adjuntos
 		for (Adjunto a : nuevaAutorizacion.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
-        
-		
 		
 		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
 			autorizarNuevaSolicitud(m.getSolicitud()); //Esto pone en true todas las autorizaciones en cada caja declarada
@@ -167,6 +159,7 @@ public class MensajeRest   {
 		//Cambiamos el estado del mensaje a Enviado
 		m.setObservacion(nuevaAutorizacion.getDestino().getMensaje().getObservacion());
         m.setEstado(Mensaje.Estado.Enviado);
+        m.setAutorizado(true);
         em.persist(m);
         
 		
@@ -176,7 +169,7 @@ public class MensajeRest   {
 	@Path("/anular")
 	@POST
 	@Consumes("application/json")
-	public void anular(Mensaje mensaje, @Context HttpServletRequest req) { 
+	public void anular(NuevaAnulacion nuevaAnulacion, @Context HttpServletRequest req) { 
 	
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
@@ -189,71 +182,32 @@ public class MensajeRest   {
         	return;
         }
         
-        Mensaje m = em.find(Mensaje.class, mensaje.getId());
+        Mensaje m = em.find(Mensaje.class, nuevaAnulacion.getMensaje().getId());
         
         if (m==null || m.getEstado() != Mensaje.Estado.Pendiente) {
         	System.out.println("Mensaje id no valido");
         	return;
         }
         
+        Destino d = m.getOrigen();
+        
+        if (d==null || d.getEstado() != Destino.Estado.Atendido) {
+        	throw new IllegalArgumentException("Destino id no valido! ");
+        }
+        
+        d.setEstado(Destino.Estado.Pendiente);
+        
+        em.persist(d);
+        
 		//Cambiamos el estado del mensaje a Anulado
-        m.setObservacion(mensaje.getObservacion());
+        m.setObservacion(nuevaAnulacion.getMensaje().getObservacion());
         m.setEstado(Mensaje.Estado.Anulado);
         em.persist(m);
         
         
-        
-        
 	}
 	
 	
-	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {
-		
-		
-		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(solicitud, usuario);
-		
-
-		/*
-		 * Calculamos y guardamos los TX, tambien al Referencia del mensaje
-		 */
-		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
-		
-		for (TiempoServicioReconocido tsr : usuarioCajaDeclarada.getListaTiempoServicioReconocido()) {
-			rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
-		}
-		
-		int txBruto = CalculoTiempo.txBruto(rangos);
-		usuarioCajaDeclarada.setTxBruto(txBruto); 
-		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
-
-		mensaje.setFecha(new Date());
-		mensaje.setReferencia(solicitud.getNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + usuario.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
-		em.persist(mensaje);
-		
-		
-		/*
-		 * Aqui verificamos al aprobar, si todas las cajas declaras cuentan con antiguedad, enviamos la Totalizacion de Tiempo de Servicio
-		 */
-		boolean txCompleto = true;
-//		//Verificamos si todas las cajas tiene estado ConAntiguedad, para pasar el estado de la solicitud a ConAntiguedad 
-		for (CajaDeclarada c : solicitud.getCajasDeclaradas() ) {
-			if (c.getEstado() != CajaDeclarada.Estado.ConAntiguedad) {
-				txCompleto = false;
-			}
-		}
- 
-		if (txCompleto) {
-			solicitud.setEstado(Solicitud.Estado.ConAntiguedad);
-			//calculamos cada el txNeto de cada CajaDeclarada y el txFinal guardamos en la solicitud
-			solicitud = CalculoTiempo.txNetoFinal(solicitud);
-			em.persist(solicitud);
-			
-			//Esto envia un mensaje a las cajas con el reporte de totalizacion
-			envioTotalizacion(solicitud);
-			
-		}
-		
-	}
 	
 	void envioTotalizacion(Solicitud s) {
 		
@@ -261,6 +215,7 @@ public class MensajeRest   {
 		Mensaje m = new Mensaje();
 
 		m.setEstado(Mensaje.Estado.Enviado); //no necesita autorizacion
+		m.setAutorizado(true);
 		m.setRemitente(null);
 		m.setAsunto(Asunto.TotalizacionTiempoServicio);
 		m.setSolicitud(s);
@@ -269,7 +224,6 @@ public class MensajeRest   {
 		//Escribimos el cuerto del mensaje
 		String cuerpo = "";
 		cuerpo += "Totalizacion de Tiempo de Servicio\r\n\r\n";
-		
 		
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
 			cuerpo += c.getCaja().getSiglas() + " txNeto: " + CalculoTiempo.leeMeses(c.getTxNeto()) + "\r\n";
@@ -321,7 +275,7 @@ public class MensajeRest   {
 	}
 	
 	private void autorizarNuevaSolicitud(Solicitud solicitud) {
-		
+		System.out.println("Hasta ahora no hacemos nada al Autorizar solicitud, y posiblemente ya no sea necesario hacer nada!");
 	}
 	
 	private void autorizarConcedido(Mensaje m, UserDTO usuario) {
@@ -331,9 +285,17 @@ public class MensajeRest   {
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 		
+		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
+			for (Finiquito f : sb.getFiniquitos()) {
+				if (f.getMensaje().getId() == m.getId()) {
+					f.setAutorizado(true);
+					em.persist(f);
+				}
+			}
+		}
+		
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Concedido);
 		em.persist(usuarioCajaDeclarada);
-		
 		
 	}
 	
@@ -344,10 +306,72 @@ public class MensajeRest   {
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 		
+		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
+			for (Finiquito f : sb.getFiniquitos()) {
+				if (f.getMensaje().getId() == m.getId()) {
+					f.setAutorizado(true);
+					em.persist(f);
+				}
+			}
+		}
+		
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Denegado);
 		em.persist(usuarioCajaDeclarada);
 
 		
 	}
 
+	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {
+		
+		
+		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(solicitud, usuario);
+		
+
+		/*
+		 * Calculamos y guardamos los TX, tambien al Referencia del mensaje
+		 */
+		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
+		
+		for (TiempoServicioReconocido tsr : usuarioCajaDeclarada.getListaTiempoServicioReconocido()) {
+			if (tsr.getMensaje().getId() == mensaje.getId()) { 			//Autorizamos los TSR que corresponan al mensaje
+				rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
+				tsr.setAutorizado(true); //Validamos los registros
+				em.persist(tsr);
+			}
+		}
+		
+		int txBruto = CalculoTiempo.txBruto(rangos);
+		usuarioCajaDeclarada.setTxBruto(txBruto); 
+		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
+
+		mensaje.setFecha(new Date());
+		mensaje.setReferencia(solicitud.getNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + usuario.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		em.persist(mensaje);
+		
+				
+		/*
+		 * Aqui verificamos al aprobar, si todas las cajas declaras cuentan con antiguedad, enviamos la Totalizacion de Tiempo de Servicio
+		 */
+		boolean txCompleto = true;
+//		//Verificamos si todas las cajas tiene estado ConAntiguedad, para pasar el estado de la solicitud a ConAntiguedad 
+		for (CajaDeclarada c : solicitud.getCajasDeclaradas() ) {
+			if (c.getEstado() != CajaDeclarada.Estado.ConAntiguedad) {
+				txCompleto = false;
+			}
+		}
+ 
+		if (txCompleto) {
+			solicitud.setEstado(Solicitud.Estado.ConAntiguedad);
+			//calculamos cada el txNeto de cada CajaDeclarada y el txFinal guardamos en la solicitud
+			solicitud = CalculoTiempo.txNetoFinal(solicitud);
+			em.persist(solicitud);
+			
+			//Esto envia un mensaje a las cajas con el reporte de totalizacion
+			envioTotalizacion(solicitud);
+			
+		}
+		
+	}
+	
+	
 }

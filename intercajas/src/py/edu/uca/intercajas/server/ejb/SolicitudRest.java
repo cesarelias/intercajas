@@ -109,17 +109,34 @@ public class SolicitudRest   {
 		}
 		
 		Destino destino = em.find(Destino.class, nuevoReconocimientoTiempoServicio.getDestino().getId());
-		if (destino == null) {
+		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
 			throw new IllegalArgumentException("No existe el detino");
 		}
 		
 		destino.setEstado(Destino.Estado.Atendido);
 		em.persist(destino);
 		
+
+		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
+		m.setEstado(Mensaje.Estado.Pendiente);
+		m.setSolicitud(s);
+		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
+		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
+		m.setOrigen(destino);
+
+		//m.setReferencia( );//la referencia cargamos al autorizar
+		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
+			a.setMensaje(m);
+			em.persist(a);
+		}
+		em.persist(m);
+
 		
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
 			tsr.setEmpleador(null); //TODO Esto falta !!!!
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
+			tsr.setAutorizado(false);
+			tsr.setMensaje(m);
 			em.persist(tsr);
 		}
 		
@@ -128,20 +145,6 @@ public class SolicitudRest   {
 //		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 //		em.persist(usuarioCajaDeclarada);
 		
-		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
-		
-		m.setEstado(Mensaje.Estado.Pendiente);
-		m.setSolicitud(s);
-		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
-		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
-		
-		//la referencia cargamos al autorizar
-//		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
-		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
-			a.setMensaje(m);
-			em.persist(a);
-		}
-		em.persist(m);
 
 		//Enviamos a todas las cajas declaradas
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {

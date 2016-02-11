@@ -13,6 +13,7 @@ public class NuevoConcedido {
 	String numeroResolucion;
 	Date fechaResolucion;
 	Long solicitudBeneficiarioId;
+	Long destino_id;
 
 	BigDecimal bx;
 	BigDecimal bt;
@@ -106,6 +107,14 @@ public class NuevoConcedido {
 
 	public void setCuerpoMensaje(String cuerpoMensaje) {
 		this.cuerpoMensaje = cuerpoMensaje;
+	}
+
+	public Long getDestino_id() {
+		return destino_id;
+	}
+
+	public void setDestino_id(Long destino_id) {
+		this.destino_id = destino_id;
 	}
 
 	

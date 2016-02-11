@@ -177,6 +177,7 @@ public class MailDetail extends ResizeComposite {
 			  
 			  @Override
 			  public void onSuccess(Method method, CajaDeclarada response) {
+				  
 				  //if (response.getEstado() == CajaDeclarada.Estado.Nuevo && response.getAutorizado()) {
 				  if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && item.getEstado() == Destino.Estado.Pendiente) {
 					  
@@ -222,7 +223,7 @@ public class MailDetail extends ResizeComposite {
 									  conceder.addClickHandler(new ClickHandler() {
 										  @Override
 										  public void onClick(ClickEvent event) {
-											  UIConceder c = new UIConceder(sb);
+											  UIConceder c = new UIConceder(sb, item);
 											  c.titulo = "Conceder beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos();
 											  c.mostrarDialog();
 										  }
@@ -232,7 +233,7 @@ public class MailDetail extends ResizeComposite {
 									  denegar.addClickHandler(new ClickHandler() {
 										  @Override
 										  public void onClick(ClickEvent event) {
-											  UIDenegar d = new UIDenegar(sb);
+											  UIDenegar d = new UIDenegar(sb, item);
 											  d.titulo = "Denegar beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos();
 											  d.mostrarDialog();
 										  }
@@ -269,6 +270,8 @@ public class MailDetail extends ResizeComposite {
 		  });
 		  
 	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
+		  Window.alert(item.getEstado().toString());
+		  Window.alert(item.getId().toString());
 		  
 		  final HorizontalPanel hp = new HorizontalPanel();
 		  
@@ -286,7 +289,7 @@ public class MailDetail extends ResizeComposite {
 		  anular.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				UIAnular uianular = new UIAnular(item.getMensaje());
+				UIAnular uianular = new UIAnular(item.getMensaje(), item);
 				uianular.mostrarDialog();
 				
 			}

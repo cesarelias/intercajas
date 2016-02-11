@@ -16,7 +16,7 @@ public class Destino extends EntityBase {
 	private Mensaje mensaje;
 	
 	public enum Estado {
-		Pendiente, Atendido
+		Pendiente, Atendido, Informativo
 	}
 	
 	public Caja getDestinatario() {

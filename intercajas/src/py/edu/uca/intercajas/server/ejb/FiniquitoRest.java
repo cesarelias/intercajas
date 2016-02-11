@@ -101,18 +101,14 @@ public class FiniquitoRest {
 			return;
 		}
 		
-		Denegado d = new Denegado();
-		d.setCajaDeclarada(cd);
-		d.setSolicitudBeneficiario(sb);
-		d.setFechaResolucion(nuevoDenegado.getFechaResolucion());
-		d.setNumeroResolucion(nuevoDenegado.getNumeroResolucion());
-		d.setMotivo(null); //TODO Motivo debe ser uno o varios
-
-		
-		em.persist(d);
-		
-		cd.setEstado(CajaDeclarada.Estado.Denegado);
-		em.persist(cd);
+		//Marcamos el destino-mensaje como Atendido
+		Destino de = em.find(Destino.class, nuevoDenegado.getDestino_id());
+		if (de==null || de.getEstado() != Destino.Estado.Pendiente) {
+			//TODO mejorar esto
+			throw new IllegalArgumentException("El destino_id no es valido");
+		}
+		de.setEstado(Destino.Estado.Atendido);
+		em.persist(de);
 		
 		
 		//Creamos el mensaje
@@ -125,12 +121,29 @@ public class FiniquitoRest {
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Deniega Beneficio ");
 		m.setCuerpo(nuevoDenegado.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Denegado);
+		m.setOrigen(de);
 		for (Adjunto a : nuevoDenegado.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
 		
 		em.persist(m);
+		
+		
+		//Creamos el denegado
+		Denegado d = new Denegado();
+		d.setCajaDeclarada(cd);
+		d.setSolicitudBeneficiario(sb);
+		d.setFechaResolucion(nuevoDenegado.getFechaResolucion());
+		d.setNumeroResolucion(nuevoDenegado.getNumeroResolucion());
+		d.setMotivo(null); //TODO Motivo debe ser uno o varios
+		d.setAutorizado(false);
+		d.setMensaje(m);
+		
+		em.persist(d);
+		
+		
+
 
 		//Destinamos a todas las cajas declaradas
 		for (CajaDeclarada cdd : sb.getSolicitud().getCajasDeclaradas() ) {
@@ -138,6 +151,7 @@ public class FiniquitoRest {
 			des.setMensaje(m);
 			des.setDestinatario(cdd.getCaja());
 			des.setLeido(false);
+			des.setEstado(Destino.Estado.Informativo);
 			em.persist(des);
 		}
 		
@@ -190,22 +204,16 @@ public class FiniquitoRest {
 			System.out.println("La solicitud del beneficiario XXXX debe estar en estado -ConAntiguedad- para poder conceder");
 			return;
 		}
-		
-		Concedido c = new Concedido();
-		c.setCajaDeclarada(cd);
-		c.setSolicitudBeneficiario(sb);
-		c.setFechaResolucion(nuevoConcedido.getFechaResolucion());
-		c.setNumeroResolucion(nuevoConcedido.getNumeroResolucion());
-		c.setTx(nuevoConcedido.getTx());
-		c.setTmin(nuevoConcedido.getTmin());
-		c.setBt(nuevoConcedido.getBt());
-		c.setBx(nuevoConcedido.getBx());
 
-		
-		em.persist(c);
-		
-//		cd.setEstado(CajaDeclarada.Estado.Concedido);
-//		em.persist(cd);
+		//Marcamos el destino-mensaje como Atendido
+		Destino de = em.find(Destino.class, nuevoConcedido.getDestino_id());
+		if (de==null || de.getEstado() != Destino.Estado.Pendiente) {
+			//TODO mejorar esto
+			throw new IllegalArgumentException("El destino_id no es valido");
+		}
+		de.setEstado(Destino.Estado.Atendido);
+		em.persist(de);
+
 		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();
@@ -217,6 +225,7 @@ public class FiniquitoRest {
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Concede Beneficio ");
 		m.setCuerpo(nuevoConcedido.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Concedido);
+		m.setOrigen(de);
 		for (Adjunto a : nuevoConcedido.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -224,12 +233,28 @@ public class FiniquitoRest {
 		
 		em.persist(m);
 
+		
+		Concedido c = new Concedido();
+		c.setCajaDeclarada(cd);
+		c.setSolicitudBeneficiario(sb);
+		c.setFechaResolucion(nuevoConcedido.getFechaResolucion());
+		c.setNumeroResolucion(nuevoConcedido.getNumeroResolucion());
+		c.setTx(nuevoConcedido.getTx());
+		c.setTmin(nuevoConcedido.getTmin());
+		c.setBt(nuevoConcedido.getBt());
+		c.setBx(nuevoConcedido.getBx());
+		c.setAutorizado(false);
+		c.setMensaje(m);
+		
+		em.persist(c);		
+		
 		//Destinamos a todas las cajas declaradas
 		for (CajaDeclarada cdd : sb.getSolicitud().getCajasDeclaradas() ) {
 			Destino d = new Destino();
 			d.setMensaje(m);
 			d.setDestinatario(cdd.getCaja());
 			d.setLeido(false);
+			d.setEstado(Destino.Estado.Informativo);
 			em.persist(d);
 		}
 

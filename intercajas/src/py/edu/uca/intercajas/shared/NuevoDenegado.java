@@ -13,6 +13,7 @@ public class NuevoDenegado {
 	Date fechaResolucion;
 	Long solicitudBeneficiarioId;
 	String movito;
+	Long destino_id;
 
 	public NuevoDenegado() {
 
@@ -72,6 +73,14 @@ public class NuevoDenegado {
 
 	public void setCuerpoMensaje(String cuerpoMensaje) {
 		this.cuerpoMensaje = cuerpoMensaje;
+	}
+
+	public Long getDestino_id() {
+		return destino_id;
+	}
+
+	public void setDestino_id(Long destino_id) {
+		this.destino_id = destino_id;
 	}
 
 }

@@ -6,9 +6,11 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
+import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 
 import com.google.gwt.core.client.GWT;
@@ -34,12 +36,14 @@ public class UIAnular extends UIBase {
 	@UiField Button anular;
 	
 	Mensaje mensaje;
+	Destino destino;
 	
-	public UIAnular(Mensaje mensaje) {
+	public UIAnular(Mensaje mensaje, Destino destino) {
 		
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		this.mensaje = mensaje;
+		this.destino = destino;
 		
 		titulo = "Anular envio de mensaje";
 		
@@ -55,8 +59,13 @@ public class UIAnular extends UIBase {
 	@UiHandler("anular")
 	void onSave(ClickEvent event) {
 
+		
+		NuevaAnulacion nuevaAnulacion = new NuevaAnulacion();
+		nuevaAnulacion.setDestino_id(destino.getId());
+		nuevaAnulacion.setMensaje(mensaje);
+		
 		mensaje.setObservacion(observacion.getValue());
-		BeneficiarioService.Util.get().anular(mensaje, new MethodCallback<Void>() {
+		BeneficiarioService.Util.get().anular(nuevaAnulacion, new MethodCallback<Void>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				//TODO mejorar esto

@@ -72,29 +72,48 @@ public class DestinoRest   {
 		
 		
 		
-		Mensaje.Estado estadoMensaje = null;
 		
 		if (user.getTipo() == Usuario.Tipo.Gestor) {
-			estadoMensaje = Mensaje.Estado.Enviado;
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "
+					+ "               and (b.estado <> :estadoSolicitud or c.leido is false) "
+					+ "               and a.estado = :estadoMensaje"
+					+ "               and c.destinatario.id = :caja_id "
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
 		} else if (user.getTipo() == Usuario.Tipo.Superior) {
-			estadoMensaje = Mensaje.Estado.Pendiente;
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "					
+					+ "               and (b.estado <> :estadoSolicitud) "
+					+ "               and a.estado = :estadoMensaje"
+					+ "               and a.remitente.id = :caja_id "
+					+ "               and c.destinatario.id = :caja_id "
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
 		}
 		
-		return em.createQuery("select c "
-				+ "              from Mensaje a, Solicitud b, Destino c"
-				+ "             where a.solicitud.id = b.id "
-				+ "               and a.id = c.mensaje.id "
-				+ "               and (b.estado <> :estadoSolicitud or c.leido is false) "
-				+ "               and a.estado = :estadoMensaje"
-				+ "               and c.destinatario.id = :caja_id "
-				+ " order by a.fecha desc "
-				, Destino.class)
-				.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
-				.setParameter("estadoMensaje", estadoMensaje)
-				.setFirstResult(startRow)
-				.setMaxResults(maxResults)
-				.setParameter("caja_id", user.getCaja().getId())
-				.getResultList();
+		return null;
+		
 		
 		
 		

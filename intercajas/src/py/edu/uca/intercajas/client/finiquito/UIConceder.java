@@ -21,6 +21,7 @@ import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
@@ -62,16 +63,18 @@ public class UIConceder extends UIBase {
 	@UiField Button calcularBx;
 	
 	SolicitudBeneficiario solicitudBeneficiario;
+	Destino destino;
 
 	int txInt, tminInt;
 	
-	public UIConceder(SolicitudBeneficiario solicitudBeneficiario) {
+	public UIConceder(SolicitudBeneficiario solicitudBeneficiario, Destino destino) {
 		
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		this.solicitudBeneficiario = solicitudBeneficiario;
+		this.destino = destino;
 		
-		titulo = "Denegar Beneficio";
+		titulo = "Conceder Beneficio";
 		
 		
 		//Obtenemos el valor de TMIN
@@ -137,6 +140,7 @@ public class UIConceder extends UIBase {
 		nuevoConcedido.setTmin(Integer.valueOf(tmin.getText()));
 		nuevoConcedido.setBt(new BigDecimal(bt.getValue()));
 		nuevoConcedido.setBx(new BigDecimal(bx.getText()));
+		nuevoConcedido.setDestino_id(destino.getId());
 
 		BeneficiarioService.Util.get().conceder(nuevoConcedido, new MethodCallback<Void>() {
 			@Override

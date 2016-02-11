@@ -17,6 +17,7 @@ import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Denegado;
+import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
@@ -53,12 +54,14 @@ public class UIDenegar extends UIBase {
 	
 	
 	SolicitudBeneficiario solicitudBeneficiario;
+	Destino destino;
 	
 	
-	public UIDenegar(SolicitudBeneficiario solicitudBeneficiario) {
+	public UIDenegar(SolicitudBeneficiario solicitudBeneficiario, Destino destino) {
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		this.solicitudBeneficiario = solicitudBeneficiario;
+		this.destino = destino;
 		
 		titulo = "Denegar Beneficio";
 		
@@ -89,6 +92,7 @@ public class UIDenegar extends UIBase {
 		nuevoDenegado.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
 		nuevoDenegado.setAdjuntos(upload.adjuntos);
 		nuevoDenegado.setCuerpoMensaje(cuerpoMensaje.getValue());
+		nuevoDenegado.setDestino_id(destino.getId());
 
 		BeneficiarioService.Util.get().denegar(nuevoDenegado, new MethodCallback<Void>() {
 			@Override
