@@ -121,7 +121,6 @@ public class FiniquitoRest {
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Deniega Beneficio ");
 		m.setCuerpo(nuevoDenegado.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Denegado);
-		m.setOrigen(de);
 		for (Adjunto a : nuevoDenegado.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
@@ -225,7 +224,6 @@ public class FiniquitoRest {
 		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Concede Beneficio ");
 		m.setCuerpo(nuevoConcedido.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Concedido);
-		m.setOrigen(de);
 		for (Adjunto a : nuevoConcedido.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);

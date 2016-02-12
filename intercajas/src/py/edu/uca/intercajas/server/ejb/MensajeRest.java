@@ -122,20 +122,9 @@ public class MensajeRest   {
         	return;
         }
         
-        Destino d = em.find(Destino.class, nuevaAutorizacion.getDestino().getId());
-        if (d==null) {
-        	System.out.println("Mensaje no valido");
-        	return;
-        }        
-        
-//        //TODO esto falta
-//        //El Destino marcamos como Atendido para NuevaSolicitud o RTS, Para concedido o Denegado, una vez finiquitado todos los solicitantes.
-//        d.setEstado(Destino.Estado.Atendido);
-//        em.persist(d);
-        
-        Mensaje m = d.getMensaje();
+        Mensaje m = em.find(Mensaje.class, nuevaAutorizacion.getMensaje_id());
         if (m==null || m.getEstado() != Mensaje.Estado.Pendiente) {
-        	System.out.println("Mensaje no valido, null o no Pendiente");
+        	System.out.println("Mensaje no valido para Autorizacion");
         	return;
         }
 
@@ -155,9 +144,8 @@ public class MensajeRest   {
 			autorizarDenegado(m, user);
 		} 
 		
-		
 		//Cambiamos el estado del mensaje a Enviado
-		m.setObservacion(nuevaAutorizacion.getDestino().getMensaje().getObservacion());
+		m.setObservacion(nuevaAutorizacion.getObservacion());
         m.setEstado(Mensaje.Estado.Enviado);
         m.setAutorizado(true);
         em.persist(m);
@@ -171,6 +159,7 @@ public class MensajeRest   {
 	@Consumes("application/json")
 	public void anular(NuevaAnulacion nuevaAnulacion, @Context HttpServletRequest req) { 
 	
+		System.out.println("llego aqui");
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
         	System.out.println("usuario no valido para el llamado rest!");
@@ -182,33 +171,72 @@ public class MensajeRest   {
         	return;
         }
         
-        Mensaje m = em.find(Mensaje.class, nuevaAnulacion.getMensaje().getId());
+        Mensaje m = em.find(Mensaje.class, nuevaAnulacion.getMensaje_id());
         
-        if (m==null || m.getEstado() != Mensaje.Estado.Pendiente) {
-        	System.out.println("Mensaje id no valido");
+        if (m==null || m.getEstado() != Mensaje.Estado.Pendiente || m.getRemitente().getId() != user.getCaja().getId()) {
+        	System.out.println("Mensaje no valido");
         	return;
         }
         
-        Destino d = m.getOrigen();
-        
-        if (d==null || d.getEstado() != Destino.Estado.Atendido) {
-        	throw new IllegalArgumentException("Destino id no valido! ");
+        //Volvemos a poner el estado del mensaje-destino originario en Pendiente
+        Destino d = destinoOriginario(m, user);
+        if (d==null) { //el Mensaje del Destino Originario, debe estar como enviado
+        	throw new IllegalArgumentException("Destino originario no valido");
+        }
+
+        if (d.getEstado() != Destino.Estado.Atendido) {
+        	throw new IllegalArgumentException("Destino no tiene estado Atendido");
         }
         
-        d.setEstado(Destino.Estado.Pendiente);
+        if (d.getMensaje().getEstado() != Mensaje.Estado.Enviado) {
+        	throw new IllegalArgumentException("el Mensaje del Destino Originario, debe estar como enviado");
+        }
         
-        em.persist(d);
-        
+		d.setEstado(Destino.Estado.Pendiente);
+		em.persist(d);
+
 		//Cambiamos el estado del mensaje a Anulado
-        m.setObservacion(nuevaAnulacion.getMensaje().getObservacion());
+        m.setObservacion(nuevaAnulacion.getObvervacion());
         m.setEstado(Mensaje.Estado.Anulado);
         em.persist(m);
-        
         
 	}
 	
 	
 	
+	private Destino destinoOriginario(Mensaje m, UserDTO user) {
+
+		Mensaje.Asunto asunto = null;
+		
+		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
+			return null; //
+		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
+			asunto = Mensaje.Asunto.NuevaSolicitud;
+		} else if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
+			asunto = Mensaje.Asunto.TotalizacionTiempoServicio;
+		}
+		
+		try {
+			//Recuperamos el Mensaje Solitidud - Destino originario del mensaje a ser anulado.
+			Destino d = em.createQuery("select d "
+					+ "                   from Mensaje m, Destino d "
+					+ "                  where m.id = d.mensaje.id "
+					+ "                    and m.solicitud.id = :solicitud_id"
+					+ "                    and m.asunto = :asunto "
+					+ "                    and d.destinatario.id = :caja", Destino.class)
+					.setParameter("asunto", asunto)
+					.setParameter("solicitud_id", m.getSolicitud().getId())
+					.setParameter("caja", user.getCaja().getId())
+					.getSingleResult();
+			
+			return d;
+			
+		} catch (NoResultException e) {
+			throw new IllegalArgumentException("No es posible recuperar el destinoOriginario");
+		}
+		
+	}
+
 	void envioTotalizacion(Solicitud s) {
 		
 		

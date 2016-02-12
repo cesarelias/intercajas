@@ -61,10 +61,9 @@ public class UIAnular extends UIBase {
 
 		
 		NuevaAnulacion nuevaAnulacion = new NuevaAnulacion();
-		nuevaAnulacion.setDestino_id(destino.getId());
-		nuevaAnulacion.setMensaje(mensaje);
+		nuevaAnulacion.setMensaje_id(mensaje.getId());
+		nuevaAnulacion.setObvervacion(observacion.getValue());
 		
-		mensaje.setObservacion(observacion.getValue());
 		BeneficiarioService.Util.get().anular(nuevaAnulacion, new MethodCallback<Void>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {

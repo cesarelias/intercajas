@@ -98,32 +98,34 @@ public class SolicitudRest   {
         	return;
         }
 		
-        
 		Solicitud s = em.find(Solicitud.class,nuevoReconocimientoTiempoServicio.getSolicitud().getId());
 		if (s==null) { 
-			return;
+			throw new IllegalArgumentException("No existe la solicitud");
 		}
 		
 		if (nuevoReconocimientoTiempoServicio.getMensaje() == null) {
 				throw new IllegalArgumentException("Al reconocer tiempo de servicio , debe adjuntarle un unico mensaje");
 		}
 		
-		Destino destino = em.find(Destino.class, nuevoReconocimientoTiempoServicio.getDestino().getId());
+		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
+		m.setEstado(Mensaje.Estado.Pendiente);
+		m.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
+		m.setSolicitud(s);
+		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
+		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
+		
+		Destino destino = destinoOriginario(m, user);
 		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
 			throw new IllegalArgumentException("No existe el detino");
 		}
 		
-		destino.setEstado(Destino.Estado.Atendido);
+        if (destino.getEstado() != Destino.Estado.Pendiente) {
+        	throw new IllegalArgumentException("Destino no tiene estado Pendiente");
+        }
+
+        destino.setEstado(Destino.Estado.Atendido);
 		em.persist(destino);
 		
-
-		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
-		m.setEstado(Mensaje.Estado.Pendiente);
-		m.setSolicitud(s);
-		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
-		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
-		m.setOrigen(destino);
-
 		//m.setReferencia( );//la referencia cargamos al autorizar
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
@@ -131,7 +133,6 @@ public class SolicitudRest   {
 		}
 		em.persist(m);
 
-		
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
 			tsr.setEmpleador(null); //TODO Esto falta !!!!
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
@@ -140,11 +141,9 @@ public class SolicitudRest   {
 			em.persist(tsr);
 		}
 		
-		
 //		Esto lo hacemos ahora al Autorizar, no al crear el nuevo reconocimiento de tiempo de servicio
 //		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 //		em.persist(usuarioCajaDeclarada);
-		
 
 		//Enviamos a todas las cajas declaradas
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
@@ -159,8 +158,6 @@ public class SolicitudRest   {
 		LOG.info("Solicitud titular persisted");
 
 	}
-	
-	
 	
 	
 	/*
@@ -248,5 +245,37 @@ public class SolicitudRest   {
 		return s.getBeneficiarios();
 	}
 
+	private Destino destinoOriginario(Mensaje m, UserDTO user) {
+
+		Mensaje.Asunto asunto = null;
+		
+		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
+			return null; //
+		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
+			asunto = Mensaje.Asunto.NuevaSolicitud;
+		} else if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
+			asunto = Mensaje.Asunto.TotalizacionTiempoServicio;
+		}
+		
+		try {
+			//Recuperamos el Mensaje Solitidud - Destino originario del mensaje a ser anulado.
+			Destino d = em.createQuery("select d "
+					+ "                   from Mensaje m, Destino d "
+					+ "                  where m.id = d.mensaje.id "
+					+ "                    and m.solicitud.id = :solicitud_id"
+					+ "                    and m.asunto = :asunto "
+					+ "                    and d.destinatario.id = :caja", Destino.class)
+					.setParameter("asunto", asunto)
+					.setParameter("solicitud_id", m.getSolicitud().getId())
+					.setParameter("caja", user.getCaja().getId())
+					.getSingleResult();
+			
+			return d;
+			
+		} catch (NoResultException e) {
+			throw new IllegalArgumentException("No es posible recuperar el destinoOriginario");
+		}
+		
+	}
 	
 }

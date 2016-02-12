@@ -72,7 +72,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
 		mensaje.setSolicitud(solicitud);
 
-		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, destino, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
+		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
 
 		BeneficiarioService.Util.get().nuevoReconocimientoTiempoServicio(n, new MethodCallback<Void>() {
 			@Override

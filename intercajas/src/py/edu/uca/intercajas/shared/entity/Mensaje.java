@@ -27,8 +27,6 @@ public class Mensaje extends EntityBase {
 	private String observacion; //guardamos el motivo en la descripcion al Autorizar o al Anular
 	private Date fecha;	
 	private boolean autorizado;
-	@ManyToOne
-	private Destino origen;
 	@OneToMany(mappedBy = "mensaje")
 	@JsonIgnore
 	private List<Adjunto> adjuntos;
@@ -123,14 +121,6 @@ public class Mensaje extends EntityBase {
 
 	public void setAutorizado(boolean autorizado) {
 		this.autorizado = autorizado;
-	}
-
-	public Destino getOrigen() {
-		return origen;
-	}
-
-	public void setOrigen(Destino origen) {
-		this.origen = origen;
 	}
 
 

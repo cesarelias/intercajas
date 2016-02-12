@@ -1,8 +1,6 @@
 package py.edu.uca.intercajas.shared;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.Destino;
-import py.edu.uca.intercajas.shared.entity.Mensaje;
 
 
 /*
@@ -11,20 +9,14 @@ import py.edu.uca.intercajas.shared.entity.Mensaje;
  */
 public class NuevaAutorizacion {
 
-	Destino destino;
+	Long mensaje_id;
+	String observacion;
 	Adjunto[] adjuntos;
 
 	public NuevaAutorizacion() {
 
 	}
 
-	public Destino getDestino() {
-		return destino;
-	}
-
-	public void setDestino(Destino destino) {
-		this.destino = destino;
-	}
 
 	public Adjunto[] getAdjuntos() {
 		return adjuntos;
@@ -34,11 +26,26 @@ public class NuevaAutorizacion {
 		this.adjuntos = adjuntos;
 	}
 
-	public NuevaAutorizacion(Mensaje mensaje, Destino destino,
-			Adjunto[] adjuntos) {
-		this.destino = destino;
-		this.adjuntos = adjuntos;
+
+	public Long getMensaje_id() {
+		return mensaje_id;
 	}
+
+
+	public void setMensaje_id(Long mensaje_id) {
+		this.mensaje_id = mensaje_id;
+	}
+
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
 
 
 }

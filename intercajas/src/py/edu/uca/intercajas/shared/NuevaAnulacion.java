@@ -1,6 +1,5 @@
 package py.edu.uca.intercajas.shared;
 
-import py.edu.uca.intercajas.shared.entity.Mensaje;
 
 
 /*
@@ -9,30 +8,29 @@ import py.edu.uca.intercajas.shared.entity.Mensaje;
  */
 public class NuevaAnulacion {
 
-	Long destino_id;
-	Mensaje mensaje;
+	Long mensaje_id;
+	String obvervacion;
 
 	public NuevaAnulacion() {
 
 	}
 
-	public Mensaje getMensaje() {
-		return mensaje;
+	public Long getMensaje_id() {
+		return mensaje_id;
 	}
 
-	public void setMensaje(Mensaje mensaje) {
-		this.mensaje = mensaje;
+	public void setMensaje_id(Long mensaje_id) {
+		this.mensaje_id = mensaje_id;
 	}
 
-
-	public Long getDestino_id() {
-		return destino_id;
+	public String getObvervacion() {
+		return obvervacion;
 	}
 
-
-	public void setDestino_id(Long destino_id) {
-		this.destino_id = destino_id;
+	public void setObvervacion(String obvervacion) {
+		this.obvervacion = obvervacion;
 	}
+
 
 
 

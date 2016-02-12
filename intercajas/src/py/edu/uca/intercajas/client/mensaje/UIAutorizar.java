@@ -66,8 +66,10 @@ public class UIAutorizar extends UIBase {
 			}
 		}
 
-		mensaje.setObservacion(observacion.getValue());
-		NuevaAutorizacion nuevaAutorizacion = new NuevaAutorizacion(mensaje, destino, upload.adjuntos);
+		NuevaAutorizacion nuevaAutorizacion = new NuevaAutorizacion();
+		nuevaAutorizacion.setAdjuntos(upload.adjuntos);
+		nuevaAutorizacion.setMensaje_id(mensaje.getId());
+		nuevaAutorizacion.setObservacion(observacion.getValue());
 		
 		BeneficiarioService.Util.get().autorizar(nuevaAutorizacion, new MethodCallback<Void>() {
 			
