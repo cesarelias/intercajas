@@ -15,7 +15,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Beneficiario Titular</td>
+				<td>Cotizante</td>
 				<td>
 					<gt:BeneficiarioSelector ui:field="beneficiario" />
 				</td>

@@ -9,27 +9,44 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class SolicitudBeneficiario extends EntityBase  {
+public class SolicitudBeneficiario extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne
 	private Solicitud solicitud;
 	@ManyToOne
 	private Beneficiario beneficiario;
-	
-	@OneToMany(mappedBy="solicitudBeneficiario")
+	@OneToMany(mappedBy = "solicitudBeneficiario")
 	@JsonIgnore
 	private List<Finiquito> finiquitos;
-
-//	Estado estado;
-//	
-//	public enum Estado {
-//		Nuevo,
-//		Concedido,
-//		Denegado
-//	}
+	private Tipo tipo;
+	private Parentesco parentesco;
 	
+	public enum Tipo {
+		Titular, Derechohabiente
+	}
+
+	public enum Parentesco {
+		Conyuge, Descendiente, Ascendiente
+	}
+	
+	public Tipo getTipo() {
+		return tipo;
+	}
+	
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+	
+	public Parentesco getParentesco() {
+		return parentesco;
+	}
+	
+	public void setParentesco(Parentesco parentesco) {
+		this.parentesco = parentesco;
+	}
+
 	public SolicitudBeneficiario() {
 		super();
 	}
@@ -41,7 +58,6 @@ public class SolicitudBeneficiario extends EntityBase  {
 	public void setBeneficiario(Beneficiario beneficiario) {
 		this.beneficiario = beneficiario;
 	}
-
 
 	public Solicitud getSolicitud() {
 		return solicitud;
@@ -58,13 +74,5 @@ public class SolicitudBeneficiario extends EntityBase  {
 	public void setFiniquitos(List<Finiquito> finiquitos) {
 		this.finiquitos = finiquitos;
 	}
-
-//	public Estado getEstado() {
-//		return estado;
-//	}
-//
-//	public void setEstado(Estado estado) {
-//		this.estado = estado;
-//	}
 
 }

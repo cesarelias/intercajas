@@ -27,7 +27,6 @@ public class Finiquito extends EntityBase {
 	@ManyToOne
 	private Mensaje mensaje;
 	private String numeroResolucion;
-	private Date fechaResolucion;
 	private boolean autorizado;
 
 	public SolicitudBeneficiario getSolicitudBeneficiario() {
@@ -45,14 +44,6 @@ public class Finiquito extends EntityBase {
 
 	public void setNumeroResolucion(String numeroResolucion) {
 		this.numeroResolucion = numeroResolucion;
-	}
-
-	public Date getFechaResolucion() {
-		return fechaResolucion;
-	}
-
-	public void setFechaResolucion(Date fechaResolucion) {
-		this.fechaResolucion = fechaResolucion;
 	}
 
 	public CajaDeclarada getCajaDeclarada() {

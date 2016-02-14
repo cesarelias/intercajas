@@ -53,7 +53,6 @@ public class UIConceder extends UIBase {
 	@UiField UploadConceder upload;
 	@UiField TextArea cuerpoMensaje;
 	
-	@UiField DateBox fechaResolucion;
 	@UiField TextBox numeroResolucion;
 	@UiField Label tx;
 	@UiField Label bx;
@@ -134,7 +133,6 @@ public class UIConceder extends UIBase {
 		nuevoConcedido.setAdjuntos(upload.adjuntos);
 		nuevoConcedido.setCuerpoMensaje(cuerpoMensaje.getValue());
 		nuevoConcedido.setNumeroResolucion(numeroResolucion.getValue());
-		nuevoConcedido.setFechaResolucion(fechaResolucion.getValue());
 		nuevoConcedido.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
 		nuevoConcedido.setTx(Integer.valueOf(tx.getText()));
 		nuevoConcedido.setTmin(Integer.valueOf(tmin.getText()));

@@ -133,7 +133,6 @@ public class FiniquitoRest {
 		Denegado d = new Denegado();
 		d.setCajaDeclarada(cd);
 		d.setSolicitudBeneficiario(sb);
-		d.setFechaResolucion(nuevoDenegado.getFechaResolucion());
 		d.setNumeroResolucion(nuevoDenegado.getNumeroResolucion());
 		d.setMotivo(null); //TODO Motivo debe ser uno o varios
 		d.setAutorizado(false);
@@ -235,7 +234,6 @@ public class FiniquitoRest {
 		Concedido c = new Concedido();
 		c.setCajaDeclarada(cd);
 		c.setSolicitudBeneficiario(sb);
-		c.setFechaResolucion(nuevoConcedido.getFechaResolucion());
 		c.setNumeroResolucion(nuevoConcedido.getNumeroResolucion());
 		c.setTx(nuevoConcedido.getTx());
 		c.setTmin(nuevoConcedido.getTmin());

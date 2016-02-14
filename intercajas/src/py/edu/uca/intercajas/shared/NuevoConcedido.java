@@ -11,7 +11,6 @@ public class NuevoConcedido {
 	Adjunto[] adjuntos;
 	String cuerpoMensaje;
 	String numeroResolucion;
-	Date fechaResolucion;
 	Long solicitudBeneficiarioId;
 	Long destino_id;
 
@@ -23,12 +22,11 @@ public class NuevoConcedido {
 	public NuevoConcedido() {
 
 	}
-	
-	public NuevoConcedido(String numeroResolucion, Date fechaResolucion,
+
+	public NuevoConcedido(String numeroResolucion,
 			Long solicitudBeneficiarioId, BigDecimal bx, BigDecimal bt,
 			Integer tx, Integer tmin) {
 		this.numeroResolucion = numeroResolucion;
-		this.fechaResolucion = fechaResolucion;
 		this.solicitudBeneficiarioId = solicitudBeneficiarioId;
 		this.bx = bx;
 		this.bt = bt;
@@ -36,21 +34,12 @@ public class NuevoConcedido {
 		this.tmin = tmin;
 	}
 
-
 	public String getNumeroResolucion() {
 		return numeroResolucion;
 	}
 
 	public void setNumeroResolucion(String numeroResolucion) {
 		this.numeroResolucion = numeroResolucion;
-	}
-
-	public Date getFechaResolucion() {
-		return fechaResolucion;
-	}
-
-	public void setFechaResolucion(Date fechaResolucion) {
-		this.fechaResolucion = fechaResolucion;
 	}
 
 	public Long getSolicitudBeneficiarioId() {
@@ -117,6 +106,4 @@ public class NuevoConcedido {
 		this.destino_id = destino_id;
 	}
 
-	
-	
 }

@@ -24,44 +24,38 @@
 						<g:HTMLPanel>
 							<table>
 								<tr>
-									<td width="120px">Numero Resolucion</td>
+									<td width="600px">Numero Resolucion</td>
 									<td>
 										<g:TextBox ui:field="numeroResolucion" />
 									</td>
 								</tr>
 								<tr>
-									<td>Fecha Resolucion</td>
-									<td>
-										<dp:DateBox ui:field="fechaResolucion" />
-									</td>
-								</tr>
-								<tr>
-									<td>tx</td>
+									<td>Tiempo de aporte efectivo en la Caja X (tx)</td>
 									<td>
 										<g:Label ui:field="tx" />
 									</td>
 								</tr>
 								<tr>
-									<td>tmin</td>
+									<td>Tiempo minimo de aportes requerido por la legislación vigente en la Caja X para el acceso al beneficio. (tmin)</td>
 									<td>
 										<g:Label ui:field="tmin" />
 									</td>
 								</tr>
 								<tr>
-									<td>bt</td>
+									<td>Beneficio que le hubiese correspondido en la Caja X de haber completo en la misma los requisitos de edad y aportes (bt)</td>
 									<td>
 										<g:IntegerBox ui:field="bt" />
 									</td>
 								</tr>
 								<tr>
-									<td>bx</td>
+									<td>Beneficio que le corresponderia cobrar la caja X (bx)</td>
 									<td>
 										<g:Label ui:field="bx" />
 									</td>
 								</tr>
 							</table>
 						</g:HTMLPanel>
-						<g:Button ui:field="calcularBx">Calcuar Bx</g:Button>
+						<g:Button ui:field="calcularBx">Calcuar bx</g:Button>
 					</g:VerticalPanel>
 				</g:center>
 				<g:south size="110">

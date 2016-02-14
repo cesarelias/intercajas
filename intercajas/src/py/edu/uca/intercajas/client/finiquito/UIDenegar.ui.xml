@@ -31,12 +31,6 @@
 									</td>
 								</tr>
 								<tr>
-									<td>Fecha Resolucion</td>
-									<td>
-										<dp:DateBox ui:field="fechaResolucion" />
-									</td>
-								</tr>
-								<tr>
 									<td>Motivo</td>
 									<td>
 										<g:TextArea ui:field="motivo" />

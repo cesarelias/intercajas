@@ -57,10 +57,8 @@ public class TablaTiempoServicioReconocido extends UIBase {
 	@UiField
 	FlexTable table;
 
-	HandlerRegistration h;
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 
-	ListDataProvider<TiempoServicioReconocido> model;
 	List<TiempoServicioReconocido> listaTiempoServicioReconocido = new ArrayList<TiempoServicioReconocido>();
 
 	int row;

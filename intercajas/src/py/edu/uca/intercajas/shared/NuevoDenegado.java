@@ -1,8 +1,5 @@
 package py.edu.uca.intercajas.shared;
 
-import java.util.Date;
-import java.util.List;
-
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 
 public class NuevoDenegado {
@@ -10,7 +7,6 @@ public class NuevoDenegado {
 	Adjunto[] adjuntos;
 	String cuerpoMensaje;
 	String numeroResolucion;
-	Date fechaResolucion;
 	Long solicitudBeneficiarioId;
 	String movito;
 	Long destino_id;
@@ -19,10 +15,9 @@ public class NuevoDenegado {
 
 	}
 
-	public NuevoDenegado(String numeroResolucion, Date fechaResolucion,
+	public NuevoDenegado(String numeroResolucion, 
 			Long solicitudBeneficiarioId, String movito) {
 		this.numeroResolucion = numeroResolucion;
-		this.fechaResolucion = fechaResolucion;
 		this.solicitudBeneficiarioId = solicitudBeneficiarioId;
 		this.movito = movito;
 	}
@@ -33,14 +28,6 @@ public class NuevoDenegado {
 
 	public void setNumeroResolucion(String numeroResolucion) {
 		this.numeroResolucion = numeroResolucion;
-	}
-
-	public Date getFechaResolucion() {
-		return fechaResolucion;
-	}
-
-	public void setFechaResolucion(Date fechaResolucion) {
-		this.fechaResolucion = fechaResolucion;
 	}
 
 	public Long getSolicitudBeneficiarioId() {

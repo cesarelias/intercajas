@@ -44,7 +44,6 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 
-	ListDataProvider<TiempoServicioDeclarado> model;
 	List<TiempoServicioDeclarado> listaTiempoServicioDeclarado = new ArrayList<TiempoServicioDeclarado>();
 
 	int row;

@@ -48,7 +48,6 @@ public class UIDenegar extends UIBase {
 	@UiField UploadDenegar upload;
 	@UiField TextArea cuerpoMensaje;
 	
-	@UiField DateBox fechaResolucion;
 	@UiField TextBox numeroResolucion;
 	@UiField TextArea motivo;
 	
@@ -87,7 +86,6 @@ public class UIDenegar extends UIBase {
 		NuevoDenegado nuevoDenegado = new NuevoDenegado();
 
 		nuevoDenegado.setNumeroResolucion(numeroResolucion.getValue());
-		nuevoDenegado.setFechaResolucion(fechaResolucion.getValue());
 		nuevoDenegado.setMovito(motivo.getValue());
 		nuevoDenegado.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
 		nuevoDenegado.setAdjuntos(upload.adjuntos);
