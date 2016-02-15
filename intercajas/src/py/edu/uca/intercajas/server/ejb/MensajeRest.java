@@ -184,12 +184,21 @@ public class MensajeRest   {
         	throw new IllegalArgumentException("Destino originario no valido");
         }
 
-        if (d.getEstado() != Destino.Estado.Atendido) {
-        	throw new IllegalArgumentException("Destino no tiene estado Atendido");
-        }
-        
         if (d.getMensaje().getEstado() != Mensaje.Estado.Enviado) {
         	throw new IllegalArgumentException("el Mensaje del Destino Originario, debe estar como enviado");
+        }
+        
+        if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
+        	for (SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
+        		for (Finiquito f : sb.getFiniquitos()) {
+        			if (f.getMensaje().getId() == m.getId()) {
+        				sb.setEstado(SolicitudBeneficiario.Estado.Pendiente); //volvemos a pendiente la solicitudBeneficiario al anular el envio
+        				em.persist(sb);
+        			}
+        		}
+        		
+        	}
+        	 
         }
         
 		d.setEstado(Destino.Estado.Pendiente);
