@@ -15,9 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import py.edu.uca.intercajas.shared.UserDTO;
-import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
-import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 @Path("/cajaDeclarada")
 @Stateless
@@ -58,7 +56,7 @@ public class CajaDeclaradaRest   {
                            .setParameter("solicitud_id", solicitud_id)
                            .getResultList();
 	}
-
+     
 	@Path("/findCajaDeclaraadBySolicitudIdAndCurrentUser")
 	@GET
 	@Produces("application/json")

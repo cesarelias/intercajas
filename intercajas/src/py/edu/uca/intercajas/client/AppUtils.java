@@ -2,7 +2,8 @@ package py.edu.uca.intercajas.client;
 
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
-import py.edu.uca.intercajas.client.tiemposervicio.TablaSolicitudBeneficiario;
+import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.client.solicitud.TablaSolicitudBeneficiario;
 import py.edu.uca.intercajas.client.view.login.UILogin;
 
 import com.google.gwt.core.client.GWT;
@@ -24,9 +25,12 @@ public class AppUtils {
             
     		//test
             try {
-            	
-            	TablaSolicitudBeneficiario t = new TablaSolicitudBeneficiario();
-            	t.mostrar();
+//            	
+//            	SolicitudTitularEditorWorkFlow s = new SolicitudTitularEditorWorkFlow();
+//            	s.titulo = "Nueva solicitud";
+//            	s.create();
+//            	s.mostrarDialog();
+//            	
             	
             }catch (Exception e) {
             	Window.alert(e.getMessage());

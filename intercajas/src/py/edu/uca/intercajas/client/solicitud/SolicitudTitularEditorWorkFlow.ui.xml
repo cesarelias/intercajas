@@ -4,21 +4,38 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
+	<g:DockLayoutPanel unit="PX" width="750px" height="650px">
 		<g:center>
-			<g:DockLayoutPanel height="100%" width="100%">
-				<g:north size="110">
-					<g:HorizontalPanel width="100%">
-						<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
-						<g:DecoratorPanel title="Adjuntos">
-							<gt:UploadSolicitud ui:field="upload"/>
-						</g:DecoratorPanel>
-					</g:HorizontalPanel>
+			<g:DockLayoutPanel height="100%" width="100%" unit="PX">
+				<g:north size="270">
+					<g:VerticalPanel width="100%">
+						<g:HorizontalPanel width="100%">
+							<gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" />
+							<g:DecoratorPanel title="Adjuntos">
+								<gt:UploadSolicitud ui:field="upload" />
+							</g:DecoratorPanel>
+						</g:HorizontalPanel>
+						<g:DockLayoutPanel height="170px" unit="PX">
+							<g:north size="20">
+								<g:VerticalPanel>
+									<g:CheckBox ui:field="cotizanteSolicitante" checked="true">
+										El beneficiario cotizante es el solicitante
+									</g:CheckBox>
+									<g:Label>Derechohabientes</g:Label>
+								</g:VerticalPanel>
+							</g:north>
+							<g:center>
+								<gt:TablaSolicitudBeneficiario ui:field="tablaSolicitudBeneficiario"/>
+							</g:center>
+						</g:DockLayoutPanel>
+
+					</g:VerticalPanel>
 				</g:north>
 				<g:center>
 					<gt:TablaTiempoServicioDeclarado
 						ui:field="tablaTiempoServicioDeclarado" />
 				</g:center>
+
 				<g:south size="110">
 					<g:TextArea ui:field="cuerpoMensaje"></g:TextArea>
 				</g:south>

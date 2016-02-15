@@ -3,10 +3,12 @@ package py.edu.uca.intercajas.client.solicitud;
 import java.util.ArrayList;
 import java.util.List;
 
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor;
 import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,6 +17,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -57,6 +60,8 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	}
 
 	private void initTable() {
+		// TODO falta que las filas de las declaraciones tenga SCROLL
+
 		// Initialize the header.
 		header.getColumnFormatter().setWidth(0, "60px");
 		header.getColumnFormatter().setWidth(1, "220px");
@@ -88,7 +93,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 			selectRow(row);
 		}
 	}
-	  
+
 	@UiHandler("create")
 	void onCreate(ClickEvent event) {
 
@@ -97,8 +102,8 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		pp.setListener(new TiempoServicioDeclaradoEditor.Listener() {
 			@Override
 			public void onChanged(
-					TiempoServicioDeclarado tiempoServicioDeclatado) {
-				listaTiempoServicioDeclarado.add(row, tiempoServicioDeclatado);
+					TiempoServicioDeclarado tiempoServicioDeclarado) {
+				listaTiempoServicioDeclarado.add(row, tiempoServicioDeclarado);
 				refreshTable();
 			}
 		});
@@ -107,15 +112,17 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 
 	}
 
-	void onEdit(TiempoServicioDeclarado periodoAporteDeclaradoProxy) {
+	
+	
+	@UiHandler("edit")
+	void onEdit(ClickEvent event) {
 
-		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(
-				listaTiempoServicioDeclarado.get(selectedRow));
+		TiempoServicioDeclaradoEditor pp = new TiempoServicioDeclaradoEditor(listaTiempoServicioDeclarado.get(selectedRow));
 		pp.setListener(new TiempoServicioDeclaradoEditor.Listener() {
 			@Override
 			public void onChanged(
-					TiempoServicioDeclarado tiempoServicioDeclatado) {
-				listaTiempoServicioDeclarado.set(row, tiempoServicioDeclatado);
+					TiempoServicioDeclarado periodoAporteDeclarado) {
+				listaTiempoServicioDeclarado.set(row, periodoAporteDeclarado);
 				refreshTable();
 			}
 		});
@@ -125,14 +132,14 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 	}
 
 	@UiHandler("delete")
-	void onDelete(ClickEvent event){
+	void onDelete(ClickEvent event) {
 
 		styleRow(selectedRow, false);
 		listaTiempoServicioDeclarado.remove(selectedRow);
 		refreshTable();
 
 	}
-	
+
 	void refreshTable() {
 		table.clear(true);
 		TiempoServicioDeclarado t;
@@ -169,16 +176,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		}
 	}
 
-	private void selectRow(int i) {
-		// if (row < 0 || listaTiempoServicioReconocido.size() == 0) {
-		// return;
-		// };
-
-		// selectedItem = listaTiempoServicioReconocido.get(row);
-
-		// if (selectedItem == null) {
-		// return;
-		// }
+	private void selectRow(int row) {
 
 		if (row == listaTiempoServicioDeclarado.size()) { // la ultima fila es
 															// un total)
@@ -188,14 +186,14 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		styleRow(row, true);
 
 		selectedRow = row;
-
+		
 		// if (listener != null) {
 		// listener.onItemSelected(selectedItem);
 		// }
 
 	}
 
-	private void styleRow(int selectedRow2, boolean selected) {
+	private void styleRow(int row, boolean selected) {
 		if (row != -1) {
 			String style = "selectedRow";
 			if (selected) {

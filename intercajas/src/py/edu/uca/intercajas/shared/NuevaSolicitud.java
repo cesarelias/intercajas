@@ -1,11 +1,13 @@
 package py.edu.uca.intercajas.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 
 /*
@@ -18,6 +20,7 @@ public class NuevaSolicitud {
 	List<TiempoServicioDeclarado> listaTiempoServicioDeclarado;
 	Mensaje mensaje;
 	Adjunto[] adjuntos;
+	List<SolicitudBeneficiario> listaSolicitudBeneficiario = new ArrayList<SolicitudBeneficiario>();
 
 	public NuevaSolicitud() {
 
@@ -63,6 +66,15 @@ public class NuevaSolicitud {
 
 	public void setAdjuntos(Adjunto[] adjuntos) {
 		this.adjuntos = adjuntos;
+	}
+
+	public List<SolicitudBeneficiario> getListaSolicitudBeneficiario() {
+		return listaSolicitudBeneficiario;
+	}
+
+	public void setListaSolicitudBeneficiario(
+			List<SolicitudBeneficiario> listaSolicitudBeneficiario) {
+		this.listaSolicitudBeneficiario = listaSolicitudBeneficiario;
 	}
 
 }

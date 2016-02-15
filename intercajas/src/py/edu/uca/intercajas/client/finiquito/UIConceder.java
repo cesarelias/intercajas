@@ -89,8 +89,9 @@ public class UIConceder extends UIBase {
 			}
 		});
 		
+		
 		//Obtenemos la cajadeclarada, y asignamos el TX
-		BeneficiarioService.Util.get().findCajaDeclaraadBySolicitudIdAndCurrentUser(solicitudBeneficiario.getId(), new MethodCallback<CajaDeclarada>() {
+		BeneficiarioService.Util.get().findCajaDeclaraadBySolicitudIdAndCurrentUser(solicitudBeneficiario.getSolicitud().getId(), new MethodCallback<CajaDeclarada>() {
 			@Override
 			public void onSuccess(Method method, CajaDeclarada response) {
 				tx.setText(response.getTxNeto().toString());

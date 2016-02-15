@@ -23,10 +23,12 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Direccion;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
 
 import com.google.gwt.cell.client.TextCell;
@@ -72,7 +74,13 @@ public class ListaBeneficiarios extends UIBase {
     @Source(value = {DataGrid.Style.DEFAULT_CSS, "DataGridPatch.css"})
     DataGrid.Style dataGridStyle();
   }
+  
+	public interface Listener {
+		void onSelected(Beneficiario beneficiarioSelected);
+	}
  
+	Listener listener;
+	
   private class ColNombres extends Column<Beneficiario, String> {
     public ColNombres() {
       super(new TextCell());
@@ -235,6 +243,11 @@ public class ListaBeneficiarios extends UIBase {
     	return;
     }
     AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+    
+	if (listener!=null) {
+		listener.onSelected(beneficiario);
+	}
+    
     close();
     
   }
@@ -288,5 +301,10 @@ public class ListaBeneficiarios extends UIBase {
   public void hideSelectButton() {
 	  select.setVisible(false);
   }
+
+
+public void setListener(Listener listener) {
+	this.listener = listener;
+}
   
 }

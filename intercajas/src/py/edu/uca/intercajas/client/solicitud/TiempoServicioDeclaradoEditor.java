@@ -56,9 +56,10 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 	
 	Listener listener;
 
-	public TiempoServicioDeclaradoEditor(TiempoServicioDeclarado periodoAporteDeclarado) {
+	public TiempoServicioDeclaradoEditor(final TiempoServicioDeclarado tiempoServicioDeclarado) {
 		
 	
+		this.tiempoServicioDeclarado = tiempoServicioDeclarado;
 		
 		oracle = new MultiWordSuggestOracle();
 		lugar = new SuggestBox(oracle);	
@@ -109,7 +110,7 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
 		if (tiempoServicioDeclarado == null) {
-			tiempoServicioDeclarado = new TiempoServicioDeclarado();
+			this.tiempoServicioDeclarado = new TiempoServicioDeclarado();
 		} else {
 			inicio.setValue(tiempoServicioDeclarado.getInicio());
 			fin.setValue(tiempoServicioDeclarado.getFin());
@@ -117,22 +118,7 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 			caja.setValue(tiempoServicioDeclarado.getCaja(), true);
 		}
 
-		BeneficiarioService.Util.get().findCajaAll(new MethodCallback<List<Caja>>() {
-
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onSuccess(Method method, List<Caja> response) {
-				if (tiempoServicioDeclarado.getCaja() == null) {
-					caja.setValue(response.get(0), true);
-				} ;
-				caja.setAcceptableValues(response);
-			}
-		});
+		addCajasListBox();
 		
 		DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 		inicio.setFormat(new DateBox.DefaultFormat(dateFormat));
@@ -184,6 +170,26 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
+	}
+	
+	public void addCajasListBox() {
+		BeneficiarioService.Util.get().findCajaAll(new MethodCallback<List<Caja>>() {
+
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				
+			}
+
+			 
+			@Override
+			public void onSuccess(Method method, List<Caja> response) {
+				if (tiempoServicioDeclarado.getCaja() == null) {
+					caja.setValue(response.get(0), true);
+				} ;
+				caja.setAcceptableValues(response);
+			}
+		});
+
 	}
 	
 }

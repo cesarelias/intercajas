@@ -312,18 +312,34 @@ public class MensajeRest   {
 		if (usuarioCajaDeclarada==null){
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
-		
+
+		boolean todasFiniquitadas = true;
 		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
 			for (Finiquito f : sb.getFiniquitos()) {
 				if (f.getMensaje().getId() == m.getId()) {
+					
+					//Marcamos como concedido a SolicitudBeneficiario
+					sb.setEstado(SolicitudBeneficiario.Estado.Concedido);
+					em.persist(sb);
+					
 					f.setAutorizado(true);
 					em.persist(f);
 				}
+				
 			}
+			
+			if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
+				todasFiniquitadas = false;
+			}
+
+			
 		}
 		
-		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Concedido);
-		em.persist(usuarioCajaDeclarada);
+		//Si todas las SolicitudBeneficio no Pendiente entonces CajaDeclarada como finiquitado
+		if (todasFiniquitadas) {
+			usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Finiquitado);
+			em.persist(usuarioCajaDeclarada);
+		}
 		
 	}
 	
@@ -334,19 +350,30 @@ public class MensajeRest   {
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 		
+		boolean todasFiniquitadas = true;
 		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
 			for (Finiquito f : sb.getFiniquitos()) {
 				if (f.getMensaje().getId() == m.getId()) {
+					
+					//Marcamos como denegado a SolicitudBeneficiario
+					sb.setEstado(SolicitudBeneficiario.Estado.Denegado);
+					em.persist(sb);
+
 					f.setAutorizado(true);
 					em.persist(f);
 				}
+				
+			}
+			if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
+				todasFiniquitadas = false;
 			}
 		}
 		
-		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Denegado);
-		em.persist(usuarioCajaDeclarada);
-
-		
+		//Si todas las SolicitudBeneficio no Pendiente entonces CajaDeclarada como finiquitado
+		if (todasFiniquitadas) {
+			usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Finiquitado);
+			em.persist(usuarioCajaDeclarada);
+		}
 	}
 
 	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {

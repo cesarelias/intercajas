@@ -76,6 +76,11 @@ public class FiniquitoRest {
 			return;
 		}
 		
+		//Marcamos como atendido la SolicitudBeneficiario
+		sb.setEstado(SolicitudBeneficiario.Estado.Atendido);
+		em.persist(sb);
+		
+		
 		CajaDeclarada cd = null;
 		try {
 			cd = em.createQuery("select cd "
@@ -103,12 +108,28 @@ public class FiniquitoRest {
 		
 		//Marcamos el destino-mensaje como Atendido
 		Destino de = em.find(Destino.class, nuevoDenegado.getDestino_id());
-		if (de==null || de.getEstado() != Destino.Estado.Pendiente) {
+		if (de==null) {
 			//TODO mejorar esto
 			throw new IllegalArgumentException("El destino_id no es valido");
 		}
-		de.setEstado(Destino.Estado.Atendido);
-		em.persist(de);
+		
+		boolean todosAtendidos = true;
+		for (SolicitudBeneficiario sbb : de.getMensaje().getSolicitud().getBeneficiarios()) {
+			if (sbb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
+				todosAtendidos = false;
+			}
+			
+		}
+		
+		if (todosAtendidos) {
+			if (de.getEstado() != Destino.Estado.Pendiente) {
+				throw new IllegalArgumentException("El destino_id no es valido");
+			}
+			
+			de.setEstado(Destino.Estado.Atendido);
+			em.persist(de);
+		}
+		
 		
 		
 		//Creamos el mensaje
@@ -178,6 +199,10 @@ public class FiniquitoRest {
 			return;
 		}
 		
+		//Marcamos como atendido la SolicitudBeneficiario
+		sb.setEstado(SolicitudBeneficiario.Estado.Atendido);
+		em.persist(sb);
+		
 		CajaDeclarada cd = null;
 		try {
 			cd = em.createQuery("select cd "
@@ -203,15 +228,30 @@ public class FiniquitoRest {
 			return;
 		}
 
-		//Marcamos el destino-mensaje como Atendido
+		//Marcamos el destino-mensaje como Atendido, si estan todos las SolicitudesBeneficiario con Finiquito.
 		Destino de = em.find(Destino.class, nuevoConcedido.getDestino_id());
-		if (de==null || de.getEstado() != Destino.Estado.Pendiente) {
+		if (de==null) {
 			//TODO mejorar esto
 			throw new IllegalArgumentException("El destino_id no es valido");
 		}
-		de.setEstado(Destino.Estado.Atendido);
-		em.persist(de);
-
+		
+		boolean todosAtendidos = true;
+		for (SolicitudBeneficiario sbb : de.getMensaje().getSolicitud().getBeneficiarios()) {
+			if (sbb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
+				todosAtendidos = false;
+			}
+			
+		}
+		
+		if (todosAtendidos) {
+			if (de.getEstado() != Destino.Estado.Pendiente) {
+				throw new IllegalArgumentException("El destino_id no es valido");
+			}
+			
+			de.setEstado(Destino.Estado.Atendido);
+			em.persist(de);
+		}
+		
 		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();

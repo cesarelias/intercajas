@@ -117,7 +117,6 @@ public class TablaTiempoServicioReconocido extends UIBase {
 		refreshTable();
 
 	}
-	
 
 	void refreshTable() {
 		
@@ -187,16 +186,6 @@ public class TablaTiempoServicioReconocido extends UIBase {
 	  
 	  void selectRow(int row) {
 		  
-//	  		if (row < 0 || listaTiempoServicioReconocido.size() == 0) {
-//	  			return; 
-//	  		};
-	  		
-//			selectedItem = listaTiempoServicioReconocido.get(row);
-		     
-//		     if (selectedItem == null) {
-//		       return;
-//		     }
-
 		  	if ( row == listaTiempoServicioReconocido.size()) {  //la ultima fila es un total)
 		  		return;
 		  	}
@@ -205,10 +194,6 @@ public class TablaTiempoServicioReconocido extends UIBase {
 
 		     selectedRow = row;
 
-//		     if (listener != null) {
-//		       listener.onItemSelected(selectedItem);
-//		     }
-		     
 	  }
 	  
 	  private void styleRow(int row, boolean selected) {

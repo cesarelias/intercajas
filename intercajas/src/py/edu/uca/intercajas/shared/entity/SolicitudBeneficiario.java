@@ -22,6 +22,11 @@ public class SolicitudBeneficiario extends EntityBase {
 	private List<Finiquito> finiquitos;
 	private Tipo tipo;
 	private Parentesco parentesco;
+	private Estado estado;
+	
+	public enum Estado {
+		Pendiente, Atendido, Concedido, Denegado
+	}
 	
 	public enum Tipo {
 		Titular, Derechohabiente
@@ -73,6 +78,14 @@ public class SolicitudBeneficiario extends EntityBase {
 
 	public void setFiniquitos(List<Finiquito> finiquitos) {
 		this.finiquitos = finiquitos;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 
 }

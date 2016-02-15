@@ -177,7 +177,6 @@ public class MailDetail extends ResizeComposite {
 			  
 			  @Override
 			  public void onSuccess(Method method, CajaDeclarada response) {
-				  
 				  //if (response.getEstado() == CajaDeclarada.Estado.Nuevo && response.getAutorizado()) {
 				  if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && item.getEstado() == Destino.Estado.Pendiente) {
 					  
@@ -209,15 +208,18 @@ public class MailDetail extends ResizeComposite {
 						  public void onSuccess(Method method, List<SolicitudBeneficiario> response) {
 							  
 							  final VerticalPanel vp = new VerticalPanel();
-							  final HorizontalPanel hp = new HorizontalPanel();
+							  HorizontalPanel hp = null;
 							  
 							  for (final SolicitudBeneficiario sb : response) {
 								  
-								  if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.Concedido) {
+								  hp = new HorizontalPanel();
+								  if (sb.getEstado() == SolicitudBeneficiario.Estado.Concedido) {
 									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio concedido, no mas acciones diponibles"));
-								  } else if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.Denegado) {
+								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Denegado) {
 									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio denegado, no mas acciones diponibles"));
-								  } else if (cajaDeclarada.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
+								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Atendido) {
+									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " en espera de autorizacion, no mas acciones diponibles"));
+								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente && cajaDeclarada.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
 									  
 									  Anchor conceder = new Anchor("conceder");
 									  conceder.addClickHandler(new ClickHandler() {
@@ -270,8 +272,6 @@ public class MailDetail extends ResizeComposite {
 		  });
 		  
 	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
-		  Window.alert(item.getEstado().toString());
-		  Window.alert(item.getId().toString());
 		  
 		  final HorizontalPanel hp = new HorizontalPanel();
 		  

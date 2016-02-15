@@ -114,7 +114,6 @@ public interface BeneficiarioService extends RestService {
 	@Consumes("application/json")
 	public void nuevoReconocimientoTiempoServicio(NuevoReconocimientoTiempoServicio nuevoReconocimientoTiempoServicio, MethodCallback<Void> callback);
 		
-
 	@Path("cajaDeclarada/findCajaDeclaraadBySolicitudIdAndCurrentUser")
 	@GET
 	@Produces("application/json")

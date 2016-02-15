@@ -13,14 +13,17 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,6 +32,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -45,6 +49,8 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField(provided = true) TablaTiempoServicioDeclarado tablaTiempoServicioDeclarado;
 	@UiField UploadSolicitud upload;
 	@UiField TextArea cuerpoMensaje;
+	@UiField TablaSolicitudBeneficiario tablaSolicitudBeneficiario;
+	@UiField CheckBox cotizanteSolicitante;
 	
 	Solicitud solicitudTitular;
 	
@@ -89,6 +95,12 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setCotizante(solicitudTitularEditor.beneficiario.getBeneficiario());
 		
+		
+		
+		
+
+		
+		
 //		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
 		//Creamos el mensaje
@@ -103,7 +115,25 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 //		solicitudTitular.setMensajes(mensajes);
 
 		NuevaSolicitud nuevaSolicitudTitular = new NuevaSolicitud(solicitudTitular, tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado, mensaje, upload.adjuntos);
-		
+
+		if (cotizanteSolicitante.getValue() == true) {
+			SolicitudBeneficiario sb = new SolicitudBeneficiario();
+			//Como la solicitud es del titular, hacemos SolicitudBenefiario = al cotizante
+			sb.setBeneficiario(solicitudTitularEditor.beneficiario.getBeneficiario());
+			sb.setTipo(SolicitudBeneficiario.Tipo.Titular);
+			nuevaSolicitudTitular.getListaSolicitudBeneficiario().add(sb);
+		} else {
+			
+			SolicitudBeneficiario sb = null;
+			for (int i=0; i<tablaSolicitudBeneficiario.listaBeneficiario.size(); i++) {
+				sb = new SolicitudBeneficiario();
+				sb.setTipo(SolicitudBeneficiario.Tipo.Derechohabiente);
+				sb.setParentesco(tablaSolicitudBeneficiario.listaParentescoEditors.get(i).getValue());
+				sb.setBeneficiario(tablaSolicitudBeneficiario.listaBeneficiario.get(i));
+				nuevaSolicitudTitular.getListaSolicitudBeneficiario().add(sb);
+			}
+		}
+
 		BeneficiarioService.Util.get().nuevoSolicitud(nuevaSolicitudTitular, new MethodCallback<Void>() {
 
 			@Override
@@ -125,6 +155,24 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 	public void create() {
 		solicitudTitular = new Solicitud();
+	}
+	
+	@UiHandler("cotizanteSolicitante")
+	public void cotizanteSolicitante(ClickEvent event) {
+
+		if (((CheckBox) event.getSource()).getValue()) {
+			tablaSolicitudBeneficiario.listaBeneficiario.clear();
+			tablaSolicitudBeneficiario.refreshTable();
+			tablaSolicitudBeneficiario.setVisible(false);
+		} else {
+			tablaSolicitudBeneficiario.listaBeneficiario.clear();
+			tablaSolicitudBeneficiario.refreshTable();
+			tablaSolicitudBeneficiario.setVisible(true);
+		}
+		
+		
+		
+		
 	}
 	
 }

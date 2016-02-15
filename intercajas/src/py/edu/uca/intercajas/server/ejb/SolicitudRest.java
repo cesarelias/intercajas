@@ -221,13 +221,13 @@ public class SolicitudRest   {
 		solicitud.setTxFinal(0); //iniciamos con 0 meses
 		solicitud.setFecha(new Date()); //fecha del dia
 		em.persist(solicitud);
+
 		
-		//Como la solicitud es del titular, hacemos SolicitudBenefiario = al cotizante
-		SolicitudBeneficiario sb = new SolicitudBeneficiario();
-		sb.setBeneficiario(solicitud.getCotizante());
-		sb.setSolicitud(solicitud);
-		
-		em.persist(sb);
+		for (SolicitudBeneficiario sb : nuevaSolicitud.getListaSolicitudBeneficiario()) {
+			sb.setSolicitud(solicitud);
+			sb.setEstado(SolicitudBeneficiario.Estado.Pendiente);
+			em.persist(sb);
+		}
 		
 		LOG.info("Solicitud titular persisted");
 		
