@@ -47,15 +47,16 @@ public class Mail extends UIBase {
   private static final Binder binder = GWT.create(Binder.class);
 
 //  @UiField TopPanel topPanel;
-  @UiField MailList mailList;
+  @UiField(provided=true) MailList mailList;
   @UiField MailDetail mailDetail;
 //  @UiField Shortcuts shortcuts;
 //  @UiField SimplePanel main;
 
   public Mail() {
 	 
-    initWidget(binder.createAndBindUi(this));
-	init();
+		mailList = new MailList(MailList.Modo.Entrada);
+		initWidget(binder.createAndBindUi(this));
+		init();
   }
   
   /**
@@ -93,6 +94,16 @@ public class Mail extends UIBase {
 //    RootLayoutPanel root = RootLayoutPanel.get();
 //    root.add(outer);
     
+  }
+  
+  public void mostrarEntrada() {
+	  mailList.modo = MailList.Modo.Entrada;
+	  mailList.update();
+  }
+  
+  public void mostrarFiniquitado() {
+	  mailList.modo = MailList.Modo.Finquitado;
+	  mailList.update();
   }
   
 }

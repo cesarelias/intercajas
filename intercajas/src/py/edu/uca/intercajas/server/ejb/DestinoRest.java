@@ -73,7 +73,7 @@ public class DestinoRest   {
 		
 		
 		
-		if (user.getTipo() == Usuario.Tipo.Gestor) {
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 			
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
@@ -114,9 +114,70 @@ public class DestinoRest   {
 		
 		return null;
 		
+	}
+	
+	@Path("/findAllFiniquitados")
+	@GET
+	@Produces("application/json")
+	public List<Destino> findAllFiniquitados(@QueryParam("startRow") int startRow,
+										@QueryParam("maxResults") int maxResults,
+										@Context HttpServletRequest req) {
+		
+		UserDTO user = userLoign.getValidUser(req.getSession().getId());
+        if (user == null) {
+       	   return null;
+       }
+
+		if (maxResults > 500) {
+			maxResults = 500;
+		}
 		
 		
+		
+		
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "
+					+ "               and (b.estado = :estadoSolicitud) "
+					+ "               and a.estado = :estadoMensaje"
+					+ "               and a.remitente.id = :caja_id "
+					+ "               and c.destinatario.id = :caja_id"
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
+					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
+//		} else if (user.getTipo() == Usuario.Tipo.Superior) {
+//			
+//			return em.createQuery("select c "
+//					+ "              from Mensaje a, Solicitud b, Destino c"
+//					+ "             where a.solicitud.id = b.id "
+//					+ "               and a.id = c.mensaje.id "					
+//					+ "               and (b.estado <> :estadoSolicitud) "
+//					+ "               and a.estado = :estadoMensaje"
+//					+ "               and a.remitente.id = :caja_id "
+//					+ "               and c.destinatario.id = :caja_id "
+//					+ " order by a.fecha desc "
+//					, Destino.class)
+//					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+//					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
+//					.setFirstResult(startRow)
+//					.setMaxResults(maxResults)
+//					.setParameter("caja_id", user.getCaja().getId())
+//					.getResultList();
+			
+		}
+		
+		return null;
 		
 	}
+	
 	
 }

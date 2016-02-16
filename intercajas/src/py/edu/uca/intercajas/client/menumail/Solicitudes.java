@@ -22,6 +22,7 @@ import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
+import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
 import py.edu.uca.intercajas.client.view.login.UICambioContrasena;
 import py.edu.uca.intercajas.shared.UserDTO;
 
@@ -82,6 +83,7 @@ public class Solicitudes extends Composite {
 		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
 		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
 		addItemCambioContrasena(new ItemMenu("Cambiar mi contraseña","Cambiar Contraseña"));
+		addItemUsuarios(new ItemMenu("Usuario","Usuario"));
 		
 //		addItem(new ItemMenu("Solicitud Derechohabiente",
 //				"Solicitud Derechohabiente"));
@@ -149,5 +151,25 @@ public class Solicitudes extends Composite {
 			}
 		});
 	}	
+	
+	private void addItemUsuarios(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+	
+				ListaUsuarios l = new ListaUsuarios(10);
+				l.mostrarDialog();
+				
+				
+			}
+		});
+	}	
+		
+	
 	
 }

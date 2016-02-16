@@ -4,7 +4,9 @@ import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.solicitud.TablaSolicitudBeneficiario;
+import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
 import py.edu.uca.intercajas.client.view.login.UILogin;
+import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -21,11 +23,13 @@ public class AppUtils {
 	    public static void mostrarMenuPrincipal() {
 			RootLayoutPanel.get().clear();
             new MenuMail();
-            new Mail().mostrar();
+            Mail m = AppUtils.Util.getMail();
+            m.mostrar();
+            m.mostrarEntrada();
             
     		//test
             try {
-//            	
+            	
 //            	SolicitudTitularEditorWorkFlow s = new SolicitudTitularEditorWorkFlow();
 //            	s.titulo = "Nueva solicitud";
 //            	s.create();
@@ -57,6 +61,34 @@ public class AppUtils {
 				}
 			});
 	    	mostrarLogin();
+	    }
+	    
+
+	    //Singleton de mail.
+	    public static class Util
+	    {
+	        public static UserDTO user;
+	        private static Mail mail;
+	 
+	        public static Mail getMail()
+	        {
+	            if (mail == null)
+	            {
+	                mail= new Mail();
+	            }
+	            return mail;
+	        }
+
+		    //ESTO NO ANDA AUN jaja.. mejor usar del LoginService
+	        public static UserDTO getCurrentUser()
+	        {
+	            if (user == null)
+	            {
+	            	user= new UserDTO();
+	            }
+	            return user;
+	        }
+	        
 	    }
 	    
 	    

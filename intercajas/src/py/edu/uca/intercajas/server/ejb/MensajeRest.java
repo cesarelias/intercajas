@@ -51,6 +51,19 @@ public class MensajeRest   {
 	@GET
 	public String test() {
 		System.out.println("rest working");
+		
+		List<Finiquito> finiquitos = em.createQuery("select f "
+                + "  from Finiquito f, CajaDeclarada cd "
+                + " where f.cajaDeclarada.id = cd.id "
+                + "   and f.autorizado = true "
+                + "   and cd.id = :caja_declarada_id",Finiquito.class)
+                .setParameter("caja_declarada_id", 2L)
+                .getResultList();
+		
+		for (Finiquito f : finiquitos) {
+			System.out.println(f.getNumeroResolucion());
+		}
+		
 		return "rest working";
 	}
 	
@@ -322,11 +335,10 @@ public class MensajeRest   {
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 
-		boolean todasFiniquitadas = true;
+		//TODO no puede pasar a concedido, porque debe estar concedido en todas las cajas!!!
 		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
 			for (Finiquito f : sb.getFiniquitos()) {
 				if (f.getMensaje().getId() == m.getId()) {
-					
 					//Marcamos como concedido a SolicitudBeneficiario
 					sb.setEstado(SolicitudBeneficiario.Estado.Concedido);
 					em.persist(sb);
@@ -334,21 +346,41 @@ public class MensajeRest   {
 					f.setAutorizado(true);
 					em.persist(f);
 				}
-				
-			}
-			
-			if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
-				todasFiniquitadas = false;
+
 			}
 
-			
 		}
 		
-		//Si todas las SolicitudBeneficio no Pendiente entonces CajaDeclarada como finiquitado
-		if (todasFiniquitadas) {
+		//Verificamos que Todos los Beneficiarios de la caja del usuario tengan finiquito para marcar como Finiquitado
+		List<Finiquito> finiquitos = em.createQuery("select f "
+				                       + "  from Finiquito f, CajaDeclarada cd "
+				                       + " where f.cajaDeclarada.id = cd.id "
+				                       + "   and f.autorizado = true "
+				                       + "   and cd.id = :caja_declarada_id",Finiquito.class)
+				                       .setParameter("caja_declarada_id", usuarioCajaDeclarada.getId())
+				                       .getResultList();
+		
+		if (finiquitos != null & finiquitos.size() == usuarioCajaDeclarada.getSolicitud().getBeneficiarios().size()) {
 			usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Finiquitado);
 			em.persist(usuarioCajaDeclarada);
 		}
+		
+		
+		
+		boolean todasFiniquitadas = true;
+		//Si todas las CajasDeclaradas Finituiadas, entoces Solicitud Finiquitada
+		for (CajaDeclarada cs : m.getSolicitud().getCajasDeclaradas()) {
+			if (cs.getEstado() != CajaDeclarada.Estado.Finiquitado) {
+				todasFiniquitadas = false;
+			}
+		}
+				
+		if (todasFiniquitadas) {
+			Solicitud s = m.getSolicitud();
+			s.setEstado(Solicitud.Estado.Finiquitado);
+			em.persist(s);
+		}
+		
 		
 	}
 	
@@ -372,17 +404,36 @@ public class MensajeRest   {
 					em.persist(f);
 				}
 				
+				if (f.getCajaDeclarada().getId() == usuarioCajaDeclarada.getId()) {
+					if ((sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente || sb.getEstado() == SolicitudBeneficiario.Estado.Atendido) ) {
+						System.out.println("todasFinqiuitadas - falso");
+						todasFiniquitadas = false;
+					}
+				}
 			}
-			if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
-				todasFiniquitadas = false;
-			}
+			
 		}
 		
 		//Si todas las SolicitudBeneficio no Pendiente entonces CajaDeclarada como finiquitado
 		if (todasFiniquitadas) {
 			usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Finiquitado);
 			em.persist(usuarioCajaDeclarada);
+			System.out.println("al denegar marcamos la cajaDeclarada como Finiquitado : " + usuarioCajaDeclarada.getCaja().getSiglas());
 		}
+		
+		//Si todas las CajasDeclaradas Finituiadas, entoces Solicitud Finiquitada
+		for (CajaDeclarada cs : m.getSolicitud().getCajasDeclaradas()) {
+			if (cs.getEstado() != CajaDeclarada.Estado.Finiquitado) {
+				todasFiniquitadas = false;
+			}
+		}
+		
+		if (todasFiniquitadas) {
+			Solicitud s = m.getSolicitud();
+			s.setEstado(Solicitud.Estado.Finiquitado);
+			em.persist(s);
+		}
+
 	}
 
 	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {

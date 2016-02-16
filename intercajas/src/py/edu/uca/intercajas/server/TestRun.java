@@ -15,11 +15,9 @@ public class TestRun {
 	public static void main(String[] args) {
 
 		
-		int DURATION = 1000 * 60 * 60 * 24 * 1;
+		int randomNum = 1000 + (int)(Math.random() * 9999); 		
 		
-		System.out.println(new Date());
-		System.out.println(new Date(new Date().getTime() + DURATION));
-		
+		System.out.println(randomNum);
 		
 	}
 	public void txFinal() {

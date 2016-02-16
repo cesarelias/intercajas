@@ -25,7 +25,7 @@ public class SolicitudBeneficiario extends EntityBase {
 	private Estado estado;
 	
 	public enum Estado {
-		Pendiente, Atendido, Concedido, Denegado
+		Pendiente, Atendido, Finalizado //Una caja puede conceder y otra denegar!, tampoco funciona el estado pendiente entonces!!!!! guardo con errores
 	}
 	
 	public enum Tipo {

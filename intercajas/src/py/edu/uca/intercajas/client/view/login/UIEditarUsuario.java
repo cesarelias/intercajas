@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.text.shared.Renderer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -30,8 +31,9 @@ public class UIEditarUsuario extends UIBase {
 
 	TextBox nombre = new TextBox();
 	TextBox descripcion = new TextBox();
-	PasswordTextBox password = new PasswordTextBox();
+	TipoUsuarioEditor tipo = new TipoUsuarioEditor();
 	Button cancel = new Button("Cancelar");
+	Button guardar = new Button("Guardar");
 	ValueListBox<Caja> caja;
 	
 	public UIEditarUsuario(Usuario usuario) {
@@ -40,14 +42,16 @@ public class UIEditarUsuario extends UIBase {
 		initComponents();
 
 		if (usuario == null) {
-			titulo = "Nuevo usurio";
-			usuario = new Usuario();
+			titulo = "Nuevo usuario";
+			this.usuario = new Usuario();
 		} else {
+			this.usuario = usuario;
 			titulo = "Editando usuario";
 			nombre.setText(usuario.getNombre());
 			nombre.setEnabled(false);
 			descripcion.setText(usuario.getDescripcion());
 			caja.setValue(usuario.getCaja());
+			tipo.setValue(usuario.getTipo());
 		}
 		
 		
@@ -59,7 +63,7 @@ public class UIEditarUsuario extends UIBase {
 		p.setWidth("100%");
 		p.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 		p.add(cancel);
-		p.add(new Button("Guardar"));
+		p.add(guardar);
 
 		FlexTable table = new FlexTable();
 		
@@ -74,8 +78,8 @@ public class UIEditarUsuario extends UIBase {
 		table.setWidget(1, 1, nombre);
 		table.setText(2, 0, "Caja");
 		table.setWidget(2, 1, caja);
-		table.setText(3, 0, "Contraseña");
-		table.setWidget(3, 1, password);
+		table.setText(3, 0, "Tipo");
+		table.setWidget(3, 1, tipo);
 		
 		VerticalPanel v = new VerticalPanel();
 		
@@ -90,8 +94,17 @@ public class UIEditarUsuario extends UIBase {
 				close();
 			}
 		});
+		
+		guardar.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				onSave();
+			}
+		});
+		
 	}
 
+	//TODO, no hace falta peroooo, seria mejor tener el ListBox caja en un editor, para no repertir codigo!
 	public void initCajaList() {
 		caja = new ValueListBox<Caja>(
 				
@@ -123,10 +136,37 @@ public class UIEditarUsuario extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, List<Caja> response) {
+				if (response != null && response.size() > 0) {
+					caja.setValue(response.get(0), true);
+				}
 				caja.setAcceptableValues(response);
 			}
 		});
 
+	}
+
+	
+	public void onSave() {
+		
+		usuario.setNombre(nombre.getValue());
+		usuario.setDescripcion(descripcion.getValue());
+		usuario.setCaja(caja.getValue());
+		usuario.setTipo(tipo.getValue());
+
+		BeneficiarioService.Util.get().actualizarUsuario(usuario, new MethodCallback<Void>() {
+
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+				Window.alert(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, Void response) {
+				Window.alert("guardado");
+				close();
+			}
+		});
 	}
 	
 }

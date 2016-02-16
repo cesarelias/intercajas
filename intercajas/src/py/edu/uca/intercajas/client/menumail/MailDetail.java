@@ -308,6 +308,24 @@ public class MailDetail extends ResizeComposite {
 		  optionsButtons.add(hp);
 		  
 		  
+	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Administrador) {
+		  
+		  final Anchor anular = new Anchor("anular solicitud");
+		  anular.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+//				UIAnular uianular = new UIAnular(item.getMensaje(), item);
+//				uianular.mostrarDialog();
+				Window.alert("falta la UI de anular solicitud");
+				
+			}
+		  });
+		  
+		  anular.getElement().getStyle().setProperty("margin", "4px");
+		  anular.getElement().getStyle().setProperty("color", "blue");
+		  
+		  optionsButtons.add(anular);
+		  
 	  }
 
 	    // Add advanced options to form in a disclosure panel

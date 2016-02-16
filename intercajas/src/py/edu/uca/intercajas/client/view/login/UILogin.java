@@ -1,6 +1,10 @@
 package py.edu.uca.intercajas.client.view.login;
 
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
 import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.shared.UserDTO;
 
@@ -9,8 +13,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -36,7 +43,7 @@ public class UILogin extends Composite implements ClickHandler {
 	protected TextBox txtUsuario;
 	private Label lblPassword;
 	protected PasswordTextBox txtPassword;
-	
+
 	
 	public UILogin() {
 		initComponents();
@@ -71,13 +78,20 @@ public class UILogin extends Composite implements ClickHandler {
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
 		}
-		grid = new Grid(3,2);
+		grid = new Grid(4,2);
 		
 		grid.setWidget(0, 0, lblNombre);
 		grid.setWidget(0, 1, txtUsuario);
 		grid.setWidget(1, 0, lblPassword);
 		grid.setWidget(1, 1, txtPassword);
 		grid.setWidget(2, 1, btnLogin);
+
+		grid.setWidget(3, 1, panelRecuperarContrasena());
+		
+		
+		
+	    
+	    
 		
 		initWidget(grid);
 
@@ -125,5 +139,42 @@ public class UILogin extends Composite implements ClickHandler {
 		login();
 	}
 	
+
+	public DisclosurePanel panelRecuperarContrasena() {
 		
+		final DisclosurePanel optionPanel = new DisclosurePanel("Recuperar contraseña");
+		final Anchor recuperar = new Anchor("Recuperar");
+		final TextBox correo = new TextBox();
+		final FlexTable f = new FlexTable();
+		
+		f.setText(0, 0, "Correo");
+		f.setWidget(0, 1, correo);
+		f.setWidget(0, 2, recuperar);
+		
+		recuperar.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				BeneficiarioService.Util.get().restablecerContrasena(txtUsuario.getValue(), correo.getValue(), new MethodCallback<Void>() {
+					@Override
+					public void onSuccess(Method method, Void response) {
+						Window.alert("La nueva contraseña fue enviada a " + correo.getValue());
+						optionPanel.setOpen(false);
+					}
+					@Override
+					public void onFailure(Method method, Throwable exception) {
+						// TODO Auto-generated method stub
+						Window.alert(exception.getMessage());
+					}
+				});
+			}
+		});
+		
+	    optionPanel.setAnimationEnabled(true);
+	    optionPanel.setContent(f);
+	    
+	    return optionPanel;
+
+	}
+	
 }

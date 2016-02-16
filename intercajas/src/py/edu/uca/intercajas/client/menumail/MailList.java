@@ -62,6 +62,8 @@ public class MailList extends ResizeComposite {
     String selectedRow();
   }
 
+  
+  
   private static final Binder binder = GWT.create(Binder.class);
   static final int VISIBLE_EMAIL_COUNT = 8;
 
@@ -77,10 +79,20 @@ public class MailList extends ResizeComposite {
   private NavBar navBar;
   private boolean onLoad = true;
 
-  public MailList() {
-	  
+  public Modo modo;
+  
+  public enum Modo {
+	  Entrada,
+	  Finquitado
+  }
+  
+  public MailList(Modo modo) {
+	
     initWidget(binder.createAndBindUi(this));
     navBar = new NavBar(this);
+    
+    
+    this.modo = modo;
     
     initTable();
     update();
@@ -216,7 +228,7 @@ public class MailList extends ResizeComposite {
     }
   }
 
-  private void update() {
+  void update() {
     // Update the older/newer buttons & label.
 //    int count = MailItems.getMailItemCount();
     int max = startIndex + VISIBLE_EMAIL_COUNT;
@@ -227,43 +239,83 @@ public class MailList extends ResizeComposite {
     // Update the nav bar.
     navBar.update(startIndex, max);
     
-    BeneficiarioService.Util.get().destinoFindAllPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
-		
-		@Override
-		public void onSuccess(Method method, List<Destino> response) {
-			table.removeAllRows();
-		      // Add a new row to the table, then set each of its columns to the
-		      // email's sender and subject values.
-						
-			for (int i=0; i<response.size(); i++) {
-			  if (response.get(i).getMensaje().getRemitente() == null) {
-				  table.setText(i, 0, "SistemaIntercajas");
-			  } else {
-				  table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
-			  }
-		      table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
-		      table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
-		      table.setText(i, 3, response.get(i).getMensaje().getReferencia());
+    if (modo == Modo.Entrada) {
+    	BeneficiarioService.Util.get().findAllDestinoPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    		
+    		@Override
+    		public void onSuccess(Method method, List<Destino> response) {
+    			table.removeAllRows();
+    			// Add a new row to the table, then set each of its columns to the
+    			// email's sender and subject values.
+    			
+    			for (int i=0; i<response.size(); i++) {
+    				if (response.get(i).getMensaje().getRemitente() == null) {
+    					table.setText(i, 0, "SistemaIntercajas");
+    				} else {
+    					table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
+    				}
+    				table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
+    				table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
+    				table.setText(i, 3, response.get(i).getMensaje().getReferencia());
+    			}
+    			
+    			destinos = response;
+    			
+    			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
+    			if (onLoad && destinos.size() > 1) {
+    				selectRow(0);
+    				onLoad = false;
+    			} else {
+    				selectRow(selectedRow);
+    			}
+    			
+    			
+    		}
+    		
+    		@Override
+    		public void onFailure(Method method, Throwable exception) {
+    			// TODO falta agregar el mensaje de error del REST
+    		}
+    	});
+    } else if (modo == Modo.Finquitado) {
+    	BeneficiarioService.Util.get().findAllFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+				
 			}
-			
-			destinos = response;
-			
-			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
-			if (onLoad && destinos.size() > 1) {
-				selectRow(0);
-				onLoad = false;
-			} else {
-				selectRow(selectedRow);
+
+			@Override
+			public void onSuccess(Method method, List<Destino> response) {
+				table.removeAllRows();
+    			// Add a new row to the table, then set each of its columns to the
+    			// email's sender and subject values.
+    			
+    			for (int i=0; i<response.size(); i++) {
+    				if (response.get(i).getMensaje().getRemitente() == null) {
+    					table.setText(i, 0, "SistemaIntercajas");
+    				} else {
+    					table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
+    				}
+    				table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
+    				table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
+    				table.setText(i, 3, response.get(i).getMensaje().getReferencia());
+    			}
+    			
+    			destinos = response;
+    			
+    			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
+    			if (onLoad && destinos.size() > 1) {
+    				selectRow(0);
+    				onLoad = false;
+    			} else {
+    				selectRow(selectedRow);
+    			}
+    			
 			}
-			
-			
-		}
-		
-		@Override
-		public void onFailure(Method method, Throwable exception) {
-			// TODO falta agregar el mensaje de error del REST
-		}
-	});
+		});
+    }
     
   }
 }

@@ -47,7 +47,6 @@ public class Shortcuts extends ResizeComposite {
    * @param images a bundle that provides the images for this widget
    */
   public Shortcuts() {
-	  
     initWidget(binder.createAndBindUi(this));
   }
 }

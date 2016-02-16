@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package py.edu.uca.intercajas.client.beneficiario;
+package py.edu.uca.intercajas.client.view.login;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import py.edu.uca.intercajas.shared.entity.Direccion;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -61,34 +62,34 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 /**
  * A paging table with summaries of all known people.
  */
-public class ListaBeneficiarios extends UIBase {
+public class ListaUsuarios extends UIBase {
 
-  interface Binder extends UiBinder<Widget, ListaBeneficiarios> {
+  interface Binder extends UiBinder<Widget, ListaUsuarios> {
   }
 
   interface Style extends CssResource {
   }
 
   interface TableResources extends DataGrid.Resources {
-    @Override
-    @Source(value = {DataGrid.Style.DEFAULT_CSS, "DataGridPatch.css"})
-    DataGrid.Style dataGridStyle();
+//    @Override
+//    @Source(value = {DataGrid.Style.DEFAULT_CSS, "DataGridPatch.css"})
+//    DataGrid.Style dataGridStyle();
   }
   
 	public interface Listener {
-		void onSelected(Beneficiario beneficiarioSelected);
+		void onSelected(Usuario usuarioSelected);
 	}
  
 	Listener listener;
 	
-  private class ColNombres extends Column<Beneficiario, String> {
-    public ColNombres() {
+  private class ColDescripcion extends Column<Usuario, String> {
+    public ColDescripcion() {
       super(new TextCell());
     }
 
     @Override
-    public String getValue(Beneficiario object) {
-      return object.toString();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
+    public String getValue(Usuario object) {
+      return object.getDescripcion();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
     }
   }
 
@@ -99,7 +100,7 @@ public class ListaBeneficiarios extends UIBase {
   SimplePager pager = new SimplePager();
 
   @UiField(provided = true)
-  DataGrid<Beneficiario> table;
+  DataGrid<Usuario> table;
   
   @UiField TextBox filtroNombres;
 
@@ -109,54 +110,34 @@ public class ListaBeneficiarios extends UIBase {
   private final int maxRows;
   private int lastStart = 0;
   private boolean pending;
-  private final SingleSelectionModel<Beneficiario> selectionModel = new SingleSelectionModel<Beneficiario>();
+  private final SingleSelectionModel<Usuario> selectionModel = new SingleSelectionModel<Usuario>();
   private HandlerRegistration r;
   
-  public ListaBeneficiarios(int maxRows) {
+  public ListaUsuarios(int maxRows) {
     this.maxRows = maxRows;
     
-    this.titulo = "Beneficiarios";
+    this.titulo = "Usuarios";
     
-    table = new DataGrid<Beneficiario>(maxRows,
+    table = new DataGrid<Usuario>(maxRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
-
-    Column<Beneficiario, String> colNombres = new ColNombres();
-    table.addColumn(colNombres, "Nombres y apellidos");
-    table.setColumnWidth(colNombres, "25ex");
+    Column<Usuario, String> colDescripcion = new ColDescripcion();
+    table.addColumn(colDescripcion, "Descripcion");
+    table.setColumnWidth(colDescripcion, "25ex");
 
     table.setSelectionModel(selectionModel);
     table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
     table.setEmptyTableWidget(new Label("Vacio"));
     
-    
-    r = AppUtils.EVENT_BUS.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
-		@Override
-		public void selected(Beneficiario beneficiarioSelected) {
-			r.removeHandler();
-			refreshTable();
-		}
-	});
-    
-//    FilterChangeEvent.register(eventBus, new FilterChangeEvent.Handler() {
-//      @Override
-//      public void onFilterChanged(FilterChangeEvent e) {
-//        filter.set(e.getDay(), e.isSelected());
-//        if (!pending) {
-//          pending = true;
-//          Scheduler.get().scheduleFinally(new ScheduledCommand() {
-//            @Override
-//            public void execute() {
-//              pending = false;
-//              fetch(0);
-//            }
-//          });
-//        }
-//      }
-//    });
-
+//    r = AppUtils.EVENT_BUS.addHandler(BeneficiarioChangedEvent.TYPE, new BeneficiarioChangedEvent.Handler() {
+//		@Override
+//		public void selected(Beneficiario beneficiarioSelected) {
+//			r.removeHandler();
+//			refreshTable();
+//		}
+//	});
     
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
       @Override
@@ -168,9 +149,9 @@ public class ListaBeneficiarios extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			Beneficiario beneficiario = selectionModel.getSelectedObject();
-		    if (beneficiario != null) {
-		    	Window.alert("el beneficiario seleccionado es:" + beneficiario.getNombres());
+			Usuario usuario = selectionModel.getSelectedObject();
+		    if (usuario != null) {
+		    	Window.alert("el beneficiario seleccionado es:" + usuario.getDescripcion());
 		    }
 		}
     },  DoubleClickEvent.getType());
@@ -193,20 +174,9 @@ public class ListaBeneficiarios extends UIBase {
   @UiHandler("create")
   void onCreate(ClickEvent event) {
 	  
-	  Beneficiario beneficiario = new Beneficiario();
-	  DocumentoIdentidad doc = new DocumentoIdentidad();
-	  Direccion dir = new Direccion();
-
-	  doc.setTipoDocumento(TipoDocumentoIdentidad.CEDULA);
-	  beneficiario.setDocumento(doc);
-	  beneficiario.setDireccion(dir);
-    
-	  beneficiario.setNombres("test");
-	  BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
-	  b.titulo = "Nuevo Beneficiario";
-	  b.mostrarDialog();
-	  b.create();
-
+	  UIEditarUsuario e = new UIEditarUsuario(null);
+	  e.mostrarDialog();
+	  
   }
 
   @UiHandler("table")
@@ -221,31 +191,31 @@ public class ListaBeneficiarios extends UIBase {
   @UiHandler("edit")
   void onEdit(ClickEvent event) {
 	
-    Beneficiario beneficiario = selectionModel.getSelectedObject();
-    if (beneficiario == null) {
-    	Window.alert("Seleccione un beneficiario para editar");
-      return;
-    }
-    
-    BeneficiarioEditorWorkFlow b = new BeneficiarioEditorWorkFlow();
-    b.titulo = "Editando Beneficiario";
-    b.mostrarDialog();
-    b.edit(beneficiario);
-//    
+
+		Usuario usuario = selectionModel.getSelectedObject();
+		if (usuario == null) {
+			Window.alert("Seleccione una fila para editar");
+			return;
+		}
+		
+		UIEditarUsuario e = new UIEditarUsuario(usuario);
+		e.mostrarDialog();
+		
   }
 
   
   @UiHandler("select")
   void onSelect(ClickEvent event) {
 	
-    Beneficiario beneficiario = selectionModel.getSelectedObject();
-    if (beneficiario == null) {
+    Usuario usuario = selectionModel.getSelectedObject();
+    if (usuario == null) {
     	return;
     }
-    AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
+    
+//    AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
     
 	if (listener!=null) {
-		listener.onSelected(beneficiario);
+		listener.onSelected(usuario);
 	}
     
     close();
@@ -271,10 +241,17 @@ public class ListaBeneficiarios extends UIBase {
 	  
 	  lastFetch = start;
 	  
-	  BeneficiarioService.Util.get().findBeneficiarioByNombresDocs(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Beneficiario>>() {
-		
+	  
+	  BeneficiarioService.Util.get().findUsuarioByDescripcionNombre(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Usuario>>() {
+
 		@Override
-		public void onSuccess(Method method, List<Beneficiario> response) {
+		public void onFailure(Method method, Throwable exception) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onSuccess(Method method, List<Usuario> response) {
             if (lastFetch != start) {
                 return;
               }
@@ -286,12 +263,8 @@ public class ListaBeneficiarios extends UIBase {
               table.setRowCount(start + responses, responses < maxRows);
             }
 		}
-		
-		@Override
-		public void onFailure(Method method, Throwable exception) {
-			// TODO Auto-generated method stub
-		}
-	  });
+	});
+	  
   }
   
   public void refreshTable() {

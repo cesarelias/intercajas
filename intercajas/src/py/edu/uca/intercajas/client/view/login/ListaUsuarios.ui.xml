@@ -1,0 +1,53 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:cv='urn:import:com.google.gwt.user.cellview.client'>
+	<ui:style src="../../common.css"
+		type="py.edu.uca.intercajas.client.view.login.ListaUsuarios.Style">
+		.displayInline {
+			display: inline;
+		}
+		
+		.table {
+			width: 100%;
+			table-layout: fixed;
+		}
+		</ui:style>
+
+	<g:DockLayoutPanel ui:field="dock" unit="PX" width="320px"
+		height="400px">
+		<g:north size="80">
+			<g:DockLayoutPanel unit="PX">
+				<g:center>
+					<g:DecoratorPanel height="100%">
+						<g:FlowPanel width="100%">
+							<g:Label>Descripcion / Nombre</g:Label>
+							<g:TextBox ui:field="filtroNombres" />
+							<g:Button ui:field="buscar" text="Buscar" />
+						</g:FlowPanel>
+					</g:DecoratorPanel>
+				</g:center>
+			</g:DockLayoutPanel>
+		</g:north>
+		<g:center>
+			<cv:DataGrid ui:field="table" stylePrimaryName="{style.table}" />
+		</g:center>
+		<g:south size="55">
+			<g:VerticalPanel>
+				<cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
+					display="{table}" />
+				<g:HorizontalPanel>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="create">Nuevo</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="edit">Editar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="del">Eliminar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="select">Seleccionar</g:Button>
+					<g:Button stylePrimaryName="{style.displayInline}"
+						ui:field="close">Cancelar</g:Button>
+				</g:HorizontalPanel>
+			</g:VerticalPanel>
+		</g:south>
+	</g:DockLayoutPanel>
+
+</ui:UiBinder>

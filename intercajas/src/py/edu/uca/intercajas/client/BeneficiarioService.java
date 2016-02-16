@@ -34,6 +34,7 @@ import py.edu.uca.intercajas.shared.entity.Concedido;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.client.GWT;
 
@@ -90,7 +91,13 @@ public interface BeneficiarioService extends RestService {
 	@Path("destino/findAllPending")
 	@GET
 	@Produces("application/json")
-	public void destinoFindAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findAllDestinoPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	
+	@Path("destino/findAllFiniquitados")
+	@GET
+	@Produces("application/json")
+	public void findAllFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	
 
 	@Path("adjunto/findByMensajeId")
 	@GET
@@ -145,6 +152,27 @@ public interface BeneficiarioService extends RestService {
 	@POST
 	@Consumes("application/json")
 	public void anular(NuevaAnulacion nuevaAnulacion, MethodCallback<Void> callback);	
+	
+	
+	@Path("usuario/findByDescripcionNombre")
+	@GET
+	@Produces("application/json")
+	public void findUsuarioByDescripcionNombre(@QueryParam("descripcionNombre") String descripcionNombre,
+   	                              @QueryParam("startRow") int startRow,
+								  @QueryParam("maxResults") int maxResults, MethodCallback<List<Usuario> > usuarios);	
+
+	@Path("usuario/actualizar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void actualizarUsuario(Usuario usuario, MethodCallback<Void> callback); 
+	
+	
+	@Path("usuario/restablecerContrasena")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void restablecerContrasena(@QueryParam("nombre") String nombre, @QueryParam("correo") String correo, MethodCallback<Void> callback);
 	
 	/**
      * Utility class to get the instance of the Rest Service
