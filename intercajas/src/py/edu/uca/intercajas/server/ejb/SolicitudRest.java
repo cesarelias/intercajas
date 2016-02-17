@@ -20,6 +20,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
+import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.RangoTiempo;
@@ -27,7 +29,10 @@ import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
+import py.edu.uca.intercajas.shared.entity.Concedido;
+import py.edu.uca.intercajas.shared.entity.Denegado;
 import py.edu.uca.intercajas.shared.entity.Destino;
+import py.edu.uca.intercajas.shared.entity.Finiquito;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
@@ -50,6 +55,46 @@ public class SolicitudRest   {
 	@Path("/test")
 	@GET
 	public String test() {
+		
+		//Caja declarada en cuestion.
+		CajaDeclarada cajaDeclarada = em.find(CajaDeclarada.class, 1L);
+		
+		List<ConsultaEstadoSolicitudBeneficiario> listaConsulta = new ArrayList<ConsultaEstadoSolicitudBeneficiario>();
+		ConsultaEstadoSolicitudBeneficiario consulta;
+		
+//		Solicitud s = cajaDeclarada.getSolicitud();
+		
+		for (SolicitudBeneficiario sb : cajaDeclarada.getSolicitud().getBeneficiarios()) {
+			
+			consulta = new ConsultaEstadoSolicitudBeneficiario();
+			consulta.setSolicitudBeneficiario(sb);
+
+			for (Finiquito f : sb.getFiniquitos()) {
+				if (f.getCajaDeclarada().getId() == cajaDeclarada.getId() && f.getMensaje().getEstado() != Mensaje.Estado.Anulado) {
+					consulta.setAutorizado(f.getAutorizado());
+					if (f instanceof Concedido) {
+						consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Concedido);
+					} else if (f instanceof Denegado) {
+						consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Denegado);
+					}
+				}
+			}
+			
+			if (consulta.getEstado() == null)  {
+				consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Pendiente);
+			}
+
+			listaConsulta.add(consulta);
+			
+		}
+		
+		
+		///para impresion
+		for (ConsultaEstadoSolicitudBeneficiario c : listaConsulta) {
+			System.out.println(c.getSolicitudBeneficiario().getBeneficiario().toString() + " estado: " + c.getEstado().toString() );
+		}
+		
+		
 		System.out.println("rest working");
 		return "rest working";
 	}
@@ -114,17 +159,17 @@ public class SolicitudRest   {
 		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		
-		Destino destino = destinoOriginario(m, user);
-		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
-			throw new IllegalArgumentException("No existe el detino");
-		}
-		
-        if (destino.getEstado() != Destino.Estado.Pendiente) {
-        	throw new IllegalArgumentException("Destino no tiene estado Pendiente");
-        }
-
-        destino.setEstado(Destino.Estado.Atendido);
-		em.persist(destino);
+//		Destino destino = destinoOriginario(m, user);
+//		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
+//			throw new IllegalArgumentException("No existe el detino");
+//		}
+//		
+//        if (destino.getEstado() != Destino.Estado.Pendiente) {
+//        	throw new IllegalArgumentException("Destino no tiene estado Pendiente");
+//        }
+//
+//        destino.setEstado(Destino.Estado.Atendido);
+//		em.persist(destino);
 		
 		//m.setReferencia( );//la referencia cargamos al autorizar
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
@@ -151,7 +196,7 @@ public class SolicitudRest   {
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
-			d.setEstado(Destino.Estado.Pendiente);
+//			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 		}
 		
@@ -213,7 +258,7 @@ public class SolicitudRest   {
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
-			d.setEstado(Destino.Estado.Pendiente);
+//			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 			
 		}
@@ -278,4 +323,101 @@ public class SolicitudRest   {
 		
 	}
 	
-}
+	private List<ConsultaEstadoSolicitudBeneficiario> consultaEstadoSolicitudBeneficiario(CajaDeclarada cajaDeclarada) {
+		
+		List<ConsultaEstadoSolicitudBeneficiario> listaConsulta = new ArrayList<ConsultaEstadoSolicitudBeneficiario>();
+		ConsultaEstadoSolicitudBeneficiario consulta;
+		
+		for (SolicitudBeneficiario sb : cajaDeclarada.getSolicitud().getBeneficiarios()) {
+			
+			consulta = new ConsultaEstadoSolicitudBeneficiario();
+			consulta.setSolicitudBeneficiario(sb);
+
+			for (Finiquito f : sb.getFiniquitos()) {
+				if (f.getCajaDeclarada().getId() == cajaDeclarada.getId() && f.getMensaje().getEstado() != Mensaje.Estado.Anulado) {
+					consulta.setAutorizado(f.getAutorizado());
+					if (f instanceof Concedido) {
+						consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Concedido);
+					} else if (f instanceof Denegado) {
+						consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Denegado);
+					}
+				}
+			}
+			
+			if (consulta.getEstado() == null)  {
+				consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Pendiente);
+			}
+
+			System.out.println("ConsultaEstadoSolicitudBeneficiario.Estado: " + consulta.getEstado().toString());
+			listaConsulta.add(consulta);
+			
+		}
+
+		return listaConsulta;
+		
+	}
+	
+	@Path("/consultEstadoMensaje")
+	@GET
+	@Produces("application/json")
+	public ConsultaEstadoMensaje consultEstadoMensaje(@QueryParam("mensaje_id") Long mensaje_id, @Context HttpServletRequest req) {
+	
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new IllegalArgumentException("usuario no valido para el llamado rest!");
+       }
+
+        
+		Mensaje m = em.find(Mensaje.class, mensaje_id);
+		if(m==null){
+			throw new IllegalArgumentException("Mensaje id no valido");
+		}
+		
+		if (m.getEstado() == Mensaje.Estado.Anulado) {
+			throw new IllegalArgumentException("Mensaje anulado!");
+		}
+		
+        CajaDeclarada usuarioCajaDeclarada = null;
+        try {
+	        usuarioCajaDeclarada = em.createQuery("select c"
+					+ "                              from CajaDeclarada c"
+					+ "                             where solicitud.id = :solicitud_id"
+					+ "                               and caja.id      = :caja_id", CajaDeclarada.class)
+					                           .setParameter("solicitud_id", m.getSolicitud().getId())
+					                           .setParameter("caja_id", user.getCaja().getId())
+					                           .getSingleResult();
+        } catch (NoResultException e) {
+        	//TODO esto converit a mensaje que le llegue al usuario
+        	throw new IllegalArgumentException("no corresponde la caja del usuario con el intento de reconocimiento de tiemp de servicios");
+        }
+	
+		ConsultaEstadoMensaje consultaEstadoMensaje = new ConsultaEstadoMensaje();
+		
+		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
+			if (m.getEstado() == Mensaje.Estado.Enviado) {
+				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_AUTORIZADO);
+				//con RTS autorizado 
+			} else 	if (m.getEstado() == Mensaje.Estado.Pendiente && m.getListaTiempoServicioReconocidos() != null && m.getListaTiempoServicioReconocidos().size() > 0) {
+				//RTS solicitado no Autorizado
+				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_SIN_AUTORIZACION);
+			} else {
+				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.SIN_RTS);
+				//sin RTS
+			}
+		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
+			//esto es solo informativo
+		} else if (m.getAsunto() == Mensaje.Asunto.TotalizacionTiempoServicio) {
+			consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.NO_APLICA);
+			//ya hicimos mas arriba. traemos la lista de ConsultaEstadoSolicitudBeneficiario :)
+			consultaEstadoMensaje.setListaConsultaEstadoSolicitudBeneficiario(consultaEstadoSolicitudBeneficiario(usuarioCajaDeclarada));
+		} else if (m.getAsunto() == Mensaje.Asunto.Concedido) {
+			//esto es solo informativo
+		} else if (m.getAsunto() == Mensaje.Asunto.Denegado) {
+			//esto es solo informativo
+		}
+		
+		return consultaEstadoMensaje;
+	}
+	
+	
+} 

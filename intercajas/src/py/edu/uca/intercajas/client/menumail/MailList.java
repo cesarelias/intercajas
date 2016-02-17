@@ -229,6 +229,7 @@ public class MailList extends ResizeComposite {
   }
 
   void update() {
+	  table.removeAllRows();
     // Update the older/newer buttons & label.
 //    int count = MailItems.getMailItemCount();
     int max = startIndex + VISIBLE_EMAIL_COUNT;

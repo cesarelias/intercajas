@@ -50,7 +50,7 @@ public class UILogin extends Composite implements ClickHandler {
 		widgetListener();
 		
 		txtUsuario.setText("cesar");
-		txtPassword.setText("323698");
+		txtPassword.setText("123456");
 	}
 	
 	

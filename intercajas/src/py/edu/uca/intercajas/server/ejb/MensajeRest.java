@@ -27,7 +27,6 @@ import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
-import py.edu.uca.intercajas.shared.entity.Destino.Estado;
 import py.edu.uca.intercajas.shared.entity.Finiquito;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
@@ -151,10 +150,8 @@ public class MensajeRest   {
 			autorizarNuevaSolicitud(m.getSolicitud()); //Esto pone en true todas las autorizaciones en cada caja declarada
 		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
 			autorizarReconocimientoTimepoServicio(m, m.getSolicitud(), user);
-		} else if (m.getAsunto() == Mensaje.Asunto.Concedido) {
-			autorizarConcedido(m, user);
-		} else if (m.getAsunto() == Mensaje.Asunto.Denegado) {
-			autorizarDenegado(m, user);
+		} else if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
+			autorizarFiniquito(m, user);
 		} 
 		
 		//Cambiamos el estado del mensaje a Enviado
@@ -191,31 +188,31 @@ public class MensajeRest   {
         	return;
         }
         
-        //Volvemos a poner el estado del mensaje-destino originario en Pendiente
-        Destino d = destinoOriginario(m, user);
-        if (d==null) { //el Mensaje del Destino Originario, debe estar como enviado
-        	throw new IllegalArgumentException("Destino originario no valido");
-        }
-
-        if (d.getMensaje().getEstado() != Mensaje.Estado.Enviado) {
-        	throw new IllegalArgumentException("el Mensaje del Destino Originario, debe estar como enviado");
-        }
+//        //Volvemos a poner el estado del mensaje-destino originario en Pendiente
+//        Destino d = destinoOriginario(m, user);
+//        if (d==null) { //el Mensaje del Destino Originario, debe estar como enviado
+//        	throw new IllegalArgumentException("Destino originario no valido");
+//        }
+//
+//        if (d.getMensaje().getEstado() != Mensaje.Estado.Enviado) {
+//        	throw new IllegalArgumentException("el Mensaje del Destino Originario, debe estar como enviado");
+//        }
+//        
+//        if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
+//        	for (SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
+//        		for (Finiquito f : sb.getFiniquitos()) {
+//        			if (f.getMensaje().getId() == m.getId()) {
+//        				sb.setEstado(SolicitudBeneficiario.Estado.Pendiente); //volvemos a pendiente la solicitudBeneficiario al anular el envio
+//        				em.persist(sb);
+//        			}
+//        		}
+//        		
+//        	}
+//        	 
+//        }
         
-        if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
-        	for (SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
-        		for (Finiquito f : sb.getFiniquitos()) {
-        			if (f.getMensaje().getId() == m.getId()) {
-        				sb.setEstado(SolicitudBeneficiario.Estado.Pendiente); //volvemos a pendiente la solicitudBeneficiario al anular el envio
-        				em.persist(sb);
-        			}
-        		}
-        		
-        	}
-        	 
-        }
-        
-		d.setEstado(Destino.Estado.Pendiente);
-		em.persist(d);
+//		d.setEstado(Destino.Estado.Pendiente);
+//		em.persist(d);
 
 		//Cambiamos el estado del mensaje a Anulado
         m.setObservacion(nuevaAnulacion.getObvervacion());
@@ -298,7 +295,7 @@ public class MensajeRest   {
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
 			d.setLeido(false);
-			d.setEstado(Estado.Pendiente);
+//			d.setEstado(Estado.Pendiente);
 			em.persist(d);
 		}
 
@@ -328,27 +325,21 @@ public class MensajeRest   {
 		System.out.println("Hasta ahora no hacemos nada al Autorizar solicitud, y posiblemente ya no sea necesario hacer nada!");
 	}
 	
-	private void autorizarConcedido(Mensaje m, UserDTO usuario) {
+	private void autorizarFiniquito(Mensaje m, UserDTO usuario) {
 		
 		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(m.getSolicitud(), usuario);
 		if (usuarioCajaDeclarada==null){
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 
-		//TODO no puede pasar a concedido, porque debe estar concedido en todas las cajas!!!
+		//Marcamos como autorizado
 		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
 			for (Finiquito f : sb.getFiniquitos()) {
 				if (f.getMensaje().getId() == m.getId()) {
-					//Marcamos como concedido a SolicitudBeneficiario
-					sb.setEstado(SolicitudBeneficiario.Estado.Concedido);
-					em.persist(sb);
-					
 					f.setAutorizado(true);
 					em.persist(f);
 				}
-
 			}
-
 		}
 		
 		//Verificamos que Todos los Beneficiarios de la caja del usuario tengan finiquito para marcar como Finiquitado
@@ -384,58 +375,6 @@ public class MensajeRest   {
 		
 	}
 	
-	private void autorizarDenegado(Mensaje m, UserDTO usuario) {
-		
-		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(m.getSolicitud(), usuario);
-		if (usuarioCajaDeclarada==null){
-			throw new IllegalArgumentException("No se encontro la caja declarada");
-		}
-		
-		boolean todasFiniquitadas = true;
-		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
-			for (Finiquito f : sb.getFiniquitos()) {
-				if (f.getMensaje().getId() == m.getId()) {
-					
-					//Marcamos como denegado a SolicitudBeneficiario
-					sb.setEstado(SolicitudBeneficiario.Estado.Denegado);
-					em.persist(sb);
-
-					f.setAutorizado(true);
-					em.persist(f);
-				}
-				
-				if (f.getCajaDeclarada().getId() == usuarioCajaDeclarada.getId()) {
-					if ((sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente || sb.getEstado() == SolicitudBeneficiario.Estado.Atendido) ) {
-						System.out.println("todasFinqiuitadas - falso");
-						todasFiniquitadas = false;
-					}
-				}
-			}
-			
-		}
-		
-		//Si todas las SolicitudBeneficio no Pendiente entonces CajaDeclarada como finiquitado
-		if (todasFiniquitadas) {
-			usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.Finiquitado);
-			em.persist(usuarioCajaDeclarada);
-			System.out.println("al denegar marcamos la cajaDeclarada como Finiquitado : " + usuarioCajaDeclarada.getCaja().getSiglas());
-		}
-		
-		//Si todas las CajasDeclaradas Finituiadas, entoces Solicitud Finiquitada
-		for (CajaDeclarada cs : m.getSolicitud().getCajasDeclaradas()) {
-			if (cs.getEstado() != CajaDeclarada.Estado.Finiquitado) {
-				todasFiniquitadas = false;
-			}
-		}
-		
-		if (todasFiniquitadas) {
-			Solicitud s = m.getSolicitud();
-			s.setEstado(Solicitud.Estado.Finiquitado);
-			em.persist(s);
-		}
-
-	}
-
 	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {
 		
 		

@@ -11,13 +11,13 @@ public class Destino extends EntityBase {
 	@ManyToOne
 	private Caja destinatario;
 	private Boolean leido;
-	private Estado estado;
+//	private Estado estado;
 	@ManyToOne
 	private Mensaje mensaje;
 	
-	public enum Estado {
-		Pendiente, Atendido, Informativo
-	}
+//	public enum Estado {
+//		Pendiente, Atendido, Informativo
+//	}
 	
 	public Caja getDestinatario() {
 		return destinatario;
@@ -43,12 +43,12 @@ public class Destino extends EntityBase {
 		this.mensaje = mensaje;
 	}
 
-	public Estado getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
+//	public Estado getEstado() {
+//		return estado;
+//	}
+//
+//	public void setEstado(Estado estado) {
+//		this.estado = estado;
+//	}
 
 }

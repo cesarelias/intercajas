@@ -30,7 +30,20 @@ public class Mensaje extends EntityBase {
 	@OneToMany(mappedBy = "mensaje")
 	@JsonIgnore
 	private List<Adjunto> adjuntos;
+
+	@OneToMany(mappedBy = "mensaje")
+	@JsonIgnore
+	private List<TiempoServicioReconocido> listaTiempoServicioReconocidos;
 	
+	public List<TiempoServicioReconocido> getListaTiempoServicioReconocidos() {
+		return listaTiempoServicioReconocidos;
+	}
+
+	public void setListaTiempoServicioReconocidos(
+			List<TiempoServicioReconocido> listaTiempoServicioReconocidos) {
+		this.listaTiempoServicioReconocidos = listaTiempoServicioReconocidos;
+	}
+
 	public enum Estado {
 		Pendiente, Enviado, Anulado 
 	}

@@ -16,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
@@ -71,21 +72,24 @@ public class DestinoRest   {
 		}
 		
 		
-		
-		
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 			
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
 					+ "               and a.id = c.mensaje.id "
-					+ "               and (b.estado <> :estadoSolicitud or c.leido is false) "
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and c.destinatario.id = :caja_id "
+					+ "               and not exists "
+					+ "                 (select cd"
+					+ "                    from CajaDeclarada cd "
+					+ "                   where cd.caja.id = :caja_id"
+					+ "                     and cd.estado = :estadoCajaDeclarada"
+					+ "                     and b.id = cd.solicitud.id)"
 					+ " order by a.fecha desc "
 					, Destino.class)
-					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
+					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
 					.setFirstResult(startRow)
 					.setMaxResults(maxResults)
 					.setParameter("caja_id", user.getCaja().getId())
@@ -141,14 +145,19 @@ public class DestinoRest   {
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
 					+ "               and a.id = c.mensaje.id "
-					+ "               and (b.estado = :estadoSolicitud) "
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
+					+ "               and not exists "
+					+ "                 (select cd"
+					+ "                    from CajaDeclarada cd "
+					+ "                   where cd.caja.id = :caja_id"
+					+ "                     and cd.estado <> :estadoCajaDeclarada"
+					+ "                     and b.id = cd.solicitud.id)"
 					+ " order by a.fecha desc "
 					, Destino.class)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
-					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
 					.setFirstResult(startRow)
 					.setMaxResults(maxResults)
 					.setParameter("caja_id", user.getCaja().getId())

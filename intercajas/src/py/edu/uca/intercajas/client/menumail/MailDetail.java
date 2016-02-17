@@ -20,28 +20,23 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
-import javafx.scene.layout.FlowPane;
-import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.finiquito.UIConceder;
 import py.edu.uca.intercajas.client.finiquito.UIDenegar;
 import py.edu.uca.intercajas.client.mensaje.UIAnular;
 import py.edu.uca.intercajas.client.mensaje.UIAutorizar;
-import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditorWorkFlow;
+import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
+import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
-import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
-import py.edu.uca.intercajas.shared.entity.Usuario;
-import py.edu.uca.intercajas.shared.entity.Solicitud.Estado;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -52,10 +47,8 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -78,8 +71,6 @@ public class MailDetail extends ResizeComposite {
 
   HorizontalPanel optionsButtons = new HorizontalPanel();
   
-  CajaDeclarada cajaDeclarada;
-
   public MailDetail() {
     initWidget(binder.createAndBindUi(this));
 //    panelAdjuntos.getElement().getStyle().setPadding(20, Unit.PX);
@@ -167,18 +158,11 @@ public class MailDetail extends ResizeComposite {
 	  if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Gestor) {
 		  
 		  
-		  //Obtenemos la cajaDeclarada correspondiente al usuario
-		  BeneficiarioService.Util.get().findCajaDeclaraadBySolicitudIdAndCurrentUser(item.getMensaje().getSolicitud().getId(), new MethodCallback<CajaDeclarada>() {
-			  @Override
-			  public void onFailure(Method method, Throwable exception) {
-				  //TODO mejorar esto
-				  Window.alert(exception.getMessage());
-			  }
-			  
-			  @Override
-			  public void onSuccess(Method method, CajaDeclarada response) {
-				  //if (response.getEstado() == CajaDeclarada.Estado.Nuevo && response.getAutorizado()) {
-				  if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && item.getEstado() == Destino.Estado.Pendiente) {
+		  BeneficiarioService.Util.get().consultEstadoMensaje(item.getMensaje().getId(), new MethodCallback<ConsultaEstadoMensaje>() {
+			@Override
+			public void onSuccess(Method method, ConsultaEstadoMensaje response) {
+				
+				  if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && response.getEstadoRTS() == ConsultaEstadoMensaje.EstadoRTS.SIN_RTS) {
 					  
 					  Button rts = new Button("Reconocer Tiempo de Servicio");
 					  rts.addClickHandler(new ClickHandler() {
@@ -193,45 +177,39 @@ public class MailDetail extends ResizeComposite {
 					  optionsButtons.add(rts);
 					  
 				  //} else if (response.getSolicitud().getEstado() == Solicitud.Estado.ConAntiguedad && response.getEstado() == CajaDeclarada.Estado.ConAntiguedad && response.getAutorizado() ) {
-				  } else if (item.getMensaje().getAsunto() == Mensaje.Asunto.TotalizacionTiempoServicio && item.getEstado() == Destino.Estado.Pendiente) {
+				  } else if (item.getMensaje().getAsunto() == Mensaje.Asunto.TotalizacionTiempoServicio) {
 					  
-					  cajaDeclarada = response;
-					  //Aqui traer los beneficiarios de la solicitud, para agrgarle el boton finiquitar a cada uno de ello!
-					  //o sino, en la ventana finiquitar, aparecen los beneficarios y a cada uno se le finiquita con oootra ventana
+					  try {
+						
+					  final VerticalPanel vp = new VerticalPanel();
+					  HorizontalPanel hp = null;
 					  
-					  BeneficiarioService.Util.get().findSolicitudBeneficioBySolicitudId(response.getSolicitud().getId(), new MethodCallback<List<SolicitudBeneficiario>>() {
-						  @Override
-						  public void onFailure(Method method, Throwable exception) {
-						  }
+					  for (ConsultaEstadoSolicitudBeneficiario c : response.getListaConsultaEstadoSolicitudBeneficiario()) {
 						  
-						  @Override
-						  public void onSuccess(Method method, List<SolicitudBeneficiario> response) {
+						  final SolicitudBeneficiario sb = c.getSolicitudBeneficiario();
+						  
+						  hp = new HorizontalPanel();
+						  if (c.getEstado() == ConsultaEstadoSolicitudBeneficiario.Estado.Concedido && c.isAutorizado()) {
+							  hp.add(new Label(sb.getBeneficiario().toString() + " con beneficio concedido, no mas acciones diponibles"));
+						  } else if (c.getEstado() == ConsultaEstadoSolicitudBeneficiario.Estado.Denegado && c.isAutorizado()) {
+							  hp.add(new Label(sb.getBeneficiario().toString() + " con beneficio denegado, no mas acciones diponibles"));
+						  } else if (c.getEstado() == ConsultaEstadoSolicitudBeneficiario.Estado.Concedido && !c.isAutorizado()) {
+							  hp.add(new Label(sb.getBeneficiario().toString() + " en espera de autorizacion para conceder beneficio, no mas acciones diponibles"));
+						  } else if (c.getEstado() == ConsultaEstadoSolicitudBeneficiario.Estado.Denegado && !c.isAutorizado()) {
+							  hp.add(new Label(sb.getBeneficiario().toString() + " en espera de autorizacion para denegar beneficio, no mas acciones diponibles"));
+						  } else if (c.getEstado() == ConsultaEstadoSolicitudBeneficiario.Estado.Pendiente) {
 							  
-							  final VerticalPanel vp = new VerticalPanel();
-							  HorizontalPanel hp = null;
-							  
-							  for (final SolicitudBeneficiario sb : response) {
-								  
-								  hp = new HorizontalPanel();
-								  if (sb.getEstado() == SolicitudBeneficiario.Estado.Concedido) {
-									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio concedido, no mas acciones diponibles"));
-								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Denegado) {
-									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " con beneficio denegado, no mas acciones diponibles"));
-								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Atendido) {
-									  hp.add(new Label(sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos() + " en espera de autorizacion, no mas acciones diponibles"));
-								  } else if (sb.getEstado() == SolicitudBeneficiario.Estado.Pendiente && cajaDeclarada.getEstado() == CajaDeclarada.Estado.ConAntiguedad) {
-									  
-									  Anchor conceder = new Anchor("conceder");
+							  Anchor conceder = new Anchor("conceder");
 									  conceder.addClickHandler(new ClickHandler() {
 										  @Override
 										  public void onClick(ClickEvent event) {
 											  UIConceder c = new UIConceder(sb, item);
-											  c.titulo = "Conceder beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos();
+											  c.titulo = "Conceder beneficio a " + sb.getBeneficiario().toString();
 											  c.mostrarDialog();
 										  }
 									  });
-									  
-									  Anchor denegar = new Anchor("denegar");
+							  
+							  Anchor denegar = new Anchor("denegar");
 									  denegar.addClickHandler(new ClickHandler() {
 										  @Override
 										  public void onClick(ClickEvent event) {
@@ -240,36 +218,35 @@ public class MailDetail extends ResizeComposite {
 											  d.mostrarDialog();
 										  }
 									  });
-									  
-									  conceder.getElement().getStyle().setProperty("margin", "4px");
-									  conceder.getElement().getStyle().setProperty("color", "blue");
-									  denegar.getElement().getStyle().setProperty("margin", "4px");
-									  denegar.getElement().getStyle().setProperty("color", "blue");
-									  hp.add(conceder);
-									  hp.add(new Label("o"));
-									  hp.add(denegar);
-									  hp.add(new Label(" el beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos()));
-								  }
-								  vp.add(hp);
-							  }
 							  
-							  optionsButtons.add(vp);
-							  
-						  } 
-						  
-					  });
+							  conceder.getElement().getStyle().setProperty("margin", "4px");
+							  conceder.getElement().getStyle().setProperty("color", "blue");
+							  denegar.getElement().getStyle().setProperty("margin", "4px");
+							  denegar.getElement().getStyle().setProperty("color", "blue");
+							  hp.add(conceder);
+							  hp.add(new Label("o"));
+							  hp.add(denegar);
+							  hp.add(new Label(" el beneficio a " + sb.getBeneficiario().getNombres() + " " + sb.getBeneficiario().getApellidos()));
+						  }
+						  vp.add(hp);
+					  }
 					  
-					  
-					  
+					  optionsButtons.add(vp);
+					  } catch (Exception e) {
+						  Window.alert(e.getMessage());
+					  }
 				  } else {
 					  optionsButtons.add(new Label("No hay acciones disponibles"));
 				  }
-				  
-				  
-				  
-				  
-			  }
-		  });
+			}
+			
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		  
 		  
 	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
 		  

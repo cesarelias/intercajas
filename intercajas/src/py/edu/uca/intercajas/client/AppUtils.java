@@ -26,6 +26,7 @@ public class AppUtils {
             Mail m = AppUtils.Util.getMail();
             m.mostrar();
             m.mostrarEntrada();
+//            m.mostrarEntrada(); //Eso no hace falta, se muestra en forma predeterminada al crear Mail, de echo, crea problemas al volver a mostrar
             
     		//test
             try {

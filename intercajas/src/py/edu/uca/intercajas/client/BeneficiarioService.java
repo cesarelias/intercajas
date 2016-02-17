@@ -17,6 +17,8 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
+import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
+import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
@@ -167,12 +169,17 @@ public interface BeneficiarioService extends RestService {
 	@Produces("application/json")
 	public void actualizarUsuario(Usuario usuario, MethodCallback<Void> callback); 
 	
-	
 	@Path("usuario/restablecerContrasena")
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void restablecerContrasena(@QueryParam("nombre") String nombre, @QueryParam("correo") String correo, MethodCallback<Void> callback);
+
+
+	@Path("solicitud/consultEstadoMensaje")
+	@GET
+	@Produces("application/json")
+	public void consultEstadoMensaje(@QueryParam("mensaje_id") Long mensaje_id, MethodCallback<ConsultaEstadoMensaje> consultaEstadoMensaje);
 	
 	/**
      * Utility class to get the instance of the Rest Service
