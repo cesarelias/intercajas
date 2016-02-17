@@ -70,5 +70,5 @@ public class TiempoServicioReconocido extends EntityBase {
 	public void setMensaje(Mensaje mensaje) {
 		this.mensaje = mensaje;
 	}
-	
+
 }

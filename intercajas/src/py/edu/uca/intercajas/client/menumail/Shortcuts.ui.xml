@@ -95,25 +95,20 @@ background: #1e5799; /* Old browsers */
   <ui:image field='tasksgroup' src='tasksgroup.png'/>
   <ui:image field='gradient' src='gradient_bg_dark.png' repeatStyle='Horizontal'/>
 
-  <g:StackLayoutPanel styleName='{style.shortcuts}' unit='EM'>
+  <g:StackLayoutPanel styleName='{style.shortcuts}' unit='EM' ui:field="stackPanel">
     <g:stack>
       <g:header size='3'><div class='{style.stackHeader}'><div class='{style.mailboxesIcon}'/> Bandejas</div></g:header>
       <mail:Mailboxes ui:field='mailboxes'/>
     </g:stack>
 
     <g:stack>
-      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.tasksIcon}'/> Tareas</div></g:header>
-      <mail:Tasks ui:field='tasks'/>
+      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.tasksIcon}'/>Gestión</div></g:header>
+      <mail:Gestion ui:field='gestion'/>
     </g:stack>
 
     <g:stack>
-      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/> Solicitudes</div></g:header>
-      <mail:Solicitudes ui:field='solicitudes'/>
-    </g:stack>
-
-    <g:stack>
-      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/>Administación</div></g:header>
-      <mail:Contacts ui:field='contacts'/>
+      <g:header size='3'><div class='{style.stackHeader}'><div class='{style.contactsIcon}'/>Mi Cuenta</div></g:header>
+      <mail:MiCuenta ui:field='miCuenta'/>
     </g:stack>
     
   </g:StackLayoutPanel>

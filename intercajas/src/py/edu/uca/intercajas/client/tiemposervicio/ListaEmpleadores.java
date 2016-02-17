@@ -13,25 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package py.edu.uca.intercajas.client.view.login;
+package py.edu.uca.intercajas.client.tiemposervicio;
 
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
-import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
-import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
-import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.entity.Beneficiario;
-import py.edu.uca.intercajas.shared.entity.Direccion;
-import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
-import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
-import py.edu.uca.intercajas.shared.entity.Usuario;
+import py.edu.uca.intercajas.shared.entity.Empleador;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -58,14 +50,13 @@ import com.google.gwt.view.client.RangeChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
 /**
  * A paging table with summaries of all known people.
  */
-public class ListaUsuarios extends UIBase {
+public class ListaEmpleadores extends UIBase {
 
-  interface Binder extends UiBinder<Widget, ListaUsuarios> {
+  interface Binder extends UiBinder<Widget, ListaEmpleadores> {
   }
 
   interface Style extends CssResource {
@@ -78,19 +69,19 @@ public class ListaUsuarios extends UIBase {
   }
   
 	public interface Listener {
-		void onSelected(Usuario usuarioSelected);
+		void onSelected(Empleador empleadorSelected);
 	}
  
 	Listener listener;
 	
-  private class ColDescripcion extends Column<Usuario, String> {
-    public ColDescripcion() {
+  private class ColNombre extends Column<Empleador, String> {
+    public ColNombre() {
       super(new TextCell());
     }
 
     @Override
-    public String getValue(Usuario object) {
-      return object.getDescripcion();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
+    public String getValue(Empleador object) {
+      return object.getNombre();// + " (" + object.getDocumento().getNumeroDocumento() + ")";
     }
   }
 
@@ -101,7 +92,7 @@ public class ListaUsuarios extends UIBase {
   SimplePager pager = new SimplePager();
 
   @UiField(provided = true)
-  DataGrid<Usuario> table;
+  DataGrid<Empleador> table;
   
   @UiField TextBox filtroNombres;
 
@@ -111,21 +102,21 @@ public class ListaUsuarios extends UIBase {
   private final int maxRows;
   private int lastStart = 0;
   private boolean pending;
-  private final SingleSelectionModel<Usuario> selectionModel = new SingleSelectionModel<Usuario>();
+  private final SingleSelectionModel<Empleador> selectionModel = new SingleSelectionModel<Empleador>();
   private HandlerRegistration r;
   
-  public ListaUsuarios(int maxRows) {
+  public ListaEmpleadores(int maxRows) {
     this.maxRows = maxRows;
     
-    this.titulo = "Usuarios";
+    this.titulo = "Empleadores";
     
-    table = new DataGrid<Usuario>(maxRows,
+    table = new DataGrid<Empleador>(maxRows,
         GWT.<TableResources> create(TableResources.class));
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
-    Column<Usuario, String> colDescripcion = new ColDescripcion();
-    table.addColumn(colDescripcion, "Descripcion");
-    table.setColumnWidth(colDescripcion, "25ex");
+    Column<Empleador, String> colNombre = new ColNombre();
+    table.addColumn(colNombre, "Nombre");
+    table.setColumnWidth(colNombre, "25ex");
 
     table.setSelectionModel(selectionModel);
     table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -150,9 +141,9 @@ public class ListaUsuarios extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			Usuario usuario = selectionModel.getSelectedObject();
-		    if (usuario != null) {
-		    	Window.alert("el beneficiario seleccionado es:" + usuario.getDescripcion());
+			Empleador empleador = selectionModel.getSelectedObject();
+		    if (empleador != null) {
+		    	Window.alert("el empleador seleccionado es:" + empleador.getNombre());
 		    }
 		}
     },  DoubleClickEvent.getType());
@@ -175,8 +166,9 @@ public class ListaUsuarios extends UIBase {
   @UiHandler("create")
   void onCreate(ClickEvent event) {
 	  
-	  UIEditarUsuario e = new UIEditarUsuario(null);
-	  e.mostrarDialog();
+		
+		UIEditarEmpleador e = new UIEditarEmpleador(null);
+		e.mostrarDialog();
 	  
   }
 
@@ -193,13 +185,13 @@ public class ListaUsuarios extends UIBase {
   void onEdit(ClickEvent event) {
 	
 
-		Usuario usuario = selectionModel.getSelectedObject();
-		if (usuario == null) {
+		Empleador empleador= selectionModel.getSelectedObject();
+		if (empleador == null) {
 			Window.alert("Seleccione una fila para editar");
 			return;
 		}
 		
-		UIEditarUsuario e = new UIEditarUsuario(usuario);
+		UIEditarEmpleador e = new UIEditarEmpleador(empleador);
 		e.mostrarDialog();
 		
   }
@@ -208,15 +200,15 @@ public class ListaUsuarios extends UIBase {
   @UiHandler("select")
   void onSelect(ClickEvent event) {
 	
-    Usuario usuario = selectionModel.getSelectedObject();
-    if (usuario == null) {
+    Empleador empleador = selectionModel.getSelectedObject();
+    if (empleador == null) {
     	return;
     }
     
 //    AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
     
 	if (listener!=null) {
-		listener.onSelected(usuario);
+		listener.onSelected(empleador);
 	}
     
     close();
@@ -241,27 +233,26 @@ public class ListaUsuarios extends UIBase {
   private void fetch(final int start) {
 	  
 	  lastFetch = start;
-	  
-	  
-	  BeneficiarioService.Util.get().findUsuarioByDescripcionNombre(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Usuario>>() {
+	
+	  BeneficiarioService.Util.get().findEmpleadorByNombre(filtroNombres.getText(), start, maxRows, new MethodCallback<List<Empleador>>() {
+		@Override
+		public void onSuccess(Method method, List<Empleador> response) {
+			if (lastFetch != start) {
+				return;
+			}
 
+			int responses = response.size();
+			table.setRowData(start, response);
+			pager.setPageStart(start);
+			if (start == 0 || !table.isRowCountExact()) {
+				table.setRowCount(start + responses, responses < maxRows);
+			}
+
+		}
+		
 		@Override
 		public void onFailure(Method method, Throwable exception) {
 			new UIErrorRestDialog(method, exception);
-		}
-
-		@Override
-		public void onSuccess(Method method, List<Usuario> response) {
-            if (lastFetch != start) {
-                return;
-              }
-
-            int responses = response.size();
-            table.setRowData(start, response);
-            pager.setPageStart(start);
-            if (start == 0 || !table.isRowCountExact()) {
-              table.setRowCount(start + responses, responses < maxRows);
-            }
 		}
 	});
 	  

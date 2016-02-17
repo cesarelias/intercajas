@@ -4,8 +4,11 @@ import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.solicitud.TablaSolicitudBeneficiario;
+import py.edu.uca.intercajas.client.tiemposervicio.ListaEmpleadores;
+import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor;
 import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
 import py.edu.uca.intercajas.client.view.login.UILogin;
+import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.GWT;
@@ -30,6 +33,13 @@ public class AppUtils {
             
     		//test
             try {
+            	
+//            	ListaEmpleadores l = new ListaEmpleadores(10);
+//            	l.mostrarDialog();
+            	
+//            	TiempoServicioReconocidoEditor n = new TiempoServicioReconocidoEditor(null);
+//            	n.titulo = "Nuevo quete";
+//            	n.mostrarDialog();
             	
 //            	SolicitudTitularEditorWorkFlow s = new SolicitudTitularEditorWorkFlow();
 //            	s.titulo = "Nueva solicitud";
@@ -91,6 +101,7 @@ public class AppUtils {
 	        }
 	        
 	    }
+	    
 	    
 	    
 }

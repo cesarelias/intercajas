@@ -17,7 +17,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.server.CalculoTiempo;
 import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
@@ -103,7 +106,6 @@ public class SolicitudRest   {
 	@GET
 	@Produces("application/json")
 	public Solicitud find(@QueryParam("id") Long id) {
-		System.out.println("**************************************id :"+id);
 		return em.find(Solicitud.class, id);
 	}
 	
@@ -124,8 +126,7 @@ public class SolicitudRest   {
 		
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
-        	System.out.println("usuario no valido para el llamado rest!");
-       	   return;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
         CajaDeclarada usuarioCajaDeclarada = null;
@@ -139,17 +140,16 @@ public class SolicitudRest   {
 					                           .getSingleResult();
         } catch (NoResultException e) {
         	//TODO esto converit a mensaje que le llegue al usuario
-        	System.out.println("no corresponde la caja del usuario con el intento de reconocimiento de tiemp de servicios");
-        	return;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("no corresponde la caja del usuario con el intento de reconocimiento de tiemp de servicios").build());
         }
 		
 		Solicitud s = em.find(Solicitud.class,nuevoReconocimientoTiempoServicio.getSolicitud().getId());
 		if (s==null) { 
-			throw new IllegalArgumentException("No existe la solicitud");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe la solicitud").build());
 		}
 		
 		if (nuevoReconocimientoTiempoServicio.getMensaje() == null) {
-				throw new IllegalArgumentException("Al reconocer tiempo de servicio , debe adjuntarle un unico mensaje");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Al reconocer tiempo de servicio , debe adjuntarle un unico mensaje").build());
 		}
 		
 		Mensaje m = nuevoReconocimientoTiempoServicio.getMensaje();
@@ -179,7 +179,6 @@ public class SolicitudRest   {
 		em.persist(m);
 
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
-			tsr.setEmpleador(null); //TODO Esto falta !!!!
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
 			tsr.setAutorizado(false);
 			tsr.setMensaje(m);
@@ -215,17 +214,16 @@ public class SolicitudRest   {
 		
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
-        	System.out.println("usuario no valido para el llamado rest!");
-       	   return;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 		
 		if (nuevaSolicitud.getMensaje() == null) {
-				throw new IllegalArgumentException("Al insertar una nueva solitidu, debe adjuntarle un unico mensaje");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Al insertar una nueva solitidu, debe adjuntarle un unico mensaje").build());
 		}
 		
 		//TODO controlar que existan al menos dos cajas declaradas
 		if (nuevaSolicitud.getListaTiempoServicioDeclarado() == null || nuevaSolicitud.getListaTiempoServicioDeclarado().size() <= 0 ) {
-			throw new IllegalArgumentException("Al insertar una nueva solitidu, debe adjuntarle los tiempos de servicios");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Al insertar una nueva solitidu, debe adjuntarle los tiempos de servicios").build());
 		}
 		
 		Solicitud solicitud = nuevaSolicitud.getSolicitud();
@@ -318,7 +316,7 @@ public class SolicitudRest   {
 			return d;
 			
 		} catch (NoResultException e) {
-			throw new IllegalArgumentException("No es posible recuperar el destinoOriginario");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No es posible recuperar el destinoOriginario").build());
 		}
 		
 	}
@@ -348,7 +346,6 @@ public class SolicitudRest   {
 				consulta.setEstado(ConsultaEstadoSolicitudBeneficiario.Estado.Pendiente);
 			}
 
-			System.out.println("ConsultaEstadoSolicitudBeneficiario.Estado: " + consulta.getEstado().toString());
 			listaConsulta.add(consulta);
 			
 		}
@@ -364,7 +361,7 @@ public class SolicitudRest   {
 	
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
-        	throw new IllegalArgumentException("usuario no valido para el llamado rest!");
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
         
@@ -394,16 +391,29 @@ public class SolicitudRest   {
 		ConsultaEstadoMensaje consultaEstadoMensaje = new ConsultaEstadoMensaje();
 		
 		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
-			if (m.getEstado() == Mensaje.Estado.Enviado) {
-				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_AUTORIZADO);
-				//con RTS autorizado 
-			} else 	if (m.getEstado() == Mensaje.Estado.Pendiente && m.getListaTiempoServicioReconocidos() != null && m.getListaTiempoServicioReconocidos().size() > 0) {
-				//RTS solicitado no Autorizado
-				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_SIN_AUTORIZACION);
-			} else {
-				consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.SIN_RTS);
-				//sin RTS
+			
+			List<TiempoServicioReconocido> lista =
+						em.createQuery("select t"
+								+ "       from TiempoServicioReconocido t, Mensaje m"
+								+ "      where t.mensaje.id = m.id"
+								+ "        and m.estado != :estadoMensaje"
+								+ "        and m.solicitud.id = :solicitud_id"
+								+ "        and t.cajaDeclarada.id = :usuarioCajaDeclarada_id", TiempoServicioReconocido.class)
+								.setParameter("solicitud_id", m.getSolicitud().getId())
+								.setParameter("usuarioCajaDeclarada_id", usuarioCajaDeclarada.getId())
+								.setParameter("estadoMensaje", Mensaje.Estado.Anulado)
+								.getResultList();
+			
+			consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.SIN_RTS);
+			
+			for (TiempoServicioReconocido tsr : lista) {
+				if (tsr.getAutorizado()) {
+					consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_AUTORIZADO);
+				} else if (!tsr.getAutorizado()) {
+					consultaEstadoMensaje.setEstadoRTS(ConsultaEstadoMensaje.EstadoRTS.CON_RTS_SIN_AUTORIZACION);
+				}
 			}
+			
 		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
 			//esto es solo informativo
 		} else if (m.getAsunto() == Mensaje.Asunto.TotalizacionTiempoServicio) {

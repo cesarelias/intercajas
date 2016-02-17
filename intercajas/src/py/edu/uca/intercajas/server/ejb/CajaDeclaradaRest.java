@@ -12,7 +12,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
@@ -41,7 +44,6 @@ public class CajaDeclaradaRest   {
 	@GET
 	@Produces("application/json")
 	public CajaDeclarada find(@QueryParam("id") Long id) {
-		System.out.println("**************************************id :"+id);
 		return em.find(CajaDeclarada.class, id);
 	}
 	
@@ -63,11 +65,9 @@ public class CajaDeclaradaRest   {
 	public CajaDeclarada findCajaDeclaraadBySolicitudIdAndCurrentUser(@QueryParam("solicitud_id") Long solicitud_id, @Context HttpServletRequest req) {
 		
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
-        if (user == null) {
-        	System.out.println("usuario no valido para el llamado rest!");
-       	   return null;
-       }
-        
+		if (user == null) {
+			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+		}        
         
         try {
         	
@@ -85,7 +85,7 @@ public class CajaDeclaradaRest   {
         	
         } catch (Exception e) {
         	e.printStackTrace();
-        	return null;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity(e.getMessage()).build());
         }
 
 	}

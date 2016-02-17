@@ -5,6 +5,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UIDialog;
@@ -65,6 +66,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				
 				@Override
 				public void onSuccess(Method method, Long response) {
+					new UIDialog("ErrorCode",new HTML(String.valueOf(method.getResponse().getStatusCode())));
 					try { 
 					AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
 					} catch (Exception e) {
@@ -75,7 +77,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				
 				@Override
 				public void onFailure(Method method, Throwable exception) {
-					new UIDialog("Error",new HTML(method.getResponse().getText()));
+					new UIErrorRestDialog(method, exception);
 				}
 			});
 			
@@ -94,7 +96,7 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				}
 				@Override
 				public void onFailure(Method method, Throwable exception) {
-					new UIDialog("Error",new HTML(method.getResponse().getText()));
+					new UIErrorRestDialog(method, exception);
 				}
 			});
 		

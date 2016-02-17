@@ -111,7 +111,7 @@ public class UsuarioRest   {
 						.setParameter("nombre", nombre)
 						.getSingleResult();
 		} catch (NoResultException e) {
-			throw new IllegalArgumentException("Nombre de usuario / correo no valido");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Nombre de usuario / correo no valido").build());
 		}
 		
 		//creamos una clave aleatoria

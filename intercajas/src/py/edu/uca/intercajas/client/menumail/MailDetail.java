@@ -22,6 +22,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.finiquito.UIConceder;
 import py.edu.uca.intercajas.client.finiquito.UIDenegar;
 import py.edu.uca.intercajas.client.mensaje.UIAnular;
@@ -105,7 +106,7 @@ public class MailDetail extends ResizeComposite {
 		}
 		@Override
 		public void onFailure(Method method, Throwable exception) {
-			// TODO Auto-generated method stub
+			new UIErrorRestDialog(method, exception);
 		}
 		
 	});
@@ -163,6 +164,7 @@ public class MailDetail extends ResizeComposite {
 			@Override
 			public void onSuccess(Method method, ConsultaEstadoMensaje response) {
 				
+				
 				  if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && response.getEstadoRTS() == ConsultaEstadoMensaje.EstadoRTS.SIN_RTS) {
 					  
 					  Button rts = new Button("Reconocer Tiempo de Servicio");
@@ -178,6 +180,8 @@ public class MailDetail extends ResizeComposite {
 					  optionsButtons.add(rts);
 					  
 				  //} else if (response.getSolicitud().getEstado() == Solicitud.Estado.ConAntiguedad && response.getEstado() == CajaDeclarada.Estado.ConAntiguedad && response.getAutorizado() ) {
+				  } else if (item.getMensaje().getAsunto() == Mensaje.Asunto.NuevaSolicitud && response.getEstadoRTS() == ConsultaEstadoMensaje.EstadoRTS.CON_RTS_SIN_AUTORIZACION) {
+					  optionsButtons.add(new Label("Con Reconocimiento de Tiempo de Servicio - Esperando autorizacion para envio"));
 				  } else if (item.getMensaje().getAsunto() == Mensaje.Asunto.TotalizacionTiempoServicio) {
 					  
 					  try {
@@ -243,8 +247,7 @@ public class MailDetail extends ResizeComposite {
 			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
-				
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 		  

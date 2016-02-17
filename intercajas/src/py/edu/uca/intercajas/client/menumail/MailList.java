@@ -23,6 +23,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
@@ -260,14 +261,14 @@ public class MailList extends ResizeComposite {
     		}
     		@Override
     		public void onFailure(Method method, Throwable exception) {
-    			// TODO falta agregar el mensaje de error del REST
+    			new UIErrorRestDialog(method, exception);
     		}
     	});
     } else if (modo == Modo.MisFiniquitados) {
     	BeneficiarioService.Util.get().findMisFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
+				new UIErrorRestDialog(method, exception);
 			}
 			@Override
 			public void onSuccess(Method method, List<Destino> response) {
@@ -278,7 +279,7 @@ public class MailList extends ResizeComposite {
     	BeneficiarioService.Util.get().findPendientes(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
+				new UIErrorRestDialog(method, exception);
 			}
 			@Override
 			public void onSuccess(Method method, List<Destino> response) {
@@ -289,7 +290,7 @@ public class MailList extends ResizeComposite {
     	BeneficiarioService.Util.get().findFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
+				new UIErrorRestDialog(method, exception);
 			}
 			@Override
 			public void onSuccess(Method method, List<Destino> response) {
@@ -300,7 +301,7 @@ public class MailList extends ResizeComposite {
     	BeneficiarioService.Util.get().findAnulados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO Auto-generated method stub
+				new UIErrorRestDialog(method, exception);
 			}
 			@Override
 			public void onSuccess(Method method, List<Destino> response) {

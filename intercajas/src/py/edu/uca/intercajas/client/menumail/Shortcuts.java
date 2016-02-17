@@ -15,6 +15,9 @@
  */
 package py.edu.uca.intercajas.client.menumail;
 
+import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.shared.entity.Usuario;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,9 +39,10 @@ public class Shortcuts extends ResizeComposite {
   private static final Binder binder = GWT.create(Binder.class);
 
   @UiField Mailboxes mailboxes;
-  @UiField Tasks tasks;
-  @UiField Contacts contacts;
-  @UiField Solicitudes solicitudes;
+  @UiField MiCuenta miCuenta;;
+  @UiField Gestion gestion;
+  
+  @UiField StackLayoutPanel stackPanel;
 
   
   /**
@@ -48,5 +52,11 @@ public class Shortcuts extends ResizeComposite {
    */
   public Shortcuts() {
     initWidget(binder.createAndBindUi(this));
+
+    //Esto es un ejemplo de como sacar un subMenuStack :D
+//    if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Administrador) {
+//    	stackPanel.remove(2); //sacamos el menu Gestion para el Usuario Admnistrador!
+//    }
+    
   }
 }

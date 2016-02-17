@@ -4,10 +4,11 @@
 	xmlns:gt="urn:import:py.edu.uca.intercajas.client.mensaje">
 
 	<ui:style>
-		.important {
+	.important {
 		font-weight: bold;
-		}
+	}
 	</ui:style>
+
 	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
 		<g:center>
 			<g:DockLayoutPanel height="100%" width="100%">
@@ -19,12 +20,14 @@
 						</g:DecoratorPanel>
 					</g:HorizontalPanel>
 				</g:north>
-				<g:center>
+				<g:west size="300">
 					<g:VerticalPanel>
 						<g:HTMLPanel>
 							<table>
 								<tr>
-									<td width="120px">Obseracion</td>
+									<td width="120px">Observacion</td>
+								</tr>
+								<tr>
 									<td>
 										<g:TextArea ui:field="observacion" />
 									</td>
@@ -32,6 +35,9 @@
 							</table>
 						</g:HTMLPanel>
 					</g:VerticalPanel>
+				</g:west>
+				<g:center>
+					<g:HTML ui:field="detalle"></g:HTML>
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:center>
@@ -41,6 +47,8 @@
 				<g:Button ui:field="autorizar">Autorizar y enviar</g:Button>
 			</g:HorizontalPanel>
 		</g:south>
+
+
 	</g:DockLayoutPanel>
 
 </ui:UiBinder> 

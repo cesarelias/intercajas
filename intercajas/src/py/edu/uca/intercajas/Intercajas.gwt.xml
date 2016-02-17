@@ -22,7 +22,6 @@
 <inherits name='com.google.gwt.logging.Logging'/>
 <inherits name="gwtupload.GWTUpload"/>
 <inherits name="com.google.gwt.i18n.I18N"/>
-
 <!-- Specify the app entry point class.                         -->
   <entry-point class='py.edu.uca.intercajas.client.Intercajas'/>
 

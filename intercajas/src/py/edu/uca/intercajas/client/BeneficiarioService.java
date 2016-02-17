@@ -16,6 +16,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.TextCallback;
 
 import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
 import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
@@ -39,6 +40,8 @@ import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dev.json.JsonString;
+import com.google.gwt.json.client.JSONString;
 
 //@Path("/rest/beneficiarios")
 public interface BeneficiarioService extends RestService {
@@ -198,6 +201,22 @@ public interface BeneficiarioService extends RestService {
 	@GET
 	@Produces("application/json")
 	public void consultEstadoMensaje(@QueryParam("mensaje_id") Long mensaje_id, MethodCallback<ConsultaEstadoMensaje> consultaEstadoMensaje);
+
+	@Path("mensaje/detalleAutorizarMensaje")
+	@GET
+	public void detalleAutorizarMensaje(@QueryParam("mensaje_id") Long mensaje_id, TextCallback detalleHTML);
+	
+	@Path("empleador/findEmpleadorByNombre")
+	@GET
+	@Produces("application/json")
+	public void findEmpleadorByNombre(@QueryParam("nombre") String nombre, @QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Empleador>> listaEmpleador);
+	
+
+	@Path("empleador/actualizar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void actualizarEmpleador(Empleador empleador, MethodCallback<Void> callback); 
 	
 	/**
      * Utility class to get the instance of the Rest Service

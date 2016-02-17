@@ -6,6 +6,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -163,8 +164,7 @@ public class UILogin extends Composite implements ClickHandler {
 					}
 					@Override
 					public void onFailure(Method method, Throwable exception) {
-						// TODO Auto-generated method stub
-						Window.alert(exception.getMessage());
+						new UIErrorRestDialog(method, exception);
 					}
 				});
 			}

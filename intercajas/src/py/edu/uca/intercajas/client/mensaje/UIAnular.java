@@ -5,6 +5,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
@@ -67,8 +68,7 @@ public class UIAnular extends UIBase {
 		BeneficiarioService.Util.get().anular(nuevaAnulacion, new MethodCallback<Void>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				//TODO mejorar esto
-				Window.alert(exception.getMessage());
+				new UIErrorRestDialog(method, exception);
 			}
 
 			@Override

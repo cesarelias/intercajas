@@ -15,7 +15,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.server.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
@@ -64,8 +67,7 @@ public class FiniquitoRest {
 
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
 		if (user == null) {
-			System.out.println("usuario no valido para el llamado rest!");
-			return;
+			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
 		}
 
 		
@@ -98,34 +100,8 @@ public class FiniquitoRest {
 		}
 		
 		if (cd.getEstado() != CajaDeclarada.Estado.ConAntiguedad) {
-			throw new IllegalArgumentException("La solicitud del beneficiario XXXX debe estar en estado -ConAntiguedad- para poder denegar");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("La solicitud del beneficiario XXXX debe estar en estado -ConAntiguedad- para poder denegar").build());
 		}
-		
-//		//Marcamos el destino-mensaje como Atendido
-//		Destino de = em.find(Destino.class, nuevoDenegado.getDestino_id());
-//		if (de==null) {
-//			//TODO mejorar esto
-//			throw new IllegalArgumentException("El destino_id no es valido");
-//		}
-//		
-//		boolean todosAtendidos = true;
-//		for (SolicitudBeneficiario sbb : de.getMensaje().getSolicitud().getBeneficiarios()) {
-//			if (sbb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
-//				todosAtendidos = false;
-//			}
-//			
-//		}
-//		
-//		if (todosAtendidos) {
-//			if (de.getEstado() != Destino.Estado.Pendiente) {
-//				throw new IllegalArgumentException("El destino_id no es valido");
-//			}
-//			
-//			de.setEstado(Destino.Estado.Atendido);
-//			em.persist(de);
-//		}
-		
-		
 		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();
@@ -182,8 +158,7 @@ public class FiniquitoRest {
 
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
 		if (user == null) {
-			System.out.println("usuario no valido para el llamado rest!");
-			return;
+			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
 		}
 
 		
@@ -215,35 +190,9 @@ public class FiniquitoRest {
 		}
 		
 		if (cd.getEstado() != CajaDeclarada.Estado.ConAntiguedad) {
-			System.out.println("La solicitud del beneficiario XXXX debe estar en estado -ConAntiguedad- para poder conceder");
-			return;
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("La solicitud del beneficiario XXXX debe estar en estado -ConAntiguedad- para poder conceder").build());
 		}
 
-//		//Marcamos el destino-mensaje como Atendido, si estan todos las SolicitudesBeneficiario con Finiquito.
-//		Destino de = em.find(Destino.class, nuevoConcedido.getDestino_id());
-//		if (de==null) {
-//			//TODO mejorar esto
-//			throw new IllegalArgumentException("El destino_id no es valido");
-//		}
-//		
-//		boolean todosAtendidos = true;
-//		for (SolicitudBeneficiario sbb : de.getMensaje().getSolicitud().getBeneficiarios()) {
-//			if (sbb.getEstado() == SolicitudBeneficiario.Estado.Pendiente) {
-//				todosAtendidos = false;
-//			}
-//			
-//		}
-//		
-//		if (todosAtendidos) {
-//			if (de.getEstado() != Destino.Estado.Pendiente) {
-//				throw new IllegalArgumentException("El destino_id no es valido");
-//			}
-//			
-//			de.setEstado(Destino.Estado.Atendido);
-//			em.persist(de);
-//		}
-		
-		
 		//Creamos el mensaje
 		Mensaje m = new Mensaje();
 		

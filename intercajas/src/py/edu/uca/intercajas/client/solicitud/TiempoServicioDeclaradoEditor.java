@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -164,6 +165,7 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 			}
 			@Override
 			public void onFailure(Method method, Throwable exception) {
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 	}
@@ -177,7 +179,7 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				
+				new UIErrorRestDialog(method, exception);
 			}
 
 			 

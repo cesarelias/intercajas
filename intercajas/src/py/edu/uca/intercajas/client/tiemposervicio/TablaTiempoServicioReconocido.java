@@ -124,7 +124,7 @@ public class TablaTiempoServicioReconocido extends UIBase {
 		TiempoServicioReconocido t;
 		for (int i=0; i< listaTiempoServicioReconocido.size();i++) {
 			t = listaTiempoServicioReconocido.get(i); 
-			table.setText(i, 0, "Empleador tal tal");
+			table.setText(i, 0, t.getEmpleador().getNombre());
 			table.setText(i, 1, dateFormat.format(t.getInicio()).toString());
 			table.setText(i, 2, dateFormat.format(t.getFin()).toString());
 			

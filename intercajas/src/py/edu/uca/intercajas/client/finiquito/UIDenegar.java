@@ -12,6 +12,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -102,8 +103,7 @@ public class UIDenegar extends UIBase {
 			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO mejorar error
-				Window.alert(exception.getMessage());
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 		

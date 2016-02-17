@@ -9,7 +9,10 @@
 			<tr>
 				<td width="120px">Empleador</td>
 				<td>
-					<g:Label>falta esto</g:Label>
+					<g:Label ui:field="empleadorNombre">seleccione un empleador</g:Label>
+				</td>
+				<td>
+				    <g:Button ui:field="buscarEmpleador">Buscar</g:Button>
 				</td>
 			</tr>
 			<tr>
@@ -22,12 +25,6 @@
 				<td>Fin</td>
 				<td>
 					<dp:DateBox ui:field="fin" />
-				</td>
-			</tr>
-			<tr>
-				<td>Lugar</td>
-				<td>
-					<g:SuggestBox ui:field="lugar" />
 				</td>
 			</tr>
 			<tr>

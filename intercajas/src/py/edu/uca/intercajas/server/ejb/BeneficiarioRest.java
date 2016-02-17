@@ -4,9 +4,11 @@ package py.edu.uca.intercajas.server.ejb;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,11 +17,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.jetty.server.Authentication.User;
+
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 
 
 @Path("/beneficiario")
@@ -31,6 +38,9 @@ public class BeneficiarioRest   {
 
 	@PersistenceContext
 	EntityManager em;
+	
+	@EJB
+	UserLogin userLogin;
 
 	@Path("/test")
 	@GET
@@ -113,37 +123,27 @@ public class BeneficiarioRest   {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public void actualizarBeneficiario(Beneficiario beneficiario)  {
+	public void actualizarBeneficiario(Beneficiario beneficiario, @Context HttpServletRequest req) { 
+	
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
+        }
+		
+		
+		List<Solicitud> lista = em.createQuery("select s "
+				+ "                         from Solicitud s "
+				+ "                        where s.cotizante.id = :beneficiario_id", Solicitud.class)
+				.setParameter("beneficiario_id", beneficiario.getId())
+				.getResultList();
+		
+		if (lista.size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede modificar un beneficiario que exista en alguna solicitud").build());
+		}
+			
 		em.merge(beneficiario);
 		LOG.info("Beneficiario merged");
 	}
 
-	
-	
-
-
-/*	
-	
-	@Path("/beneficiarios")
-	@GET
-	@Produces("application/json")
-	public List<BeneficiarioClient> test() {
-		
-		return null;
-	}
-
-	
-	@Path("/beneficiarios/nuevoBeneficiario")
-	@POST
-	@Consumes("application/json")
-	@Produces("application/json")
-	public void insert(BeneficiarioClient beneficiario) throws Exception { 
-		System.out.println("******************************");
-		System.out.println("nombre: " + beneficiario.getNombre());
-		
-		throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Aqui va el mensaje de error!").build());
-		
-	}
-*/
 	
 }

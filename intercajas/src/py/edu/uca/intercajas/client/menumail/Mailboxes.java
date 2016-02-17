@@ -114,7 +114,7 @@ public class Mailboxes extends Composite {
     addImageItem(root, "Mis Finiquitados", images.sent());
     addImageItem(root, "Pendientes", images.drafts());
     addImageItem(root, "Finiquitados", images.templates());
-    addImageItem(root, "Anulados", images.trash());
+//    addImageItem(root, "Anulados", images.trash());
 
     root.setState(true);
 

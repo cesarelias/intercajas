@@ -21,7 +21,7 @@ public class Solicitud extends EntityBase {
 	@NotNull
 	private Estado estado;
 	@ManyToOne
-	Beneficiario cotizante;
+	private Beneficiario cotizante;
 	private Integer txFinal;
 	
 	@OneToMany(mappedBy="solicitud")
@@ -47,8 +47,9 @@ public class Solicitud extends EntityBase {
 		// todas las cajas intervinientes reconocieron la antiguedad
 		ConAntiguedad,
 		// todas las cajas itervinientes finiquitaron el beneficio
-		Finiquitado,
-		Anulado //Solo el adminitrador puede anular una solicitud, y puede anularno en cualquier instancia. //TODO falta la opcionde anular solicitud
+		Finiquitado
+		//No existe el estado Anulado, En todo caso, una vez Aprovado el envio Inicial, deberian denegar todas las cajas, para cerrar el tramite.
+//		Anulado //Solo el adminitrador puede anular una solicitud, y puede anularno en cualquier instancia. //TODO falta la opcion de anular solicitud
 	}
 
 	public Solicitud () {

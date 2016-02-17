@@ -17,14 +17,12 @@ package py.edu.uca.intercajas.client.menumail;
 
 import java.util.logging.Logger;
 
-import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
-import py.edu.uca.intercajas.client.view.login.UICambioContrasena;
-import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,7 +31,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -43,7 +40,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 /**
  * A component that displays a list of contacts.
  */
-public class Solicitudes extends Composite {
+public class Gestion extends Composite {
 
 	
 	private final SimpleEventBus eventBus = new SimpleEventBus();
@@ -54,15 +51,13 @@ public class Solicitudes extends Composite {
 	 */
 	private static class ItemMenu {
 		public String nombre;
-		public String titulo;
 
-		public ItemMenu(String nombre, String titulo) {
+		public ItemMenu(String nombre) {
 			this.nombre = nombre;
-			this.titulo = titulo;
 		}
 	}
 
-	interface Binder extends UiBinder<Widget, Solicitudes> {
+	interface Binder extends UiBinder<Widget, Gestion> {
 	}
 
 	interface Style extends CssResource {
@@ -76,14 +71,18 @@ public class Solicitudes extends Composite {
 	@UiField
 	Style style;
 
-	public Solicitudes() {
+	public Gestion() {
 		
 		initWidget(binder.createAndBindUi(this));
 		
-		addItemSolicitudTitular(new ItemMenu("Solicitud Titular", "Solicitud Titular"));
-		addItemBeneficiario(new ItemMenu("Beneficiario", "Beneficiario"));
-		addItemCambioContrasena(new ItemMenu("Cambiar mi contraseña","Cambiar Contraseña"));
-		addItemUsuarios(new ItemMenu("Usuario","Usuario"));
+		if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Administrador) {
+			addItemUsuarios(new ItemMenu("Gestion de Usuarios"));
+		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Gestor) {
+			addItemSolicitudTitular(new ItemMenu("Nueva Solicitud"));
+			addItemBeneficiario(new ItemMenu("Gestion de Beneficiario"));
+		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
+//			addItemAnularSolicitud(new ItemMenu("Anular Solicitud"));
+		}
 		
 //		addItem(new ItemMenu("Solicitud Derechohabiente",
 //				"Solicitud Derechohabiente"));
@@ -101,7 +100,6 @@ public class Solicitudes extends Composite {
 			public void onClick(ClickEvent event) {
 				//new UISolicitudTitular().mostrar();
 				  SolicitudTitularEditorWorkFlow b = new SolicitudTitularEditorWorkFlow();
-				  b.titulo = "Nueva solicitud titular";
 				  b.mostrarDialog();
 				  b.create();
 			}
@@ -125,33 +123,6 @@ public class Solicitudes extends Composite {
 
 	}	
 	
-	private void addItemCambioContrasena(final ItemMenu itemMenu) {
-		final Anchor link = new Anchor(itemMenu.nombre);
-		link.setStyleName(style.item());
-
-		panel.add(link);
-
-		// Add a click handler that displays a ContactPopup when it is clicked.
-		link.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				
-				LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
-					@Override
-					public void onSuccess(UserDTO result) {
-						new UICambioContrasena(result).mostrarDialog();
-					}
-					
-					@Override
-					public void onFailure(Throwable caught) {
-						//TODO mejorar esto
-						Window.alert(caught.getMessage());
-					}
-				});				
-				
-			}
-		});
-	}	
-	
 	private void addItemUsuarios(final ItemMenu itemMenu) {
 		final Anchor link = new Anchor(itemMenu.nombre);
 		link.setStyleName(style.item());
@@ -161,15 +132,23 @@ public class Solicitudes extends Composite {
 		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-	
 				ListaUsuarios l = new ListaUsuarios(10);
 				l.mostrarDialog();
-				
-				
 			}
 		});
 	}	
-		
 	
-	
+	private void addItemAnularSolicitud(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Window.alert("esto falta desarrollar");
+			}
+		});
+	}	
 }

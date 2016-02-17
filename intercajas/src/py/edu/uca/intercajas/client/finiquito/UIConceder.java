@@ -15,9 +15,11 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
@@ -34,6 +36,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -75,7 +78,6 @@ public class UIConceder extends UIBase {
 		
 		titulo = "Conceder Beneficio";
 		
-		
 		//Obtenemos el valor de TMIN
 		LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
 			@Override
@@ -100,10 +102,7 @@ public class UIConceder extends UIBase {
 			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO mejorar esto
-				Window.alert(exception.getMessage());
-				close();
-				
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 
@@ -151,8 +150,7 @@ public class UIConceder extends UIBase {
 			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				// TODO mejorar error
-				Window.alert(exception.getMessage());
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 		

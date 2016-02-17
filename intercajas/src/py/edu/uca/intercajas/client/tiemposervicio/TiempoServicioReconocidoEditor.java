@@ -26,6 +26,9 @@ import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.ValueListBox;
@@ -46,9 +49,10 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 	@UiField DateBox inicio;
 	@UiField DateBox fin;
 
-	@UiField(provided = true) SuggestBox lugar;
-
-	@Editor.Ignore	MultiWordSuggestOracle oracle;
+	@UiField Button buscarEmpleador;
+	@UiField Label empleadorNombre;
+	
+	Empleador empleador;
 	
 	TiempoServicioReconocido tiempoServicioReconocido;
 	Listener listener;
@@ -57,9 +61,6 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 		
 		this.tiempoServicioReconocido = periodoAporteReconocidoEdit;
 		
-		oracle = new MultiWordSuggestOracle();
-		lugar = new SuggestBox(oracle);	
-
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 
 		if (tiempoServicioReconocido == null) {
@@ -67,7 +68,8 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 		} else {
 			inicio.setValue(tiempoServicioReconocido.getInicio());
 			fin.setValue(tiempoServicioReconocido.getFin());
-			lugar.setValue("esto falta");
+			empleador = tiempoServicioReconocido.getEmpleador();
+			empleadorNombre.setText(tiempoServicioReconocido.getEmpleador().getNombre());
 		}
 
 		DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
@@ -84,18 +86,18 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 	@UiHandler("save")
 	void onSave(ClickEvent event){
 
-		CajaDeclarada cd = new CajaDeclarada();
-		Caja c = new Caja();
-		c.setSiglas("CAJADEC");
-		cd.setCaja(c);
+//		CajaDeclarada cd = new CajaDeclarada();
+//		Caja c = new Caja();
+//		c.setSiglas("CAJADEC");
+//		cd.setCaja(c);
 		
-		Empleador e = new Empleador();
-		e.setDescripcion("FALTA EL EMPLEADOR");
+		//TODO falta validar TOODOOO!!!
 		
-		tiempoServicioReconocido.setCajaDeclarada(cd);
+		tiempoServicioReconocido.setEmpleador(empleador);
+//		tiempoServicioReconocido.setCajaDeclarada(cd);
 		tiempoServicioReconocido.setInicio(inicio.getValue());
 		tiempoServicioReconocido.setFin(fin.getValue());
-		tiempoServicioReconocido.setEmpleador(e);
+		tiempoServicioReconocido.setEmpleador(empleador);
 		
 		
 		if (listener!=null) {
@@ -111,23 +113,23 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 		close();
 	}
 
-	void setSuggest(Long caja_id) {
-		BeneficiarioService.Util.get().findEmpleadorByCajaId(caja_id, new MethodCallback<List<Empleador>>() {
-			@Override
-			public void onSuccess(Method method, List<Empleador> response) {
-				oracle.clear();
-				for (Empleador e : response) {
-					oracle.add(e.getNombre());
-				}
-			}
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-			}
-		});
-	}
-
 	public void setListener(Listener listener) {
 		this.listener = listener;
+	}
+	
+	@UiHandler("buscarEmpleador")
+	void onBuscarEmpleador(ClickEvent event){
+		ListaEmpleadores l = new ListaEmpleadores(10);
+		l.mostrarDialog();
+		
+		l.setListener(new ListaEmpleadores.Listener() {
+			@Override
+			public void onSelected(Empleador empleadorSelected) {
+				empleadorNombre.setText(empleadorSelected.getNombre());
+				empleador = empleadorSelected;
+			}
+		});
+		
 	}
 	
 }

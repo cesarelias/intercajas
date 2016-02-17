@@ -13,7 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
@@ -64,7 +67,7 @@ public class DestinoRest   {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
-       	   return null;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
 		if (maxResults > 500) {
@@ -129,7 +132,7 @@ public class DestinoRest   {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
-       	   return null;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
 		if (maxResults > 500) {
@@ -195,7 +198,7 @@ public class DestinoRest   {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
-       	   return null;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
 		if (maxResults > 500) {
@@ -260,7 +263,7 @@ public class DestinoRest   {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
-       	   return null;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
 		if (maxResults > 500) {
@@ -326,7 +329,7 @@ public class DestinoRest   {
 
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
 		if (user == null) {
-			return null;
+			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
 		}
 
 		if (maxResults > 500) {
@@ -339,12 +342,10 @@ public class DestinoRest   {
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
 					+ "               and a.id = c.mensaje.id "
-					+ "               and b.estado = :estadoSolicitud"
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
 					+ " order by a.fecha desc "
 					, Destino.class)
-					.setParameter("estadoSolicitud", Solicitud.Estado.Anulado)
 					.setFirstResult(startRow)
 					.setMaxResults(maxResults)
 					.setParameter("caja_id", user.getCaja().getId())

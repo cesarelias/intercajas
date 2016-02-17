@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.client.view.login;
+package py.edu.uca.intercajas.client.tiemposervicio;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,6 +10,7 @@ import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.Empleador;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -26,33 +27,31 @@ import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SimpleKeyProvider;
 
-public class UIEditarUsuario extends UIBase {
+public class UIEditarEmpleador extends UIBase {
 
-	Usuario usuario;
+	Empleador empleador;
 
 	TextBox nombre = new TextBox();
-	TextBox descripcion = new TextBox();
-	TipoUsuarioEditor tipo = new TipoUsuarioEditor();
 	Button cancel = new Button("Cancelar");
 	Button guardar = new Button("Guardar");
 	ValueListBox<Caja> caja;
+//	boolean nuevo;
 	
-	public UIEditarUsuario(Usuario usuario) {
+	public UIEditarEmpleador(Empleador empleador) {
 		
 		initCajaList();
 		initComponents();
 
-		if (usuario == null) {
-			titulo = "Nuevo usuario";
-			this.usuario = new Usuario();
+		if (empleador == null) {
+			titulo = "Nuevo empleador";
+			this.empleador = new Empleador();
+//			nuevo = true;
 		} else {
-			this.usuario = usuario;
-			titulo = "Editando usuario";
-			nombre.setText(usuario.getNombre());
-			nombre.setEnabled(false);
-			descripcion.setText(usuario.getDescripcion());
-			caja.setValue(usuario.getCaja());
-			tipo.setValue(usuario.getTipo());
+			this.empleador = empleador;
+			titulo = "Editando empleador";
+			nombre.setText(empleador.getNombre());
+			caja.setValue(empleador.getCaja());
+//			nuevo = false;
 		}
 		
 		
@@ -73,14 +72,13 @@ public class UIEditarUsuario extends UIBase {
 		table.getColumnFormatter().setWidth(0, "60px");
 		table.getColumnFormatter().setWidth(1, "60px");
 		
-		table.setText(0, 0, "Descripcion");
-		table.setWidget(0, 1, descripcion);
-		table.setText(1, 0, "Nombre");
-		table.setWidget(1, 1, nombre);
-		table.setText(2, 0, "Caja");
-		table.setWidget(2, 1, caja);
-		table.setText(3, 0, "Tipo");
-		table.setWidget(3, 1, tipo);
+		table.setText(0, 0, "Nombre");
+		table.setWidget(0, 1, nombre);
+		
+//		if (!nuevo) {
+//			table.setText(1, 0, "Caja");
+//			table.setWidget(1, 1, caja);
+//		}
 		
 		VerticalPanel v = new VerticalPanel();
 		
@@ -148,24 +146,23 @@ public class UIEditarUsuario extends UIBase {
 	
 	public void onSave() {
 		
-		usuario.setNombre(nombre.getValue());
-		usuario.setDescripcion(descripcion.getValue());
-		usuario.setCaja(caja.getValue());
-		usuario.setTipo(tipo.getValue());
+		empleador.setNombre(nombre.getValue());
+		empleador.setCaja(caja.getValue());
 
-		BeneficiarioService.Util.get().actualizarUsuario(usuario, new MethodCallback<Void>() {
-
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-				new UIErrorRestDialog(method, exception);
-			}
-
+		BeneficiarioService.Util.get().actualizarEmpleador(empleador, new MethodCallback<Void>() {
+			
 			@Override
 			public void onSuccess(Method method, Void response) {
 				Window.alert("guardado");
 				close();
 			}
+			
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				new UIErrorRestDialog(method, exception);
+			}
 		});
+		
 	}
 	
 }

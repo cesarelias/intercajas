@@ -25,6 +25,7 @@ import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
+import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Direccion;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
@@ -48,6 +49,7 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -289,7 +291,7 @@ public class ListaBeneficiarios extends UIBase {
 		
 		@Override
 		public void onFailure(Method method, Throwable exception) {
-			// TODO Auto-generated method stub
+			new UIDialog("ErrorText",new HTML(method.getResponse().getText()));
 		}
 	  });
   }

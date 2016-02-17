@@ -5,6 +5,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
@@ -83,8 +84,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 			
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				Window.alert(exception.getMessage());
-				new UIDialog("Error",new HTML(method.getResponse().getText()));
+				new UIErrorRestDialog(method, exception);
 			}
 		});
 		

@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.server.ejb;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +19,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.server.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
@@ -26,12 +31,15 @@ import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
+import py.edu.uca.intercajas.shared.entity.Concedido;
+import py.edu.uca.intercajas.shared.entity.Denegado;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Finiquito;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Mensaje.Asunto;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
@@ -82,9 +90,6 @@ public class MensajeRest   {
 	@Produces("application/json")
 	public List<Mensaje> findAll() {
 		List<Mensaje> retorno = em.createQuery("select b from Mensaje b", Mensaje.class).getResultList();
-//		for (Mensaje m : retorno) {
-//			m.getAdjuntos().size(); //lazy
-//		}
 		return retorno; 
 	}
 
@@ -93,12 +98,6 @@ public class MensajeRest   {
 	@Produces("application/json")
 	public List<Mensaje> findByNombresDocs(@QueryParam("startRow") int startRow,
 												@QueryParam("maxResults") int maxResults) {
-		
-//		if (nombresDocs == null || nombresDocs.length() == 0) {
-//			nombresDocs = "%";
-//		} else {
-//			nombresDocs = '%' + nombresDocs.toUpperCase() + '%';
-//		}
 		
 		if (maxResults > 500) {
 			maxResults = 500;
@@ -125,19 +124,16 @@ public class MensajeRest   {
 		
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
-        	System.out.println("usuario no valido para el llamado rest!");
-       	   return;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
         }
         
         if (user.getTipo() != Usuario.Tipo.Superior ) {
-        	System.out.println("usuario no valido para autorizar/enviar mensaje");
-        	return;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("usuario no valido para autorizar/enviar mensaje").build());
         }
         
         Mensaje m = em.find(Mensaje.class, nuevaAutorizacion.getMensaje_id());
         if (m==null || m.getEstado() != Mensaje.Estado.Pendiente) {
-        	System.out.println("Mensaje no valido para Autorizacion");
-        	return;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Mensaje no valido para Autorizacion").build());
         }
 
         //Guardamos el o los adjuntos
@@ -172,48 +168,19 @@ public class MensajeRest   {
 		System.out.println("llego aqui");
 		UserDTO user = userLogin.getValidUser(req.getSession().getId());
         if (user == null) {
-        	System.out.println("usuario no valido para el llamado rest!");
-       	   return;
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
         }
         
         if (user.getTipo() != Usuario.Tipo.Superior ) {
-        	System.out.println("usuario no valido para autorizar/enviar mensaje");
-        	return;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("usuario no valido para autorizar/enviar mensaje").build());
         }
         
         Mensaje m = em.find(Mensaje.class, nuevaAnulacion.getMensaje_id());
         
         if (m==null || m.getEstado() != Mensaje.Estado.Pendiente || m.getRemitente().getId() != user.getCaja().getId()) {
-        	System.out.println("Mensaje no valido");
-        	return;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Mensaje no valido").build());
         }
         
-//        //Volvemos a poner el estado del mensaje-destino originario en Pendiente
-//        Destino d = destinoOriginario(m, user);
-//        if (d==null) { //el Mensaje del Destino Originario, debe estar como enviado
-//        	throw new IllegalArgumentException("Destino originario no valido");
-//        }
-//
-//        if (d.getMensaje().getEstado() != Mensaje.Estado.Enviado) {
-//        	throw new IllegalArgumentException("el Mensaje del Destino Originario, debe estar como enviado");
-//        }
-//        
-//        if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
-//        	for (SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
-//        		for (Finiquito f : sb.getFiniquitos()) {
-//        			if (f.getMensaje().getId() == m.getId()) {
-//        				sb.setEstado(SolicitudBeneficiario.Estado.Pendiente); //volvemos a pendiente la solicitudBeneficiario al anular el envio
-//        				em.persist(sb);
-//        			}
-//        		}
-//        		
-//        	}
-//        	 
-//        }
-        
-//		d.setEstado(Destino.Estado.Pendiente);
-//		em.persist(d);
-
 		//Cambiamos el estado del mensaje a Anulado
         m.setObservacion(nuevaAnulacion.getObvervacion());
         m.setEstado(Mensaje.Estado.Anulado);
@@ -251,7 +218,7 @@ public class MensajeRest   {
 			return d;
 			
 		} catch (NoResultException e) {
-			throw new IllegalArgumentException("No es posible recuperar el destinoOriginario");
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No es posible recuperar el destinoOriginario").build());
 		}
 		
 	}
@@ -315,8 +282,7 @@ public class MensajeRest   {
 	        return usuarioCajaDeclarada;
         } catch (NoResultException e) {
         	//TODO esto converit a mensaje que le llegue al usuario
-        	System.out.println("no corresponde la caja del usuario con el intento de reconocimiento de tiemp de servicios");
-        	return null;
+        	throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("no corresponde la caja del usuario con el intento de reconocimiento de tiemp de servicios").build());
         }
         
 	}
@@ -426,6 +392,73 @@ public class MensajeRest   {
 		}
 		
 	}
+
 	
+	@Path("/detalleAutorizarMensaje")
+	@GET
+	@Produces("text/plain")
+	public String detalleAutorizarMensaje(@QueryParam("mensaje_id") Long mensaje_id) {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(0);
+		df.setMinimumFractionDigits(0);
+//		df.setGroupingUsed(false);
+
+		Mensaje m = em.find(Mensaje.class, mensaje_id);
+		
+		if (m==null) {
+			return null;
+		}
+		
+		String detalleHTML = "";
+
+		detalleHTML += "<font color='blue'>Mensaje</font><br>";
+		detalleHTML += "Creado el " + sdf.format(m.getFecha()) + "<br>";
+		detalleHTML += "Asunto: " + m.getAsunto().toString() + "<br>";
+		detalleHTML += "<font color='blue'>Solicitud</font><br>";
+		detalleHTML += "Creado el " + sdf.format(m.getSolicitud().getFecha()) + "<br>";
+		detalleHTML += "Cotizante:  " + m.getSolicitud().getCotizante().toString() + "<br>";
+		detalleHTML += "<font color='blue'>Solicitante</font><br>";
+		for (SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
+			if (sb.getTipo() == SolicitudBeneficiario.Tipo.Titular) {
+				detalleHTML += "" + m.getSolicitud().getCotizante().toString() + "<br>";
+			} else {
+				detalleHTML += "" + sb.getBeneficiario().toString() + " - " + sb.getParentesco().toString() + "<br>";
+			}
+		}	
+		
+		detalleHTML += "<font color='blue'>Cajas Declaradas</font><br>";
+		
+		for (CajaDeclarada cd : m.getSolicitud().getCajasDeclaradas()) {
+			detalleHTML += cd.getCaja().getSiglas() + " - " + CalculoTiempo.leeMeses(cd.getTxDeclarado()) + "<br>";
+		}
+		
+		if (m.getAsunto() ==  Mensaje.Asunto.ReconocimientoTiempoServicio) {
+			List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
+			
+			for (TiempoServicioReconocido tsr : m.getListaTiempoServicioReconocidos()) {
+				rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
+			}
+			detalleHTML += "<font color='blue'>Tiempo Servicio Reconocido</font><br>";
+			detalleHTML += "" + CalculoTiempo.leeMeses(CalculoTiempo.txBruto(rangos)) + "<br>";
+			
+		} else if (m.getAsunto() == Mensaje.Asunto.Concedido) {
+			detalleHTML += "<font color='blue'>Finiquito - Concedido</font><br>";
+			Finiquito f = m.getListaFiniquitos().get(0); //siempre deberia de haber una sola fila
+			Concedido c = (Concedido) f;
+			detalleHTML += "Resolucion N°: " + c.getNumeroResolucion() + "<br>";
+			detalleHTML += "Monto Final Gs: " + df.format(c.getBx()) + "<br>";
+		} else if (m.getAsunto() == Mensaje.Asunto.Denegado) {
+			detalleHTML += "<font color='blue'>Finiquito - Denedago</font><br>";
+			Finiquito f = m.getListaFiniquitos().get(0); //siempre deberia de haber una sola fila
+			Denegado d = (Denegado) f;
+			detalleHTML += "Resolucion N°: " + d.getNumeroResolucion() + "<br>";
+			detalleHTML += "Motivo: " + d.getMotivo() + "<br>";
+		}
+		
+		return detalleHTML;
+		
+	}
 	
 }

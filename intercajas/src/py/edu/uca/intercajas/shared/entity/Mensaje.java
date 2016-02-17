@@ -35,6 +35,10 @@ public class Mensaje extends EntityBase {
 	@JsonIgnore
 	private List<TiempoServicioReconocido> listaTiempoServicioReconocidos;
 	
+	@OneToMany(mappedBy = "mensaje")
+	@JsonIgnore
+	private List<Finiquito> listaFiniquitos;
+	
 	public List<TiempoServicioReconocido> getListaTiempoServicioReconocidos() {
 		return listaTiempoServicioReconocidos;
 	}
@@ -134,6 +138,14 @@ public class Mensaje extends EntityBase {
 
 	public void setAutorizado(boolean autorizado) {
 		this.autorizado = autorizado;
+	}
+
+	public List<Finiquito> getListaFiniquitos() {
+		return listaFiniquitos;
+	}
+
+	public void setListaFiniquitos(List<Finiquito> listaFiniquitos) {
+		this.listaFiniquitos = listaFiniquitos;
 	}
 
 

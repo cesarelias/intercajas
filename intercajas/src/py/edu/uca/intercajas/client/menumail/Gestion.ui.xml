@@ -1,0 +1,22 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:mail='urn:import:py.edu.uca.intercajas.client.menumail'>
+
+  <ui:style field='style'
+    type='py.edu.uca.intercajas.client.menumail.Gestion.Style'>
+
+  .gestion {
+    padding: 0.5em;
+    line-height: 150%;
+  }
+
+  .item {
+  	display: block;
+	color: red;
+    padding: 0.2em;
+ 	}
+  </ui:style>
+
+  <g:FlowPanel styleName='{style.gestion}' ui:field='panel'/>
+</ui:UiBinder>
