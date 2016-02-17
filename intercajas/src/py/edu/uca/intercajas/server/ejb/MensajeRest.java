@@ -143,9 +143,9 @@ public class MensajeRest   {
 		}
 		
 		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
-			autorizarNuevaSolicitud(m.getSolicitud()); //Esto pone en true todas las autorizaciones en cada caja declarada
+			autorizarNuevaSolicitud(m.getSolicitud(), user); //Esto pone en true todas las autorizaciones en cada caja declarada
 		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
-			autorizarReconocimientoTimepoServicio(m, m.getSolicitud(), user);
+			autorizarReconocimientoTiempoServicio(m, m.getSolicitud(), user);
 		} else if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
 			autorizarFiniquito(m, user);
 		} 
@@ -185,6 +185,8 @@ public class MensajeRest   {
         m.setObservacion(nuevaAnulacion.getObvervacion());
         m.setEstado(Mensaje.Estado.Anulado);
         em.persist(m);
+        
+        userLogin.registrarAuditoria(user, "Anula (desautoriza) envio de Mensaje - Solicitud : " +  m.getSolicitud().getNumero() + " Asunto: " + m.getAsunto().toString());
         
 	}
 	
@@ -287,21 +289,23 @@ public class MensajeRest   {
         
 	}
 	
-	private void autorizarNuevaSolicitud(Solicitud solicitud) {
-		System.out.println("Hasta ahora no hacemos nada al Autorizar solicitud, y posiblemente ya no sea necesario hacer nada!");
+	private void autorizarNuevaSolicitud(Solicitud solicitud, UserDTO user) {
+		userLogin.registrarAuditoria(user, "Autoriza Nueva Solicitud : " + solicitud.getNumero() + " Cotizante: " + solicitud.getCotizante().toString());
 	}
 	
-	private void autorizarFiniquito(Mensaje m, UserDTO usuario) {
+	private void autorizarFiniquito(Mensaje m, UserDTO user) {
 		
-		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(m.getSolicitud(), usuario);
+		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(m.getSolicitud(), user);
 		if (usuarioCajaDeclarada==null){
 			throw new IllegalArgumentException("No se encontro la caja declarada");
 		}
 
+		Finiquito finiquitoAutorizado = null;
 		//Marcamos como autorizado
 		for(SolicitudBeneficiario sb : m.getSolicitud().getBeneficiarios()) {
 			for (Finiquito f : sb.getFiniquitos()) {
 				if (f.getMensaje().getId() == m.getId()) {
+					finiquitoAutorizado = f;
 					f.setAutorizado(true);
 					em.persist(f);
 				}
@@ -339,12 +343,15 @@ public class MensajeRest   {
 		}
 		
 		
+		
+		userLogin.registrarAuditoria(user, "Autoriza Finiquito Solicitud : " + finiquitoAutorizado.getSolicitudBeneficiario().getSolicitud().getNumero() + " Resolucion Finiquito " + finiquitoAutorizado.getNumeroResolucion());
+		
 	}
 	
-	void autorizarReconocimientoTimepoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO usuario) {
+	void autorizarReconocimientoTiempoServicio(Mensaje mensaje, Solicitud solicitud, UserDTO user) {
 		
 		
-		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(solicitud, usuario);
+		CajaDeclarada usuarioCajaDeclarada = getUsuarioCajaDeclarada(solicitud, user);
 		
 
 		/*
@@ -365,7 +372,7 @@ public class MensajeRest   {
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 
 		mensaje.setFecha(new Date());
-		mensaje.setReferencia(solicitud.getNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + usuario.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		mensaje.setReferencia(solicitud.getNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
 		em.persist(mensaje);
 		
 				
@@ -390,6 +397,8 @@ public class MensajeRest   {
 			envioTotalizacion(solicitud);
 			
 		}
+		
+		userLogin.registrarAuditoria(user, "Autoriza Reconocimiento Tiempo Servicio - Solicitud : " + mensaje.getSolicitud().getNumero() + " Reconoce " + CalculoTiempo.leeMeses(txBruto));
 		
 	}
 

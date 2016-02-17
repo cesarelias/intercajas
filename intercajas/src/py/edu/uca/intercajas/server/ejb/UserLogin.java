@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import org.eclipse.jetty.server.Authentication.User;
 
 import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.Auditoria;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
@@ -165,5 +166,16 @@ public class UserLogin {
 		}
 	}
 	
+	public void registrarAuditoria(UserDTO user, String operacion) {
+		
+		Auditoria a = new Auditoria();
+		a.setCajaSiglas(user.getCaja().getSiglas());
+		a.setFecha(new Date());
+		a.setNombreUsuario(user.getName());
+		a.setOperacion(operacion);
+		
+		em.persist(a);
+		
+	}
 	
 }

@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.server.ejb;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -145,8 +147,7 @@ public class FiniquitoRest {
 			em.persist(des);
 		}
 		
-		
-		
+		userLogin.registrarAuditoria(user, "Deniega beneficio - Solicitud " + m.getSolicitud().getNumero() + " Resolucion " + d.getNumeroResolucion() + " Cotizante " + m.getSolicitud().getCotizante().toString() + " Solicitante " + sb.getBeneficiario().toString() + " Motivo " + d.getMotivo());
 	}
 
 	
@@ -233,6 +234,13 @@ public class FiniquitoRest {
 //			d.setEstado(Destino.Estado.Informativo);
 			em.persist(d);
 		}
+
+		//Registramos auditoria
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(0);
+		df.setMinimumFractionDigits(0);
+		userLogin.registrarAuditoria(user, "Concede beneficio - Solicitud " + m.getSolicitud().getNumero() + " Resolucion " + c.getNumeroResolucion() + " Cotizante " + m.getSolicitud().getCotizante().toString() + " Solicitante " + sb.getBeneficiario().toString() + " Monto Final " + df.format(c.getBx()));
 
 	}
 	

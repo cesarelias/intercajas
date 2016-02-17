@@ -159,36 +159,21 @@ public class SolicitudRest   {
 		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		
-//		Destino destino = destinoOriginario(m, user);
-//		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
-//			throw new IllegalArgumentException("No existe el detino");
-//		}
-//		
-//        if (destino.getEstado() != Destino.Estado.Pendiente) {
-//        	throw new IllegalArgumentException("Destino no tiene estado Pendiente");
-//        }
-//
-//        destino.setEstado(Destino.Estado.Atendido);
-//		em.persist(destino);
-		
-		//m.setReferencia( );//la referencia cargamos al autorizar
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
 		em.persist(m);
 
+		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
+			rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
 			tsr.setAutorizado(false);
 			tsr.setMensaje(m);
 			em.persist(tsr);
 		}
 		
-//		Esto lo hacemos ahora al Autorizar, no al crear el nuevo reconocimiento de tiempo de servicio
-//		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
-//		em.persist(usuarioCajaDeclarada);
-
 		//Enviamos a todas las cajas declaradas
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
 			Destino d = new Destino();
@@ -198,6 +183,8 @@ public class SolicitudRest   {
 //			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 		}
+		
+		userLogin.registrarAuditoria(user, "Nuevo Reconocimiento Tiempo Servicio" + s.getNumero() + " Cotizante: " + s.getCotizante().toString() + " Reconoce " +CalculoTiempo.leeMeses(CalculoTiempo.txBruto(rangos)));
 		
 		LOG.info("Solicitud titular persisted");
 
@@ -271,6 +258,8 @@ public class SolicitudRest   {
 			sb.setEstado(SolicitudBeneficiario.Estado.Pendiente);
 			em.persist(sb);
 		}
+
+		userLogin.registrarAuditoria(user, "Nueva Solicitud " + solicitud.getNumero() + " Cotizante: " + solicitud.getCotizante().toString());
 		
 		LOG.info("Solicitud titular persisted");
 		

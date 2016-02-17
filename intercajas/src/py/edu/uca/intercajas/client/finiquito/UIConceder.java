@@ -63,6 +63,8 @@ public class UIConceder extends UIBase {
 	@UiField Label tmin;
 	@UiField Button enviar;
 	@UiField Button calcularBx;
+
+	BigDecimal bxBig;
 	
 	SolicitudBeneficiario solicitudBeneficiario;
 	Destino destino;
@@ -88,6 +90,7 @@ public class UIConceder extends UIBase {
 			
 			@Override
 			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
 			}
 		});
 		
@@ -121,6 +124,7 @@ public class UIConceder extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
+		try {
 		for(Adjunto a : upload.adjuntos) {
 			if (a == null) {
 				Window.alert("Es obligatorio enviar adjunto");
@@ -137,7 +141,7 @@ public class UIConceder extends UIBase {
 		nuevoConcedido.setTx(Integer.valueOf(tx.getText()));
 		nuevoConcedido.setTmin(Integer.valueOf(tmin.getText()));
 		nuevoConcedido.setBt(new BigDecimal(bt.getValue()));
-		nuevoConcedido.setBx(new BigDecimal(bx.getText()));
+		nuevoConcedido.setBx(bxBig);
 		nuevoConcedido.setDestino_id(destino.getId());
 
 		BeneficiarioService.Util.get().conceder(nuevoConcedido, new MethodCallback<Void>() {
@@ -153,6 +157,9 @@ public class UIConceder extends UIBase {
 				new UIErrorRestDialog(method, exception);
 			}
 		});
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
 		
 	}
 	
@@ -160,7 +167,7 @@ public class UIConceder extends UIBase {
 	void onCalcularBx(ClickEvent event) {
 
 		BigDecimal btBig = null;
-		BigDecimal bxBig = null;
+//		BigDecimal bxBig = null;
 		BigDecimal txBig = null;
 		BigDecimal tmin = null;
 		
@@ -175,8 +182,9 @@ public class UIConceder extends UIBase {
 		
 		bxBig = btBig.multiply(x).setScale(0, RoundingMode.HALF_UP);
 		
-		bx.setText(NumberFormat.getFormat("0,000").format(bxBig));
-				
+		bx.setText(NumberFormat.getFormat("#,##0").format(bxBig));
+
+		
 		bt.setEnabled(false);
 		enviar.setEnabled(true);
 		calcularBx.setEnabled(false);
