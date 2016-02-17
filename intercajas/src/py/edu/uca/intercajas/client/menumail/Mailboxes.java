@@ -17,24 +17,17 @@ package py.edu.uca.intercajas.client.menumail;
 
 
 import py.edu.uca.intercajas.client.AppUtils;
-import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
-import py.edu.uca.intercajas.server.LoginServiceImpl;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -79,7 +72,7 @@ public class Mailboxes extends Composite {
     Images images = GWT.create(Images.class);
     
     tree = new Tree(images);
-    TreeItem root = new TreeItem(
+    final TreeItem root = new TreeItem(
         imageItemHTML(images.home(), LoginService.Util.currentUser.getDescription()));
     tree.addItem(root);
     
@@ -88,31 +81,44 @@ public class Mailboxes extends Composite {
   	  public void onSelection(SelectionEvent<TreeItem> event) {
 //  	    TreeItem item = event.getSelectedItem();
   		
-  	    if (event.getSelectedItem().getText().trim().equals("Entrada")) {
-	  	    	Mail m = AppUtils.Util.getMail();
-	  	    	m.mostrar();
-	  	    	m.mostrarEntrada();
-	  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
-	  	    	
-  	    } else if (event.getSelectedItem().getText().trim().equals("Finiquitado")) {
+  	    if (event.getSelectedItem().getText().trim().equals("Mis Pendientes")) {
   	    	Mail m = AppUtils.Util.getMail();
   	    	m.mostrar();
-  	    	m.mostrarFiniquitado();
+  	    	m.mostrarMisPendientes();
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    } else if (event.getSelectedItem().getText().trim().equals("Mis Finiquitados")) {
+  	    	Mail m = AppUtils.Util.getMail();
+  	    	m.mostrar();
+  	    	m.mostrarMisFiniquitados();
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+	    } else if (event.getSelectedItem().getText().trim().equals("Pendientes")) {
+  	    	Mail m = AppUtils.Util.getMail();
+  	    	m.mostrar();
+  	    	m.mostrarPendientes();
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+	    } else if (event.getSelectedItem().getText().trim().equals("Finiquitados")) {
+  	    	Mail m = AppUtils.Util.getMail();
+  	    	m.mostrar();
+  	    	m.mostrarFiniquitados();
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+	    } else if (event.getSelectedItem().getText().trim().equals("Anulados")) {
+  	    	Mail m = AppUtils.Util.getMail();
+  	    	m.mostrar();
+  	    	m.mostrarAnulados();
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 	    }
-  	    
   	  }
   	});
 
-    addImageItem(root, "Entrada", images.inbox());
-    addImageItem(root, "Finiquitado", images.sent());
-    addImageItem(root, "Borrador", images.drafts());
-    addImageItem(root, "Plantilla", images.templates());
-    addImageItem(root, "Papelera", images.trash());
+    addImageItem(root, "Mis Pendientes", images.inbox());
+    addImageItem(root, "Mis Finiquitados", images.sent());
+    addImageItem(root, "Pendientes", images.drafts());
+    addImageItem(root, "Finiquitados", images.templates());
+    addImageItem(root, "Anulados", images.trash());
 
     root.setState(true);
-    initWidget(tree);
 
+    initWidget(tree);
   }
 
   /**

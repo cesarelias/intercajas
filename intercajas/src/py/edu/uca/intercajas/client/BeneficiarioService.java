@@ -90,16 +90,34 @@ public interface BeneficiarioService extends RestService {
 	@Produces("application/json")
 	public void mensajeFindAllPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Mensaje>> mensajes);
 
-	@Path("destino/findAllPending")
+	
+	////BANDEJA
+	@Path("destino/findMisPendientes")
 	@GET
 	@Produces("application/json")
-	public void findAllDestinoPending(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findMisPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
 	
-	@Path("destino/findAllFiniquitados")
+	@Path("destino/findMisFiniquitados")
 	@GET
 	@Produces("application/json")
-	public void findAllFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findMisFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
 	
+	@Path("destino/findPendientes")
+	@GET
+	@Produces("application/json")
+	public void findPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	
+	@Path("destino/findFiniquitados")
+	@GET
+	@Produces("application/json")
+	public void findFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	
+	@Path("destino/findAnulados")
+	@GET
+	@Produces("application/json")
+	public void findAnulados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	
+	//FIN BANDEJA
 
 	@Path("adjunto/findByMensajeId")
 	@GET

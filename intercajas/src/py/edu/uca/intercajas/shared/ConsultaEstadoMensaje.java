@@ -5,7 +5,6 @@ import java.util.List;
 
 public class ConsultaEstadoMensaje {
 
-	
 	EstadoRTS estadoRTS;
 	List<ConsultaEstadoSolicitudBeneficiario> listaConsultaEstadoSolicitudBeneficiario;
 
@@ -30,7 +29,4 @@ public class ConsultaEstadoMensaje {
 		this.listaConsultaEstadoSolicitudBeneficiario = listaConsultaEstadoSolicitudBeneficiario;
 	}
 
-	
-	
-	
 }

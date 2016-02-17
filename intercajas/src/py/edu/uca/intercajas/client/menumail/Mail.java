@@ -54,7 +54,7 @@ public class Mail extends UIBase {
 
   public Mail() {
 	 
-		mailList = new MailList(MailList.Modo.Entrada);
+		mailList = new MailList(MailList.Modo.MisPendientes);
 		initWidget(binder.createAndBindUi(this));
 		init();
   }
@@ -83,9 +83,15 @@ public class Mail extends UIBase {
     // Listen for item selection, displaying the currently-selected item in
     // the detail area.
     mailList.setListener(new MailList.Listener() {
-      public void onItemSelected(Destino item) {
-        mailDetail.setItem(item);
-      }
+    		@Override
+			public void onItemSelected(Destino item) {
+				mailDetail.setItem(item);
+			}
+
+			@Override
+			public void clear() {
+				mailDetail.clear();
+			}
     });
 
     // Add the outer panel to the RootLayoutPanel, so that it will be
@@ -96,14 +102,31 @@ public class Mail extends UIBase {
     
   }
   
-  public void mostrarEntrada() {
-	  mailList.modo = MailList.Modo.Entrada;
+  public void mostrarMisPendientes() {
+	  mailList.modo = MailList.Modo.MisPendientes;
 	  mailList.update();
   }
   
-  public void mostrarFiniquitado() {
-	  mailList.modo = MailList.Modo.Finquitado;
+  public void mostrarMisFiniquitados() {
+	  mailList.modo = MailList.Modo.MisFiniquitados;
 	  mailList.update();
   }
+  
+  public void mostrarPendientes() {
+	  mailList.modo = MailList.Modo.Pendientes;
+	  mailList.update();
+  }
+
+  public void mostrarFiniquitados() {
+	  mailList.modo = MailList.Modo.Finquitados;
+	  mailList.update();
+  }
+  
+  public void mostrarAnulados() {
+	  mailList.modo = MailList.Modo.Anulados;
+	  mailList.update();
+  }
+
+
   
 }

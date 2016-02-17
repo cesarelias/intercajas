@@ -55,10 +55,10 @@ public class DestinoRest   {
 		return lista;
 	}
 	
-	@Path("/findAllPending")
+	@Path("/findMisPendientes")
 	@GET
 	@Produces("application/json")
-	public List<Destino> findAllPending(@QueryParam("startRow") int startRow,
+	public List<Destino> findMisPendientes(@QueryParam("startRow") int startRow,
 										@QueryParam("maxResults") int maxResults,
 										@Context HttpServletRequest req) {
 		
@@ -120,10 +120,10 @@ public class DestinoRest   {
 		
 	}
 	
-	@Path("/findAllFiniquitados")
+	@Path("/findMisFiniquitados")
 	@GET
 	@Produces("application/json")
-	public List<Destino> findAllFiniquitados(@QueryParam("startRow") int startRow,
+	public List<Destino> findMisFiniquitados(@QueryParam("startRow") int startRow,
 										@QueryParam("maxResults") int maxResults,
 										@Context HttpServletRequest req) {
 		
@@ -136,10 +136,7 @@ public class DestinoRest   {
 			maxResults = 500;
 		}
 		
-		
-		
-		
-		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador || user.getTipo() == Usuario.Tipo.Superior) {
 			
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
@@ -187,6 +184,195 @@ public class DestinoRest   {
 		return null;
 		
 	}
+
 	
+	@Path("/findPendientes")
+	@GET
+	@Produces("application/json")
+	public List<Destino> findPendientes(@QueryParam("startRow") int startRow,
+										@QueryParam("maxResults") int maxResults,
+										@Context HttpServletRequest req) {
+		
+		UserDTO user = userLoign.getValidUser(req.getSession().getId());
+        if (user == null) {
+       	   return null;
+       }
+
+		if (maxResults > 500) {
+			maxResults = 500;
+		}
+		
+		
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "
+					+ "               and a.estado = :estadoMensaje"
+					+ "               and a.remitente.id = :caja_id "
+					+ "               and c.destinatario.id = :caja_id"
+					+ "               and exists "
+					+ "                 (select cd"
+					+ "                    from CajaDeclarada cd "
+					+ "                   where cd.estado <> :estadoCajaDeclarada"
+					+ "                     and b.id = cd.solicitud.id)"
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
+					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
+//		} else if (user.getTipo() == Usuario.Tipo.Superior) {
+//			
+//			return em.createQuery("select c "
+//					+ "              from Mensaje a, Solicitud b, Destino c"
+//					+ "             where a.solicitud.id = b.id "
+//					+ "               and a.id = c.mensaje.id "					
+//					+ "               and (b.estado <> :estadoSolicitud) "
+//					+ "               and a.estado = :estadoMensaje"
+//					+ "               and a.remitente.id = :caja_id "
+//					+ "               and c.destinatario.id = :caja_id "
+//					+ " order by a.fecha desc "
+//					, Destino.class)
+//					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+//					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
+//					.setFirstResult(startRow)
+//					.setMaxResults(maxResults)
+//					.setParameter("caja_id", user.getCaja().getId())
+//					.getResultList();
+			
+		}
+		
+		return null;
+		
+	}
+	
+	@Path("/findFiniquitados")
+	@GET
+	@Produces("application/json")
+	public List<Destino> findFiniquitados(@QueryParam("startRow") int startRow,
+										@QueryParam("maxResults") int maxResults,
+										@Context HttpServletRequest req) {
+		
+		UserDTO user = userLoign.getValidUser(req.getSession().getId());
+        if (user == null) {
+       	   return null;
+       }
+
+		if (maxResults > 500) {
+			maxResults = 500;
+		}
+		
+		
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "
+					+ "               and a.estado = :estadoMensaje"
+					+ "               and a.remitente.id = :caja_id "
+					+ "               and c.destinatario.id = :caja_id"
+					+ "               and not exists "
+					+ "                 (select cd"
+					+ "                    from CajaDeclarada cd "
+					+ "                   where cd.estado <> :estadoCajaDeclarada"
+					+ "                     and b.id = cd.solicitud.id)"
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
+					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
+//		} else if (user.getTipo() == Usuario.Tipo.Superior) {
+//			
+//			return em.createQuery("select c "
+//					+ "              from Mensaje a, Solicitud b, Destino c"
+//					+ "             where a.solicitud.id = b.id "
+//					+ "               and a.id = c.mensaje.id "					
+//					+ "               and (b.estado <> :estadoSolicitud) "
+//					+ "               and a.estado = :estadoMensaje"
+//					+ "               and a.remitente.id = :caja_id "
+//					+ "               and c.destinatario.id = :caja_id "
+//					+ " order by a.fecha desc "
+//					, Destino.class)
+//					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+//					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
+//					.setFirstResult(startRow)
+//					.setMaxResults(maxResults)
+//					.setParameter("caja_id", user.getCaja().getId())
+//					.getResultList();
+			
+		}
+		
+		return null;
+		
+	}
+	
+	@Path("/findAnulados")
+	@GET
+	@Produces("application/json")
+	public List<Destino> findAnulados(@QueryParam("startRow") int startRow,
+										@QueryParam("maxResults") int maxResults,
+										@Context HttpServletRequest req) {
+		
+
+		UserDTO user = userLoign.getValidUser(req.getSession().getId());
+		if (user == null) {
+			return null;
+		}
+
+		if (maxResults > 500) {
+			maxResults = 500;
+		}
+		
+		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+			
+			return em.createQuery("select c "
+					+ "              from Mensaje a, Solicitud b, Destino c"
+					+ "             where a.solicitud.id = b.id "
+					+ "               and a.id = c.mensaje.id "
+					+ "               and b.estado = :estadoSolicitud"
+					+ "               and a.remitente.id = :caja_id "
+					+ "               and c.destinatario.id = :caja_id"
+					+ " order by a.fecha desc "
+					, Destino.class)
+					.setParameter("estadoSolicitud", Solicitud.Estado.Anulado)
+					.setFirstResult(startRow)
+					.setMaxResults(maxResults)
+					.setParameter("caja_id", user.getCaja().getId())
+					.getResultList();
+			
+//		} else if (user.getTipo() == Usuario.Tipo.Superior) {
+//			
+//			return em.createQuery("select c "
+//					+ "              from Mensaje a, Solicitud b, Destino c"
+//					+ "             where a.solicitud.id = b.id "
+//					+ "               and a.id = c.mensaje.id "					
+//					+ "               and (b.estado <> :estadoSolicitud) "
+//					+ "               and a.estado = :estadoMensaje"
+//					+ "               and a.remitente.id = :caja_id "
+//					+ "               and c.destinatario.id = :caja_id "
+//					+ " order by a.fecha desc "
+//					, Destino.class)
+//					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
+//					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
+//					.setFirstResult(startRow)
+//					.setMaxResults(maxResults)
+//					.setParameter("caja_id", user.getCaja().getId())
+//					.getResultList();
+			
+		}
+		
+		return null;
+		
+	}
 	
 }

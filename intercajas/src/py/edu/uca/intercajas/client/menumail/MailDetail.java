@@ -92,8 +92,7 @@ public class MailDetail extends ResizeComposite {
     //body.setHTML(item.body);
 
 
-
-    acciones(item);
+   	acciones(item);
     
     //Obtenemos los adjuntos del mensaje
     BeneficiarioService.Util.get().adjuntoFindByMensajeId(item.getMensaje().getId(), new MethodCallback<List<Adjunto>>() {
@@ -148,6 +147,8 @@ public class MailDetail extends ResizeComposite {
   
   
   public void acciones(final Destino item) {
+	  
+	  
 	  
 		opciones.clear();
 		optionsButtons.clear();
@@ -248,7 +249,7 @@ public class MailDetail extends ResizeComposite {
 		});
 		  
 		  
-	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
+	  } else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior && item.getMensaje().getEstado() == Mensaje.Estado.Pendiente ) {
 		  
 		  final HorizontalPanel hp = new HorizontalPanel();
 		  
@@ -303,6 +304,8 @@ public class MailDetail extends ResizeComposite {
 		  
 		  optionsButtons.add(anular);
 		  
+	  } else {
+		  optionsButtons.add(new Label("No hay acciones disponibles"));
 	  }
 
 	    // Add advanced options to form in a disclosure panel
@@ -314,6 +317,16 @@ public class MailDetail extends ResizeComposite {
 	    opciones.add(optionPanel);
 
 
+  }
+  
+  public void clear() {
+	  subject.setText("--");
+	  sender.setText("--");
+	  recipient.setText("--");
+	  body.setHTML("");
+	  panelAdjuntos.clear();
+	  opciones.clear();
+	  
   }
   
 }

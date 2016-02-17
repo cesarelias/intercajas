@@ -47,7 +47,8 @@ public class Solicitud extends EntityBase {
 		// todas las cajas intervinientes reconocieron la antiguedad
 		ConAntiguedad,
 		// todas las cajas itervinientes finiquitaron el beneficio
-		Finiquitado
+		Finiquitado,
+		Anulado //Solo el adminitrador puede anular una solicitud, y puede anularno en cualquier instancia. //TODO falta la opcionde anular solicitud
 	}
 
 	public Solicitud () {

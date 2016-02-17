@@ -55,6 +55,7 @@ public class MailList extends ResizeComposite {
 	
   public interface Listener {
     void onItemSelected(Destino item);
+    void clear();
   }
 
   interface Binder extends UiBinder<Widget, MailList> { }
@@ -82,8 +83,11 @@ public class MailList extends ResizeComposite {
   public Modo modo;
   
   public enum Modo {
-	  Entrada,
-	  Finquitado
+	  MisPendientes,
+	  MisFiniquitados,
+	  Pendientes,
+	  Finquitados,
+	  Anulados
   }
   
   public MailList(Modo modo) {
@@ -229,7 +233,14 @@ public class MailList extends ResizeComposite {
   }
 
   void update() {
+	  //limpiamos la tabla
 	  table.removeAllRows();
+	  //limpiamos el mailDetail
+	  if (listener!=null) {
+		  listener.clear();
+	  }
+	  
+	  
     // Update the older/newer buttons & label.
 //    int count = MailItems.getMailItemCount();
     int max = startIndex + VISIBLE_EMAIL_COUNT;
@@ -240,83 +251,91 @@ public class MailList extends ResizeComposite {
     // Update the nav bar.
     navBar.update(startIndex, max);
     
-    if (modo == Modo.Entrada) {
-    	BeneficiarioService.Util.get().findAllDestinoPending(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    if (modo == Modo.MisPendientes) {
+    	BeneficiarioService.Util.get().findMisPendientes(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
     		
     		@Override
     		public void onSuccess(Method method, List<Destino> response) {
-    			table.removeAllRows();
-    			// Add a new row to the table, then set each of its columns to the
-    			// email's sender and subject values.
-    			
-    			for (int i=0; i<response.size(); i++) {
-    				if (response.get(i).getMensaje().getRemitente() == null) {
-    					table.setText(i, 0, "SistemaIntercajas");
-    				} else {
-    					table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
-    				}
-    				table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
-    				table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
-    				table.setText(i, 3, response.get(i).getMensaje().getReferencia());
-    			}
-    			
-    			destinos = response;
-    			
-    			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
-    			if (onLoad && destinos.size() > 1) {
-    				selectRow(0);
-    				onLoad = false;
-    			} else {
-    				selectRow(selectedRow);
-    			}
-    			
-    			
+    			update(response);
     		}
-    		
     		@Override
     		public void onFailure(Method method, Throwable exception) {
     			// TODO falta agregar el mensaje de error del REST
     		}
     	});
-    } else if (modo == Modo.Finquitado) {
-    	BeneficiarioService.Util.get().findAllFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
-
+    } else if (modo == Modo.MisFiniquitados) {
+    	BeneficiarioService.Util.get().findMisFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				// TODO Auto-generated method stub
-				
 			}
-
 			@Override
 			public void onSuccess(Method method, List<Destino> response) {
-				table.removeAllRows();
-    			// Add a new row to the table, then set each of its columns to the
-    			// email's sender and subject values.
-    			
-    			for (int i=0; i<response.size(); i++) {
-    				if (response.get(i).getMensaje().getRemitente() == null) {
-    					table.setText(i, 0, "SistemaIntercajas");
-    				} else {
-    					table.setText(i, 0, response.get(i).getMensaje().getRemitente().getSiglas());
-    				}
-    				table.setText(i, 1, dateFormat.format(response.get(i).getMensaje().getFecha()).toString());
-    				table.setText(i, 2, response.get(i).getMensaje().getAsunto().toString());
-    				table.setText(i, 3, response.get(i).getMensaje().getReferencia());
-    			}
-    			
-    			destinos = response;
-    			
-    			//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
-    			if (onLoad && destinos.size() > 1) {
-    				selectRow(0);
-    				onLoad = false;
-    			} else {
-    				selectRow(selectedRow);
-    			}
-    			
+				update(response);
+			}
+		});
+    } else if (modo == Modo.Pendientes) {
+    	BeneficiarioService.Util.get().findPendientes(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onSuccess(Method method, List<Destino> response) {
+				update(response);
+			}
+		});
+    } else if (modo == Modo.Finquitados) {
+    	BeneficiarioService.Util.get().findFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onSuccess(Method method, List<Destino> response) {
+				update(response);
+			}
+		});
+    } else if (modo == Modo.Anulados) {
+    	BeneficiarioService.Util.get().findAnulados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onSuccess(Method method, List<Destino> response) {
+				update(response);
 			}
 		});
     }
     
+  }
+  
+  private void update(List<Destino> items) {
+		table.removeAllRows();
+		// Add a new row to the table, then set each of its columns to the
+		// email's sender and subject values.
+		
+		for (int i=0; i<items.size(); i++) {
+			if (items.get(i).getMensaje().getRemitente() == null) {
+				table.setText(i, 0, "SistemaIntercajas");
+			} else {
+				table.setText(i, 0, items.get(i).getMensaje().getRemitente().getSiglas());
+			}
+			table.setText(i, 1, dateFormat.format(items.get(i).getMensaje().getFecha()).toString());
+			table.setText(i, 2, items.get(i).getMensaje().getAsunto().toString());
+			table.setText(i, 3, items.get(i).getMensaje().getReferencia());
+		}
+		
+		destinos = items;
+		
+		//Al cargar por primera vez la lista de correo, seleccionamos la primera fila
+		if (onLoad && destinos.size() > 1) {
+			selectRow(0);
+			onLoad = false;
+		} else {
+			selectRow(selectedRow);
+		}
+
   }
 }
