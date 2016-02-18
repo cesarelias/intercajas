@@ -217,6 +217,17 @@ public interface BeneficiarioService extends RestService {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void actualizarEmpleador(Empleador empleador, MethodCallback<Void> callback); 
+
+	
+	
+	//REPORTES
+	@Path("report/test")
+	@GET
+	public void reportTest(@QueryParam("param") String param, TextCallback ruta);
+	
+	
+	///FIN REPORTES
+	
 	
 	/**
      * Utility class to get the instance of the Rest Service

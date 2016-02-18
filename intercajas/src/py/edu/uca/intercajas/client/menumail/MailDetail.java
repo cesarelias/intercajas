@@ -128,7 +128,6 @@ public class MailDetail extends ResizeComposite {
   public Anchor createDownloadLink(final String nombreArchivo, final String nombreInternoArchivo) {
 
 
-
 	    Anchor link = new Anchor(nombreArchivo);
 ////		link.setStyleName(style.item());
 //
@@ -136,7 +135,7 @@ public class MailDetail extends ResizeComposite {
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 //				final String url = GWT.getModuleBaseURL() + "servlet.gupld?show=" + nombreInternoArchivo;
-				Window.open( "servlet.gupld?show=" + nombreInternoArchivo, "_blank", "status=0,toolbar=0,menubar=0,location=0");
+				Window.open( "servlet.gupld?show=" + "/imgs/" + nombreInternoArchivo, "_blank", "status=0,toolbar=0,menubar=0,location=0");
 				
 			}
 		});

@@ -55,7 +55,7 @@ public class MyCustomizedUploadServlet extends UploadAction {
           
           /// Create a temporary file placed in the default system temp folder
         	
-        	String newFileName = "/home/cesar/imgs/intercajas-" + new Date().getTime() + ".bin";
+        	String newFileName = "/home/cesar/principal/imgs/intercajas-" + new Date().getTime() + ".bin";
           File file = new File(newFileName);
           
           item.write(file);
@@ -96,7 +96,7 @@ public class MyCustomizedUploadServlet extends UploadAction {
   public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String fieldName = request.getParameter(UConsts.PARAM_SHOW);
     
-    File f = new File("/home/cesar/imgs/"+fieldName);
+    File f = new File("/home/cesar/principal" + fieldName);
     
     if (f.exists()) {
       response.setContentType(receivedContentTypes.get(fieldName));

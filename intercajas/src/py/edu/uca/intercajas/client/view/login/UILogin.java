@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.client.view.login;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.TextCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
@@ -100,6 +101,24 @@ public class UILogin extends Composite implements ClickHandler {
 	
 	
 	public void login() {
+		
+//		btnLogin.setEnabled(false);
+//		BeneficiarioService.Util.get().reportTest(txtUsuario.getValue(), new TextCallback() {
+//
+//			@Override
+//			public void onFailure(Method method, Throwable exception) {
+//				Window.alert(exception.getMessage());
+//				btnLogin.setEnabled(true);		
+//			}
+//
+//			@Override
+//			public void onSuccess(Method method, String response) {
+//				btnLogin.setEnabled(true);
+//				Window.open( "servlet.gupld?show=" + "/reports/" + response, "_blank", "status=0,toolbar=0,menubar=0,location=0");
+//			}
+//	});
+		
+		
 		LoginService.Util.getInstance().loginServer(txtUsuario.getValue(), txtPassword.getValue(), new AsyncCallback<UserDTO>()
                 {
                     @Override
@@ -124,6 +143,8 @@ public class UILogin extends Composite implements ClickHandler {
                         Window.alert("Ocurrio un error al verificar el Usuario y Contraseña");
                     }
                 });
+                
+                
 	}
 
 	public void irCuenta() {

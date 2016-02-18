@@ -44,5 +44,4 @@ public class CajaRest   {
 	public List<Caja> findAll() {
 		return em.createQuery("select b from Caja b",Caja.class).getResultList();
 	}
-
 }
