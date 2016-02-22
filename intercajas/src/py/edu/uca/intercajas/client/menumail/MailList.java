@@ -334,8 +334,8 @@ public class MailList extends ResizeComposite {
 		if (onLoad && destinos.size() > 1) {
 			selectRow(0);
 			onLoad = false;
-		} else {
-			selectRow(selectedRow);
+//		} else {
+//			selectRow(selectedRow);
 		}
 
   }

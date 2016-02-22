@@ -4,7 +4,6 @@ import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
-
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -13,8 +12,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UploadReconocimientoTiempoServicio extends UIBase {
 
@@ -35,10 +36,16 @@ public class UploadReconocimientoTiempoServicio extends UIBase {
 
 		reconocimientoTiempoServicio = createUploader();
 
-		uploadTable.setText(0, 0, "Reconocimiento de Tiempo deServicio");
+		uploadTable.setText(0, 0, "Reconocimiento de Tiempo de Servicio");
 		uploadTable.setWidget(0, 1, reconocimientoTiempoServicio);
 
-		initWidget(uploadTable);
+		VerticalPanel v = new VerticalPanel();
+		DecoratorPanel dp = new DecoratorPanel();
+		dp.add(uploadTable);
+		v.add(new Label("Adjuntos"));
+		v.add(dp);
+		
+		initWidget(v);
 		
 		addEliminarHander();
 
@@ -48,16 +55,13 @@ public class UploadReconocimientoTiempoServicio extends UIBase {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  a.setTipo(Adjunto.Tipo.ReconocimientoTiempoServicio);
-	    		  adjuntos[0] = a;
+    		  Adjunto a = new Adjunto();
+    		  a.setNombreArchivo(archivos[0]);
+    		  a.setRutaArchivo(archivos[1]);
+    		  a.setTipo(Adjunto.Tipo.ReconocimientoTiempoServicio);
+    		  adjuntos[0] = a;
 	    		  
-	    	  }
-	    	  
-	    	  uploadTable.setText(0, 1, adjuntos[0].getNombreArchivo());
+	    	  uploadTable.setText(0, 1, archivos[2]);
 	    	  uploadTable.setWidget(0, 2, eliminarReconocimientoTiempoServicio);
 	      }
 	    }

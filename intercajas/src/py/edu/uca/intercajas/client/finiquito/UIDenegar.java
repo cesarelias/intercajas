@@ -13,6 +13,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -50,7 +51,7 @@ public class UIDenegar extends UIBase {
 	@UiField TextArea cuerpoMensaje;
 	
 	@UiField TextBox numeroResolucion;
-	@UiField TextArea motivo;
+	@UiField DenegadoMotivoEditor motivoEditor;
 	
 	
 	SolicitudBeneficiario solicitudBeneficiario;
@@ -76,18 +77,12 @@ public class UIDenegar extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		for(Adjunto a : upload.adjuntos) {
-			if (a == null) {
-				Window.alert("Es obligatorio enviar adjunto");
-				return;
-			}
-		}
-
+		if (!formularioValido()) return;
 
 		NuevoDenegado nuevoDenegado = new NuevoDenegado();
 
 		nuevoDenegado.setNumeroResolucion(numeroResolucion.getValue());
-		nuevoDenegado.setMovito(motivo.getValue());
+		nuevoDenegado.setMotivo(motivoEditor.getValue());
 		nuevoDenegado.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
 		nuevoDenegado.setAdjuntos(upload.adjuntos);
 		nuevoDenegado.setCuerpoMensaje(cuerpoMensaje.getValue());
@@ -109,4 +104,24 @@ public class UIDenegar extends UIBase {
 		
 	}
 
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para denegar beneficio");
+
+		if (upload.adjuntos[0] == null) {
+			vf.addError("Es obligatorio enviar adjunto la Resolucion");
+		}
+		
+		if (cuerpoMensaje.getValue().length() == 0){
+			vf.addError("Ingrese texto en el mensaje");
+		}
+		
+		if (numeroResolucion.getValue().length() == 0) {
+			vf.addError("Es obligatorio ingresar el numero de resolucion");
+		}
+		
+		return vf.esValido();
+		
+	}
+	
 }

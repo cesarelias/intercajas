@@ -43,6 +43,7 @@ public class MyCustomizedUploadServlet extends UploadAction {
   @Override
   public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
     String response = "";
+    
     for (FileItem item : sessionFiles) {
       if (false == item.isFormField()) {
         try {
@@ -55,7 +56,7 @@ public class MyCustomizedUploadServlet extends UploadAction {
           
           /// Create a temporary file placed in the default system temp folder
         	
-        	String newFileName = "/home/cesar/imgs/intercajas-" + new Date().getTime() + ".bin";
+        	String newFileName = "/home/cesar/principal/imgs/intercajas-" + new Date().getTime() + ".bin";
           File file = new File(newFileName);
           
           item.write(file);
@@ -64,28 +65,23 @@ public class MyCustomizedUploadServlet extends UploadAction {
           receivedFiles.put(item.getFieldName(), file);
           receivedContentTypes.put(item.getFieldName(), item.getContentType());
 
-          
           /// Send a customized message to the client.
           if (response.length() == 0) {
-        	  response +=  item.getName() + "|" + file.getName();
+        	  response +=  "/imgs/" + "|" + file.getName() + "|" + item.getName();
           }  else {
-        	  response += "|" + item.getName() + "|" + file.getName();
+        	  response += "|" + "/imgs/" + "|" + file.getName() + "|" + item.getName();
        	  }
         		  
-          
-          System.out.println("respuesta: ");
-          System.out.println(response);
-
         } catch (Exception e) {
           throw new UploadActionException(e);
         }
       }
     }
     
-    /// Remove files from session because we have a copy of them
+//  Remove files from session because we have a copy of them
     removeSessionFileItems(request);
     
-    /// Send your customized message to the client.
+//  Send your customized message to the client.
     return response;
   }
   
@@ -96,9 +92,14 @@ public class MyCustomizedUploadServlet extends UploadAction {
   public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String fieldName = request.getParameter(UConsts.PARAM_SHOW);
     
-    File f = new File("/home/cesar/imgs/"+fieldName);
+    String nombreDescarga  = request.getParameter("nombreDescarga");
+    
+    File f = new File("/home/cesar/principal/" + fieldName);
     
     if (f.exists()) {
+    	if (nombreDescarga != null && nombreDescarga.length() > 0) {
+    		response.setHeader("Content-Disposition","attachment;filename=\"" + nombreDescarga + "\"");
+    	}
       response.setContentType(receivedContentTypes.get(fieldName));
       FileInputStream is = new FileInputStream(f);
       copyFromInputStreamToOutputStream(is, response.getOutputStream());

@@ -4,7 +4,6 @@ import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
-
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -13,8 +12,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UploadAutorizar extends UIBase {
 
@@ -38,7 +39,13 @@ public class UploadAutorizar extends UIBase {
 		uploadTable.setText(0, 0, "Nota Interinstitucional");
 		uploadTable.setWidget(0, 1, notaInterinstitucional);
 
-		initWidget(uploadTable);
+		VerticalPanel v = new VerticalPanel();
+		DecoratorPanel dp = new DecoratorPanel();
+		dp.add(uploadTable);
+		v.add(new Label("Adjuntos"));
+		v.add(dp);
+		
+		initWidget(v);
 		
 		addEliminarHander();
 
@@ -50,14 +57,14 @@ public class UploadAutorizar extends UIBase {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
 	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
+	    		  a.setRutaArchivo(archivos[i]);
+	    		  a.setNombreArchivo(archivos[i+1]);
 	    		  a.setTipo(Adjunto.Tipo.NotaInterinstitucional);
 	    		  adjuntos[0] = a;
 	    		  
 	    	  }
 	    	  
-	    	  uploadTable.setText(0, 1, adjuntos[0].getNombreArchivo());
+	    	  uploadTable.setText(0, 1, archivos[2]);
 	    	  uploadTable.setWidget(0, 2, eliminarNotaInterinstitucional);
 	      }
 	    }

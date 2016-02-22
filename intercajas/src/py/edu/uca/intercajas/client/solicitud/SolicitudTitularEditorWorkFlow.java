@@ -6,25 +6,30 @@ import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIDialog;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,6 +43,8 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -52,6 +59,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiField TextArea cuerpoMensaje;
 	@UiField TablaSolicitudBeneficiario tablaSolicitudBeneficiario;
 	@UiField CheckBox cotizanteSolicitante;
+	@UiField TabLayoutPanel tab;
 	
 	Solicitud solicitudTitular;
 	
@@ -65,6 +73,9 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		solicitudTitularEditor = new SolicitudTitularEditor();
 		initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
 		
+		tab.getTabWidget(1).getParent().setVisible(false);
+		cotizanteSolicitante.setValue(true);
+		
 	}
 
 	@UiHandler("cancelar")
@@ -75,32 +86,12 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 		
+		if (!formularioValido()) return;
 		
-		for(Adjunto a : upload.adjuntos) {
-			if (a == null) {
-				Window.alert("Es obligatorio enviar adjunto");
-				return;
-			}
-		}
-				
-		//TODO falta agregar la validacion del formulario
-		/* 1. Beneficiario seleccionado (no nulo)
-		 * 2. Fecha de solicitud no puede ser futura, ni menor a la fecha de la ley de intercajas
-		 * 3. Periodos declarados no puede estar vacio
-		 * 4. Periodos declarados debe contener al menos dos cajas en cuestion
-		 * 5. El numero de solicitud debe ser autogenerado? o tenes ambos (agregar numero expediente interno)
-		 * 6. Agregar insertarEnvio -- con los adjutos.!
-		 */
 		
 		solicitudTitular.setEstado(Solicitud.Estado.Nuevo);	
-		solicitudTitular.setNumero(solicitudTitularEditor.numero.getValue());
+		solicitudTitular.setExpedienteNumero(solicitudTitularEditor.numero.getValue());
 		solicitudTitular.setCotizante(solicitudTitularEditor.beneficiario.getBeneficiario());
-		
-		
-		
-		
-
-		
 		
 //		solicitudTitular.setListaTiempoServicioDeclarado(tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado);
 
@@ -109,7 +100,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.NuevaSolicitud);
 		mensaje.setCuerpo(cuerpoMensaje.getValue());
-		mensaje.setReferencia(solicitudTitular.getNumero() + " - " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
+		mensaje.setReferencia(solicitudTitular.getExpedienteNumero() + " - " + solicitudTitularEditor.beneficiario.getBeneficiario().toString());
 //		mensaje.setAdjuntos(adjuntos);
 		mensaje.setSolicitud(solicitudTitular);
 //		mensajes.add(mensaje);
@@ -160,19 +151,84 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 	@UiHandler("cotizanteSolicitante")
 	public void cotizanteSolicitante(ClickEvent event) {
 
-		if (((CheckBox) event.getSource()).getValue()) {
-			tablaSolicitudBeneficiario.listaBeneficiario.clear();
-			tablaSolicitudBeneficiario.refreshTable();
-			tablaSolicitudBeneficiario.setVisible(false);
+		if (cotizanteSolicitante.getValue()) {
+			tab.getTabWidget(1).getParent().setVisible(false);
+//			tablaSolicitudBeneficiario.listaBeneficiario.clear();
+//			tablaSolicitudBeneficiario.refreshTable();
+//			tablaSolicitudBeneficiario.setVisible(false);
 		} else {
-			tablaSolicitudBeneficiario.listaBeneficiario.clear();
-			tablaSolicitudBeneficiario.refreshTable();
-			tablaSolicitudBeneficiario.setVisible(true);
+			tab.getTabWidget(1).getParent().setVisible(true);
+//			tablaSolicitudBeneficiario.listaBeneficiario.clear();
+//			tablaSolicitudBeneficiario.refreshTable();
+//			tablaSolicitudBeneficiario.setVisible(true);
 		}
 		
+	}
+	
+	public boolean formularioValido() {
 		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la solicitud");
 		
+		if (upload.adjuntos[0] == null) {
+			vf.addError("Es obligatorio enviar adjunto de la solicitud");
+		}
+
+		if (upload.adjuntos[1] == null) {
+			vf.addError("Es obligatorio enviar adjunto del documento de identidad");
+		}
+		
+		if (solicitudTitularEditor.beneficiario.getBeneficiario() == null) {
+			vf.addError("Favor seleccione beneficiario cotizante");
+		}
+
+		Set<String> cajasDiferentes = new HashSet<String>();
+		for (TiempoServicioDeclarado tsd : tablaTiempoServicioDeclarado.listaTiempoServicioDeclarado) {
+			cajasDiferentes.add(tsd.getCaja().getSiglas());
+		}
+		if (cajasDiferentes.size() < 2) {
+			vf.addError("Debe declarar al menos dos cajas de jubilaciones");
+		}
+		
+		if (solicitudTitularEditor.numero.getValue().length() < 3) {
+			vf.addError("El numero de Expediente debe contener al menos tres digitos");
+		}
+		
+		if (cuerpoMensaje.getValue().length() == 0){
+			vf.addError("Ingrese texto en el mensaje");
+		}
+		
+		if (!cotizanteSolicitante.getValue()) {
+			if (tablaSolicitudBeneficiario.listaBeneficiario.size() == 0) {
+				vf.addError("Seleccione a los herederos");
+			} else {
+				int cantConyuges = 0;
+				Set<Long> listaUnica = new HashSet<Long>();
+				for (int i=0; i< tablaSolicitudBeneficiario.listaBeneficiario.size(); i++) {
+					Beneficiario b = tablaSolicitudBeneficiario.listaBeneficiario.get(i);
+					listaUnica.add(b.getId());
+					if (solicitudTitularEditor.beneficiario.getBeneficiario() != null && b.getId() == solicitudTitularEditor.beneficiario.getBeneficiario().getId()) {
+						vf.addError("El beneficiario cotizante " +  b.toString() + " no puede ser heredero al mismo tiempo");
+					}
+					
+					if (tablaSolicitudBeneficiario.listaParentescoEditors.get(i).getValue() == SolicitudBeneficiario.Parentesco.Conyuge) {
+						cantConyuges++;
+					}
+				}
+				
+				if (tablaSolicitudBeneficiario.listaBeneficiario.size() != listaUnica.size()){
+					vf.addError("Declaro mas una vez el mismo derechohabiente, favor verifique");
+				}
+				
+				if (cantConyuges>1) {
+					vf.addError("Declaro mas un derechohabiente con parentesco Conyuge, favor verifique");
+				}
+				
+			}
+		}
+		
+		return vf.esValido();
 		
 	}
+	
 	
 }

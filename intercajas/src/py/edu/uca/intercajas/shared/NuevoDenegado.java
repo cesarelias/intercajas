@@ -1,6 +1,7 @@
 package py.edu.uca.intercajas.shared;
 
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Denegado;
 
 public class NuevoDenegado {
 
@@ -8,7 +9,7 @@ public class NuevoDenegado {
 	String cuerpoMensaje;
 	String numeroResolucion;
 	Long solicitudBeneficiarioId;
-	String movito;
+	Denegado.Motivo motivo;
 	Long destino_id;
 
 	public NuevoDenegado() {
@@ -16,10 +17,10 @@ public class NuevoDenegado {
 	}
 
 	public NuevoDenegado(String numeroResolucion, 
-			Long solicitudBeneficiarioId, String movito) {
+			Long solicitudBeneficiarioId, Denegado.Motivo motivo) {
 		this.numeroResolucion = numeroResolucion;
 		this.solicitudBeneficiarioId = solicitudBeneficiarioId;
-		this.movito = movito;
+		this.motivo = motivo;
 	}
 
 	public String getNumeroResolucion() {
@@ -38,12 +39,12 @@ public class NuevoDenegado {
 		this.solicitudBeneficiarioId = solicitudBeneficiarioId;
 	}
 
-	public String getMovito() {
-		return movito;
+	public Denegado.Motivo getMotivo() {
+		return motivo;
 	}
 
-	public void setMovito(String movito) {
-		this.movito = movito;
+	public void setMotivo(Denegado.Motivo motivo) {
+		this.motivo = motivo;
 	}
 
 	public Adjunto[] getAdjuntos() {

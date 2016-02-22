@@ -24,7 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
 import py.edu.uca.intercajas.shared.RangoTiempo;
@@ -53,6 +53,8 @@ public class MensajeRest   {
 	@EJB
 	UserLogin userLogin;
 
+	@EJB
+	ReportRest reporteRest;
 
 	@Path("/test")
 	@GET
@@ -143,7 +145,7 @@ public class MensajeRest   {
 		}
 		
 		if (m.getAsunto() == Mensaje.Asunto.NuevaSolicitud) {
-			autorizarNuevaSolicitud(m.getSolicitud(), user); //Esto pone en true todas las autorizaciones en cada caja declarada
+			autorizarNuevaSolicitud(m.getSolicitud(), user); 
 		} else if (m.getAsunto() == Mensaje.Asunto.ReconocimientoTiempoServicio) {
 			autorizarReconocimientoTiempoServicio(m, m.getSolicitud(), user);
 		} else if (m.getAsunto() == Mensaje.Asunto.Concedido || m.getAsunto() == Mensaje.Asunto.Denegado) {
@@ -186,7 +188,7 @@ public class MensajeRest   {
         m.setEstado(Mensaje.Estado.Anulado);
         em.persist(m);
         
-        userLogin.registrarAuditoria(user, "Anula (desautoriza) envio de Mensaje - Solicitud : " +  m.getSolicitud().getNumero() + " Asunto: " + m.getAsunto().toString());
+        userLogin.registrarAuditoria(user, "Anula (desautoriza) envio de Mensaje - Solicitud : " +  m.getSolicitud().getExpedienteNumero() + " Asunto: " + m.getAsunto().toString());
         
 	}
 	
@@ -227,7 +229,6 @@ public class MensajeRest   {
 
 	void envioTotalizacion(Solicitud s) {
 		
-		
 		Mensaje m = new Mensaje();
 
 		m.setEstado(Mensaje.Estado.Enviado); //no necesita autorizacion
@@ -236,26 +237,21 @@ public class MensajeRest   {
 		m.setAsunto(Asunto.TotalizacionTiempoServicio);
 		m.setSolicitud(s);
 		m.setFecha(new Date());
-
+		
 		//Escribimos el cuerto del mensaje
 		String cuerpo = "";
 		cuerpo += "Totalizacion de Tiempo de Servicio\r\n\r\n";
 		
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
-			cuerpo += c.getCaja().getSiglas() + " txNeto: " + CalculoTiempo.leeMeses(c.getTxNeto()) + "\r\n";
+			cuerpo += c.getCaja().getSiglas() + ": " + CalculoTiempo.leeMeses(c.getTxNeto()) + "\r\n";
 		}
 		
-		cuerpo += "txFinal : " + CalculoTiempo.leeMeses(s.getTxFinal());
+		cuerpo += "Tiempo Neto : " + CalculoTiempo.leeMeses(s.getTxFinal());
 
 		m.setCuerpo(cuerpo);
 		//Fin cuerpo mensaje
-		m.setReferencia(s.getNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(s.getTxFinal()) + " de servicios");
+		m.setReferencia(s.getExpedienteNumero() + " - " + s.getCotizante().getNombres() + " " + s.getCotizante().getApellidos() + " - Totalizacion de Tiempo de Servicio : " +  CalculoTiempo.leeMeses(s.getTxFinal()) + " de servicios");
 
-		//TODO enviar como adjunto un reporte en PDF del sistema
-//		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
-//			a.setMensaje(m);
-//			em.persist(a);
-//		}
 		em.persist(m);
 		
 		//Enviamos a todas las cajas declaradas
@@ -267,7 +263,26 @@ public class MensajeRest   {
 //			d.setEstado(Estado.Pendiente);
 			em.persist(d);
 		}
-
+		
+		
+		//Enviamos el reporte adjunto
+		String reporteTotalizacion = reporteRest.totalizacion(s.getId());
+		
+		if (reporteTotalizacion != null) { //por si no funciono el reporte
+			Adjunto a = new Adjunto();
+			a.setMensaje(m);
+			
+			a.setNombreArchivo(reporteTotalizacion);
+			a.setRutaArchivo("/reports/");
+			a.setTipo(Adjunto.Tipo.TotalizacionTiempoServicio);
+			
+			em.persist(a);
+			
+		} else {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No se pudo crear el informe de Totalizacion").build());
+		}
+		
+		
 	}
 
 	
@@ -290,7 +305,7 @@ public class MensajeRest   {
 	}
 	
 	private void autorizarNuevaSolicitud(Solicitud solicitud, UserDTO user) {
-		userLogin.registrarAuditoria(user, "Autoriza Nueva Solicitud : " + solicitud.getNumero() + " Cotizante: " + solicitud.getCotizante().toString());
+		userLogin.registrarAuditoria(user, "Autoriza Nueva Solicitud : " + solicitud.getExpedienteNumero() + " Cotizante: " + solicitud.getCotizante().toString());
 	}
 	
 	private void autorizarFiniquito(Mensaje m, UserDTO user) {
@@ -344,7 +359,7 @@ public class MensajeRest   {
 		
 		
 		
-		userLogin.registrarAuditoria(user, "Autoriza Finiquito Solicitud : " + finiquitoAutorizado.getSolicitudBeneficiario().getSolicitud().getNumero() + " Resolucion Finiquito " + finiquitoAutorizado.getNumeroResolucion());
+		userLogin.registrarAuditoria(user, "Autoriza Finiquito Solicitud : " + finiquitoAutorizado.getSolicitudBeneficiario().getSolicitud().getExpedienteNumero() + " Resolucion Finiquito " + finiquitoAutorizado.getNumeroResolucion());
 		
 	}
 	
@@ -372,7 +387,7 @@ public class MensajeRest   {
 		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
 
 		mensaje.setFecha(new Date());
-		mensaje.setReferencia(solicitud.getNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		mensaje.setReferencia(solicitud.getExpedienteNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
 		em.persist(mensaje);
 		
 				
@@ -390,15 +405,19 @@ public class MensajeRest   {
 		if (txCompleto) {
 			solicitud.setEstado(Solicitud.Estado.ConAntiguedad);
 			//calculamos cada el txNeto de cada CajaDeclarada y el txFinal guardamos en la solicitud
-			solicitud = CalculoTiempo.txNetoFinal(solicitud);
+			solicitud = CalculoTiempo.txNetoFinal(solicitud); //Esto calcula el txFinal de la solicitud y el txNeto de cada cajaDeclarada
+			for (CajaDeclarada cds : solicitud.getCajasDeclaradas()) {
+				em.persist(cds); //persistimos los txneto de cada caja declarada
+			}
 			em.persist(solicitud);
 			
+			em.flush(); //Con eso aseguramos que existan los registros para el reporte de totalizacion
 			//Esto envia un mensaje a las cajas con el reporte de totalizacion
 			envioTotalizacion(solicitud);
 			
 		}
 		
-		userLogin.registrarAuditoria(user, "Autoriza Reconocimiento Tiempo Servicio - Solicitud : " + mensaje.getSolicitud().getNumero() + " Reconoce " + CalculoTiempo.leeMeses(txBruto));
+		userLogin.registrarAuditoria(user, "Autoriza Reconocimiento Tiempo Servicio - Solicitud : " + mensaje.getSolicitud().getExpedienteNumero() + " Reconoce " + CalculoTiempo.leeMeses(txBruto));
 		
 	}
 
@@ -463,7 +482,7 @@ public class MensajeRest   {
 			Finiquito f = m.getListaFiniquitos().get(0); //siempre deberia de haber una sola fila
 			Denegado d = (Denegado) f;
 			detalleHTML += "Resolucion N°: " + d.getNumeroResolucion() + "<br>";
-			detalleHTML += "Motivo: " + d.getMotivo() + "<br>";
+			detalleHTML += "Motivo: " + d.getMotivo().toString() + "<br>";
 		}
 		
 		return detalleHTML;

@@ -5,11 +5,14 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIDialog;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Beneficiario.Sexo;
 import py.edu.uca.intercajas.shared.entity.Direccion;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
 
@@ -47,6 +50,9 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 	@UiHandler("guardar")
 	void onSave(ClickEvent event) {
 
+		if (!formularioValido()) return;
+		try {
+			
 		
 		beneficiario.setApellidos(beneficiarioEditor.apellidos.getValue());
 		beneficiario.setNombres(beneficiarioEditor.nombres.getValue());
@@ -62,16 +68,10 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 
 		if (nuevo) { //insert
 			
-			BeneficiarioService.Util.get().nuevoBeneficiario(beneficiario, new MethodCallback<Long>() {
+			BeneficiarioService.Util.get().nuevoBeneficiario(beneficiario, new MethodCallback<Void>() {
 				
 				@Override
-				public void onSuccess(Method method, Long response) {
-					new UIDialog("ErrorCode",new HTML(String.valueOf(method.getResponse().getStatusCode())));
-					try { 
-					AppUtils.EVENT_BUS.fireEvent(new BeneficiarioChangedEvent(beneficiario));
-					} catch (Exception e) {
-						Window.alert(e.getMessage());
-					}
+				public void onSuccess(Method method, Void response) {
 					close();
 				}
 				
@@ -103,6 +103,9 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 		
 		}
 		
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
 		
 //		// Flush the contents of the UI
 //		RequestContext context = editorDriver.flush();
@@ -132,6 +135,10 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 			this.beneficiario.setDireccion(new Direccion());
 			this.beneficiario.setDocumento(new DocumentoIdentidad());
 
+			
+			beneficiarioEditor.documento.tipoDocumento.setValue(DocumentoIdentidad.TipoDocumentoIdentidad.CEDULA);
+			beneficiarioEditor.sexo.setValue(Beneficiario.Sexo.MASCULINO);
+			
 			setTitle("Nuevo Beneficiario");
 		
 			
@@ -207,5 +214,34 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 	
 	Beneficiario getBeneficiario() {
 		return this.beneficiario;
+	}
+	
+	public boolean formularioValido() {
+			
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear el beneficiario");
+
+		if (beneficiarioEditor.nombres.getValue().length() < 2 ){
+			vf.addError("Ingrese nombre del beneficiario");
+		}
+		
+		if (beneficiarioEditor.apellidos.getValue().length() < 2) {
+			vf.addError("Ingrese apellido del beneficiario");
+		}
+		
+		if (!AppUtils.esFecha(beneficiarioEditor.fechaNacimiento)) {
+			vf.addError("Ingrese una fecha de nacimiento valida");
+		} else {
+			if (beneficiarioEditor.fechaNacimiento.getValue().after(LoginService.Util.currentUser.getFechaLogin())) {
+				vf.addError("La fecha de nacimiento no puede ser posterior a hoy");
+			}
+		}
+		
+		if (beneficiarioEditor.documento.numeroDocumento.getValue().length() == 0 ){
+			vf.addError("Ingrese numero de documento");
+		}
+		
+		
+		return vf.esValido();
+			
 	}
 }

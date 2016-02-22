@@ -150,10 +150,7 @@ public class ListaUsuarios extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			Usuario usuario = selectionModel.getSelectedObject();
-		    if (usuario != null) {
-		    	Window.alert("el beneficiario seleccionado es:" + usuario.getDescripcion());
-		    }
+			onSelect(null);
 		}
     },  DoubleClickEvent.getType());
     

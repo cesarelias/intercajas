@@ -5,12 +5,13 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIDialog;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
@@ -59,18 +60,13 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		for(Adjunto a : upload.adjuntos) {
-			if (a == null) {
-				Window.alert("Es obligatorio enviar adjunto");
-				return;
-			}
-		}
 		
+		if (!formularioValido()) return;
 		
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
 		mensaje.setCuerpo(cuerpoMensaje.getValue());
-		mensaje.setReferencia(solicitud.getNumero() + " " + " falta el titular del beneficio");
+		mensaje.setReferencia(solicitud.getExpedienteNumero() + " " + " falta el titular del beneficio");
 		mensaje.setSolicitud(solicitud);
 
 		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);
@@ -103,8 +99,28 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 //		});
 	}
 
-	public void create() {
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para reconocer tiempo de servicio");
 
+		
+		if (upload.adjuntos[0] == null) {
+			vf.addError("Es obligatorio enviar adjunto del tiempo de reconocimento de servicios");
+		}
+
+		
+//		//TODO y si no tiene aportes, va tiempo de servicios 0 ?
+//		if (tablaTiempoServicioReconocido.listaTiempoServicioReconocido.size() == 0) {
+//			vf.addError("Debe declarar el tiempo de servicio reconocido");
+//		}
+		
+		if (cuerpoMensaje.getValue().length() == 0){
+			vf.addError("Ingrese texto en el mensaje");
+		}	
+			
+		return vf.esValido();
+		
 	}
 
+	
 }

@@ -20,7 +20,7 @@ public class Beneficiario extends EntityBase {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message="ingrese un nombre valido")
-	@Size(min = 4, message = "El nombre debe contener al menos 4 catacteres")
+	@Size(min = 2, message = "El nombre debe contener al menos 2 catacteres")
 	private String nombres;
 	@NotNull(message="ingrese un apellido valido")
 	private String apellidos;

@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.client;
 
+import java.util.Date;
+
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.core.client.GWT;

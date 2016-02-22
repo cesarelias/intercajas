@@ -22,10 +22,11 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIDialog;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Direccion;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad;
@@ -170,10 +171,7 @@ public class ListaBeneficiarios extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			Beneficiario beneficiario = selectionModel.getSelectedObject();
-		    if (beneficiario != null) {
-		    	Window.alert("el beneficiario seleccionado es:" + beneficiario.getNombres());
-		    }
+			onSelect(null);
 		}
     },  DoubleClickEvent.getType());
     
@@ -236,7 +234,30 @@ public class ListaBeneficiarios extends UIBase {
 //    
   }
 
-  
+
+  @UiHandler("del")
+  void onDel(ClickEvent event) {
+	  
+		Beneficiario beneficiario = selectionModel.getSelectedObject();
+		if (beneficiario == null) {
+			return;
+		}
+
+		BeneficiarioService.Util.get().eliminarBeneficiario(
+				beneficiario.getId(), new MethodCallback<Void>() {
+
+					@Override
+					public void onFailure(Method method, Throwable exception) {
+						new UIErrorRestDialog(method, exception);
+					}
+
+					@Override
+					public void onSuccess(Method method, Void response) {
+						refreshTable();
+					}
+				});
+  }
+
   @UiHandler("select")
   void onSelect(ClickEvent event) {
 	
@@ -291,7 +312,7 @@ public class ListaBeneficiarios extends UIBase {
 		
 		@Override
 		public void onFailure(Method method, Throwable exception) {
-			new UIDialog("ErrorText",new HTML(method.getResponse().getText()));
+			new UIErrorRestDialog(method, exception);
 		}
 	  });
   }

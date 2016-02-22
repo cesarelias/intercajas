@@ -22,7 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
 import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
@@ -30,6 +30,7 @@ import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Concedido;
@@ -184,7 +185,7 @@ public class SolicitudRest   {
 			em.persist(d);
 		}
 		
-		userLogin.registrarAuditoria(user, "Nuevo Reconocimiento Tiempo Servicio" + s.getNumero() + " Cotizante: " + s.getCotizante().toString() + " Reconoce " +CalculoTiempo.leeMeses(CalculoTiempo.txBruto(rangos)));
+		userLogin.registrarAuditoria(user, "Nuevo Reconocimiento Tiempo Servicio" + s.getExpedienteNumero() + " Cotizante: " + s.getCotizante().toString() + " Reconoce " +CalculoTiempo.leeMeses(CalculoTiempo.txBruto(rangos)));
 		
 		LOG.info("Solicitud titular persisted");
 
@@ -216,6 +217,9 @@ public class SolicitudRest   {
 		Solicitud solicitud = nuevaSolicitud.getSolicitud();
 		Mensaje m = nuevaSolicitud.getMensaje();
 		
+		Beneficiario b = em.find(Beneficiario.class, solicitud.getCotizante().getId());
+		solicitud.setCotizante(b); //eso es necesario, cuando damos de alta a un beneficiario al crear la solicitud
+
 		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(solicitud);
 		m.setFecha(new Date());
@@ -248,6 +252,7 @@ public class SolicitudRest   {
 			
 		}
 		
+		solicitud.setCajaGestora(user.getCaja()); //Donde inicia es caja gestora
 		solicitud.setTxFinal(0); //iniciamos con 0 meses
 		solicitud.setFecha(new Date()); //fecha del dia
 		em.persist(solicitud);
@@ -259,7 +264,7 @@ public class SolicitudRest   {
 			em.persist(sb);
 		}
 
-		userLogin.registrarAuditoria(user, "Nueva Solicitud " + solicitud.getNumero() + " Cotizante: " + solicitud.getCotizante().toString());
+		userLogin.registrarAuditoria(user, "Nueva Solicitud " + solicitud.getExpedienteNumero() + " Cotizante: " + solicitud.getCotizante().toString());
 		
 		LOG.info("Solicitud titular persisted");
 		

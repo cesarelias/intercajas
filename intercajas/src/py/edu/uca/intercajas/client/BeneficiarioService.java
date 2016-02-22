@@ -1,7 +1,10 @@
 package py.edu.uca.intercajas.client;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,7 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
@@ -40,6 +46,7 @@ import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dev.generator.ast.MethodCall;
 import com.google.gwt.dev.json.JsonString;
 import com.google.gwt.json.client.JSONString;
 
@@ -51,7 +58,7 @@ public interface BeneficiarioService extends RestService {
 	
 	@POST
 	@Path("beneficiario/nuevo")
-	public void nuevoBeneficiario(Beneficiario beneficiario,  MethodCallback<Long> callback);
+	public void nuevoBeneficiario(Beneficiario beneficiario,  MethodCallback<Void> callback);
 	
 	@POST
 	@Path("beneficiario/actualizar")
@@ -217,6 +224,53 @@ public interface BeneficiarioService extends RestService {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void actualizarEmpleador(Empleador empleador, MethodCallback<Void> callback); 
+	
+	@Path("caja/findByNombreSigla")
+	@GET
+	@Produces("application/json")
+	public void findCajaByNombreSigla(@QueryParam("nombreSigla") String nombreSigla,
+			                            @QueryParam("startRow") int startRow,
+										@QueryParam("maxResults") int maxResults,
+										MethodCallback<List<Caja>> cajas);
+	
+	@Path("caja/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminarCaja(@WebParam(name="caja_id") Long caja_id, MethodCallback<Void> callback);
+	
+	@Path("caja/actualizar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void actualizarCaja(Caja caja, MethodCallback<Void> callback);	
+	
+	@Path("beneficiario/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminarBeneficiario(@WebParam(name="beneficiario_id") Long beneficiario_id, MethodCallback<Void> callback);	
+	
+	@Path("empleador/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminarEmpleador(@WebParam(name="empleador_id") Long empleador_id, MethodCallback<Void> callback); 
+	
+	////REPORTES
+	@Path("report/auditoriaPorUsuario")
+	@GET
+	@Produces("text/plain")
+	public void reporteAuditoriaPorUsuario(@QueryParam(value = "desde") String desde,
+			           @QueryParam(value = "hasta") String hasta,
+			           @QueryParam(value = "usuario") String usuario, TextCallback archivo);
+	
+	@Path("report/totalizacion")
+	@GET
+	@Produces("text/plain")
+	public void reporteTotalizacion(@QueryParam(value = "param") Long soliciutd_id, TextCallback archivo); 
+	
+	//FIN REPORTES
 	
 	/**
      * Utility class to get the instance of the Rest Service

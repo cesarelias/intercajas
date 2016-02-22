@@ -141,10 +141,7 @@ public class ListaEmpleadores extends UIBase {
     table.addDomHandler(new DoubleClickHandler() {
 		@Override
 		public void onDoubleClick(DoubleClickEvent event) {
-			Empleador empleador = selectionModel.getSelectedObject();
-		    if (empleador != null) {
-		    	Window.alert("el empleador seleccionado es:" + empleador.getNombre());
-		    }
+			onSelect(null);
 		}
     },  DoubleClickEvent.getType());
     
@@ -196,6 +193,25 @@ public class ListaEmpleadores extends UIBase {
 		
   }
 
+  @UiHandler("del")
+  void onDel(ClickEvent event) {
+	    Empleador empleador = selectionModel.getSelectedObject();
+	    if (empleador == null) {
+	    	return;
+	    }
+
+	    BeneficiarioService.Util.get().eliminarEmpleador(empleador.getId(), new MethodCallback<Void>() {
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				new UIErrorRestDialog(method, exception);
+			}
+
+			@Override
+			public void onSuccess(Method method, Void response) {
+				refreshTable();
+			}
+		});
+  }
   
   @UiHandler("select")
   void onSelect(ClickEvent event) {

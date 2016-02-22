@@ -10,22 +10,21 @@
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
 		<g:center>
-			<g:DockLayoutPanel height="100%" width="100%">
-				<g:center>
-					<g:VerticalPanel>
-						<g:HTMLPanel>
-							<table>
-								<tr>
-									<td width="120px">Obseracion</td>
-									<td>
-										<g:TextArea ui:field="observacion" />
-									</td>
-								</tr>
-							</table>
-						</g:HTMLPanel>
-					</g:VerticalPanel>
-				</g:center>
-			</g:DockLayoutPanel>
+			<g:TabLayoutPanel barUnit="PX" barHeight="30"
+				animationDuration="1000" ui:field="tab" height="400px">
+				<g:tab>
+					<g:header size='7'>Anular envio de mensaje</g:header>
+					<g:DockLayoutPanel unit="PX">
+						<g:north size="20">
+							<g:Label>Observacion</g:Label>
+						</g:north>
+						<g:center>
+							<g:TextArea ui:field="observacion" height="100%"
+								width="100%" />
+						</g:center>
+					</g:DockLayoutPanel>
+				</g:tab>
+			</g:TabLayoutPanel>
 		</g:center>
 		<g:south size="40">
 			<g:HorizontalPanel>

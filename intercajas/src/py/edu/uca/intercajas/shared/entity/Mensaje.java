@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.shared.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -19,6 +20,7 @@ public class Mensaje extends EntityBase {
 	private Caja remitente;
 	private String referencia;
 	private Asunto asunto;
+	@Column(columnDefinition = "text")
 	private String cuerpo;
 	@ManyToOne
 	@JsonIgnoreProperties({"beneficiario"})

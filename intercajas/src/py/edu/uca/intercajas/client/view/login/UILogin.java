@@ -1,7 +1,10 @@
 package py.edu.uca.intercajas.client.view.login;
 
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.TextCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
@@ -9,6 +12,7 @@ import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.shared.UserDTO;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
@@ -17,13 +21,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 public class UILogin extends Composite implements ClickHandler {	
@@ -61,7 +71,15 @@ public class UILogin extends Composite implements ClickHandler {
 
 
 	private void initComponents(){
-
+//
+//		<g:HorizontalPanel width="100%" height="100%">
+//		 <g:cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+//		  <g:Label>Hello Center</g:Label>
+//		 </g:cell>
+//		</g:HorizontalPanel>
+//		
+	
+		
 		
 		lblNombre = new Label("Usuario");
 		lblPassword = new Label("Contraseña");
@@ -89,17 +107,68 @@ public class UILogin extends Composite implements ClickHandler {
 
 		grid.setWidget(3, 1, panelRecuperarContrasena());
 		
+		DecoratorPanel dp = new DecoratorPanel();
+		
+		dp.add(grid);
+
+		VerticalPanel logos = new VerticalPanel();
+		logos.setSize("100%", "100%");
+		logos.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		logos.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		logos.add(new HTML("<font color='blue' size='6'>Bienvenido al sistema intercajas</font>"));
 		
 		
-	    
-	    
+		VerticalPanel v = new VerticalPanel();//Esto es el panel central, donde se centra todo
+	    v.setWidth("100%");
+	    v.setHeight("100%");
+	    v.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+//	    v.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+	    v.add(dp);
+
+	    DockLayoutPanel dockPanel = new DockLayoutPanel(Unit.PX);
+		dockPanel.addNorth(logos, 200);
+		dockPanel.add(v);
 		
-		initWidget(grid);
+		initWidget(dockPanel);
 
 	}
 	
 	
 	public void login() {
+		
+		
+//		btnLogin.setEnabled(false);
+//		BeneficiarioService.Util.get().reporteTotalizacion(Long.valueOf(txtUsuario.getValue()), new TextCallback() {
+//			@Override
+//			public void onSuccess(Method method, String response) {
+//				btnLogin.setEnabled(true);
+////				Window.open( "servlet.gupld?show=" + "reports/" + response, "_parent", "");
+//				Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=test.pdf", "_parent", "");
+//			}
+//			
+//			@Override
+//			public void onFailure(Method method, Throwable exception) {
+//				btnLogin.setEnabled(true);
+//				Window.alert(exception.getMessage());
+//			}
+//		});
+//		
+//		BeneficiarioService.Util.get().reporTest(txtUsuario.getValue(), new TextCallback() {
+//			@Override
+//			public void onSuccess(Method method, String response) {
+//				btnLogin.setEnabled(true);
+////				Window.open( "servlet.gupld?show=" + "reports/" + response, "_parent", "");
+//				Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=test.pdf", "_parent", "");
+//			}
+//			
+//			@Override
+//			public void onFailure(Method method, Throwable exception) {
+//				btnLogin.setEnabled(true);
+//				Window.alert(exception.getMessage());
+//			}
+//		});
+		
+		
 		LoginService.Util.getInstance().loginServer(txtUsuario.getValue(), txtPassword.getValue(), new AsyncCallback<UserDTO>()
                 {
                     @Override
@@ -124,6 +193,8 @@ public class UILogin extends Composite implements ClickHandler {
                         Window.alert("Ocurrio un error al verificar el Usuario y Contraseña");
                     }
                 });
+                
+                
 	}
 
 	public void irCuenta() {

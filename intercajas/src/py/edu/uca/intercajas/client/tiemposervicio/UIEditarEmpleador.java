@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Empleador;
@@ -146,6 +147,8 @@ public class UIEditarEmpleador extends UIBase {
 	
 	public void onSave() {
 		
+		if (!formularioValido()) return;
+		
 		empleador.setNombre(nombre.getValue());
 		empleador.setCaja(caja.getValue());
 
@@ -162,6 +165,18 @@ public class UIEditarEmpleador extends UIBase {
 				new UIErrorRestDialog(method, exception);
 			}
 		});
+		
+	}
+	
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear el empleador");
+
+		if (nombre.getValue().length() < 2) {
+			vf.addError("Ingrese nombre del empleador");
+		}
+		
+		return vf.esValido();
 		
 	}
 	

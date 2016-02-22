@@ -15,7 +15,7 @@ public class CajaDeclarada extends EntityBase {
 
 	private Integer txDeclarado;
 	private Integer txBruto;
-	private Integer txNeto;
+	private Integer txNeto;	
 	@ManyToOne
 	private Solicitud solicitud;
 	@ManyToOne

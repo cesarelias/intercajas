@@ -49,7 +49,6 @@ public class UIEditarUsuario extends UIBase {
 			this.usuario = usuario;
 			titulo = "Editando usuario";
 			nombre.setText(usuario.getNombre());
-			nombre.setEnabled(false);
 			descripcion.setText(usuario.getDescripcion());
 			caja.setValue(usuario.getCaja());
 			tipo.setValue(usuario.getTipo());

@@ -19,6 +19,7 @@ public class UserDTO implements Serializable {
 	private Date expire;
 	private Caja caja;
 	private Usuario.Tipo tipo;
+	private Date fechaLogin;
 	
 
 	public UserDTO() {
@@ -122,6 +123,14 @@ public class UserDTO implements Serializable {
 
 	public void setTipo(Usuario.Tipo tipo) {
 		this.tipo = tipo;
+	}
+
+	public Date getFechaLogin() {
+		return fechaLogin;
+	}
+
+	public void setFechaLogin(Date fechaLogin) {
+		this.fechaLogin = fechaLogin;
 	}
 
 

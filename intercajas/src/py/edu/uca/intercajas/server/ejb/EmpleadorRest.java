@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.WebParam;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response.Status;
 
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Empleador;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 @Path("/empleador")
@@ -123,5 +125,27 @@ public class EmpleadorRest   {
 		
 	}
 
+	@Path("/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminar(@WebParam(name="empleador_id") Long empleador_id)  {
+
+		Empleador e = em.find(Empleador.class, empleador_id);
+		
+		if (e==null){
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el empleador").build());
+		}
+		
+		if (em.createQuery("select t from TiempoServicioReconocido t where empleador.id = :empleador_id", TiempoServicioReconocido.class)
+				.setParameter("empleador_id", empleador_id)
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede eliminar empleador, existe en tiempoServicioReconocido").build());
+		}
+
+		em.remove(e);
+		
+	}
 	
 }

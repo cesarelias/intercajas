@@ -17,12 +17,15 @@ public class Solicitud extends EntityBase {
 	private static final long serialVersionUID = 1L;
 	
 	private Date fecha;
-	private String numero;
+	private String expedienteNumero;
 	@NotNull
 	private Estado estado;
 	@ManyToOne
 	private Beneficiario cotizante;
 	private Integer txFinal;
+	
+	@ManyToOne
+	private Caja cajaGestora;
 	
 	@OneToMany(mappedBy="solicitud")
 	@JsonIgnore
@@ -64,13 +67,6 @@ public class Solicitud extends EntityBase {
 		this.fecha = fecha;
 	}
 
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
 
 	public Estado getEstado() {
 		return estado;
@@ -127,6 +123,22 @@ public class Solicitud extends EntityBase {
 
 	public void setCotizante(Beneficiario cotizante) {
 		this.cotizante = cotizante;
+	}
+
+	public Caja getCajaGestora() {
+		return cajaGestora;
+	}
+
+	public void setCajaGestora(Caja cajaGestora) {
+		this.cajaGestora = cajaGestora;
+	}
+
+	public String getExpedienteNumero() {
+		return expedienteNumero;
+	}
+
+	public void setExpedienteNumero(String expedienteNumero) {
+		this.expedienteNumero = expedienteNumero;
 	}
 
 }

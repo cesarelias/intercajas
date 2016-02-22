@@ -1,6 +1,7 @@
 package py.edu.uca.intercajas.client.solicitud;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
@@ -8,7 +9,9 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -135,6 +138,12 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 	@UiHandler("save")
 	void onSave(ClickEvent event){
 
+		try {
+		if (!formularioValido()) return;
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
+		
 		tiempoServicioDeclarado.setCaja(caja.getValue());
 		tiempoServicioDeclarado.setInicio(inicio.getValue());
 		tiempoServicioDeclarado.setFin(fin.getValue());
@@ -193,5 +202,46 @@ public class TiempoServicioDeclaradoEditor extends UIBase  {
 		});
 
 	}
-	
+
+	public boolean formularioValido() {
+		
+		Date hoy = LoginService.Util.currentUser.getFechaLogin(); 
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete correctamente las siguientes informaciones solicitadas");
+
+		if (lugar.getValue().length() == 0) {
+			vf.addError("Ingrese un lugar");
+		}
+		
+		if (!AppUtils.esFecha(inicio)) {
+			vf.addError("Fecha de inicio no valida");
+		} else {
+			if (inicio.getValue().after(hoy)) {
+				vf.addError("Fecha de inicio no puede ser posterior a la fecha de hoy");
+			}
+		}
+		
+		if (!AppUtils.esFecha(fin)) {
+			vf.addError("Fecha fin no valida");
+		} else {
+			if (fin.getValue().after(hoy)) {
+				vf.addError("Fecha fin no puede ser posterior a la fecha de hoy");
+			}
+		}
+		
+		if (caja.getValue() == null) {
+			vf.addError("Seleccione una caja de jubilacion");
+		}
+
+
+		if (AppUtils.esFecha(inicio) && AppUtils.esFecha(fin)) {
+			if (fin.getValue().before(inicio.getValue())) {
+				vf.addError("Rango de fecha del inicio al fin no valido");
+			}
+		}
+		
+		
+
+		return vf.esValido();
+	}
 }

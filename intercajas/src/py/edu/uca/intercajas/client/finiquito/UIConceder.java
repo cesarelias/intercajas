@@ -15,11 +15,13 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIDialog;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
 import py.edu.uca.intercajas.shared.UIBase;
-import py.edu.uca.intercajas.shared.UIDialog;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
@@ -84,7 +86,7 @@ public class UIConceder extends UIBase {
 		LoginService.Util.getInstance().loginFromSessionServer(new AsyncCallback<UserDTO>() {
 			@Override
 			public void onSuccess(UserDTO result) {
-				tmin.setText(result.getCaja().getT_min().toString());
+				tmin.setText(CalculoTiempo.leeMeses(result.getCaja().getT_min()));
 				tminInt = result.getCaja().getT_min();
 			}
 			
@@ -99,7 +101,7 @@ public class UIConceder extends UIBase {
 		BeneficiarioService.Util.get().findCajaDeclaraadBySolicitudIdAndCurrentUser(solicitudBeneficiario.getSolicitud().getId(), new MethodCallback<CajaDeclarada>() {
 			@Override
 			public void onSuccess(Method method, CajaDeclarada response) {
-				tx.setText(response.getTxNeto().toString());
+				tx.setText(CalculoTiempo.leeMeses(response.getTxNeto()));
 				txInt = response.getTxNeto();
 			}
 			
@@ -124,13 +126,7 @@ public class UIConceder extends UIBase {
 	@UiHandler("enviar")
 	void onSave(ClickEvent event) {
 
-		try {
-		for(Adjunto a : upload.adjuntos) {
-			if (a == null) {
-				Window.alert("Es obligatorio enviar adjunto");
-				return;
-			}
-		}
+		if (!formularioValido()) return;
 
 		NuevoConcedido nuevoConcedido = new NuevoConcedido();
 
@@ -138,8 +134,8 @@ public class UIConceder extends UIBase {
 		nuevoConcedido.setCuerpoMensaje(cuerpoMensaje.getValue());
 		nuevoConcedido.setNumeroResolucion(numeroResolucion.getValue());
 		nuevoConcedido.setSolicitudBeneficiarioId(solicitudBeneficiario.getId());
-		nuevoConcedido.setTx(Integer.valueOf(tx.getText()));
-		nuevoConcedido.setTmin(Integer.valueOf(tmin.getText()));
+		nuevoConcedido.setTx(txInt);
+		nuevoConcedido.setTmin(tminInt);
 		nuevoConcedido.setBt(new BigDecimal(bt.getValue()));
 		nuevoConcedido.setBx(bxBig);
 		nuevoConcedido.setDestino_id(destino.getId());
@@ -157,9 +153,6 @@ public class UIConceder extends UIBase {
 				new UIErrorRestDialog(method, exception);
 			}
 		});
-		} catch (Exception e) {
-			Window.alert(e.getMessage());
-		}
 		
 	}
 	
@@ -192,5 +185,28 @@ public class UIConceder extends UIBase {
 	}
 	
 
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la concesion de beneficio");
+
+		if (upload.adjuntos[0] == null) {
+			vf.addError("Es obligatorio enviar adjunto la Resolucion");
+		}
+		
+		if (upload.adjuntos[1] == null) {
+			vf.addError("Es obligatorio enviar adjunto la Liquidacion");
+		}
+
+		if (cuerpoMensaje.getValue().length() == 0){
+			vf.addError("Ingrese texto en el mensaje");
+		}
+		
+		if (numeroResolucion.getValue().length() == 0) {
+			vf.addError("Es obligatorio ingresar el numero de resolucion");
+		}
+		
+		return vf.esValido();
+		
+	}
 
 }

@@ -53,7 +53,6 @@ public class TablaSolicitudBeneficiario extends UIBase {
 
 		initWidget(uiBinder.createAndBindUi(this));
 		initTable();
-		this.setVisible(false);
 	}
 
 	@UiHandler("create")
@@ -100,15 +99,17 @@ public class TablaSolicitudBeneficiario extends UIBase {
 
 	private void initTable() {
 		// Initialize the header.
-		header.getColumnFormatter().setWidth(0, "230px");
-		header.getColumnFormatter().setWidth(1, "60px");
+//		header.setWidth("320px");
+//		header.getColumnFormatter().setWidth(0, "210px");
+		header.getColumnFormatter().setWidth(1, "110px");
 
 		header.setText(0, 0, "Beneficiario");
 		header.setText(0, 1, "Parentesco");
 
+//		table.setWidth("320px");
 		// Initialize the table.
-		table.getColumnFormatter().setWidth(0, "230px");
-		table.getColumnFormatter().setWidth(1, "60px");
+//		table.getColumnFormatter().setWidth(0, "210px");
+		table.getColumnFormatter().setWidth(1, "110px");
 
 //		table.setWidget(0, 1, new ParentescoEditor());
 //		table.setWidget(1, 1, new ParentescoEditor());

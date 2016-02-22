@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 import py.edu.uca.intercajas.client.Intercajas;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios;
+import py.edu.uca.intercajas.client.caja.ListaCajas;
+import py.edu.uca.intercajas.client.report.UIAuditoria;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
 import py.edu.uca.intercajas.shared.entity.Usuario;
@@ -77,6 +79,9 @@ public class Gestion extends Composite {
 		
 		if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Administrador) {
 			addItemUsuarios(new ItemMenu("Gestion de Usuarios"));
+			addItemBeneficiario(new ItemMenu("Gestion de Beneficiario"));
+			addItemInformeAuditoria(new ItemMenu("Informe Auditoria"));
+			addItemCaja(new ItemMenu("Caja de Jubilacion"));
 		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Gestor) {
 			addItemSolicitudTitular(new ItemMenu("Nueva Solicitud"));
 			addItemBeneficiario(new ItemMenu("Gestion de Beneficiario"));
@@ -150,5 +155,35 @@ public class Gestion extends Composite {
 				Window.alert("esto falta desarrollar");
 			}
 		});
+	}
+	
+	private void addItemInformeAuditoria(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new UIAuditoria().mostrarDialog();
+			}
+		});
 	}	
+
+	
+	private void addItemCaja(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new ListaCajas(10).mostrarDialog();
+			}
+		});
+	}	
+
 }

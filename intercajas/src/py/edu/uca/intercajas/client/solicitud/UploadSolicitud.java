@@ -4,7 +4,6 @@ import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
-
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -12,9 +11,12 @@ import py.edu.uca.intercajas.shared.entity.Adjunto;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UploadSolicitud extends UIBase {
 
@@ -38,12 +40,19 @@ public class UploadSolicitud extends UIBase {
 		solicitud = createUploaderSolicutud();
 		documentoIdentidad = createUploaderDocumentoIdentidad();
 
+		
 		uploadTable.setText(0, 0, "Solicitud");
 		uploadTable.setWidget(0, 1, solicitud);
 		uploadTable.setText(1, 0, "Dicumento de Identidad");
 		uploadTable.setWidget(1, 1, documentoIdentidad);
 
-		initWidget(uploadTable);
+		VerticalPanel v = new VerticalPanel();
+		DecoratorPanel dp = new DecoratorPanel();
+		dp.add(uploadTable);
+		v.add(new Label("Adjuntos"));
+		v.add(dp);
+		
+		initWidget(v);
 		
 		addEliminarHander();
 
@@ -53,16 +62,14 @@ public class UploadSolicitud extends UIBase {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  a.setTipo(Adjunto.Tipo.Solicitud);
-	    		  adjuntos[0] = a;
+    		  Adjunto a = new Adjunto();
+    		  a.setRutaArchivo(archivos[0]);
+    		  a.setNombreArchivo(archivos[1]);
+    		  a.setTipo(Adjunto.Tipo.Solicitud);
+    		  adjuntos[0] = a;
 	    		  
-	    	  }
 	    	  
-	    	  uploadTable.setText(0, 1, adjuntos[0].getNombreArchivo());
+	    	  uploadTable.setText(0, 1, archivos[2]);
 	    	  uploadTable.setWidget(0, 2, eliminarSolicitud);
 	      }
 	    }
@@ -72,15 +79,13 @@ public class UploadSolicitud extends UIBase {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
-	    	  for (int i=0; i< archivos.length; i+=2) {
-	    		  Adjunto a = new Adjunto();
-	    		  a.setNombreArchivo(archivos[i]);
-	    		  a.setRutaArchivo(archivos[i+1]);
-	    		  a.setTipo(Adjunto.Tipo.DocumentoIdentidad);
-	    		  adjuntos[1] = a;
-	    		  
-	    	  }
-	    	  uploadTable.setText(1, 1, adjuntos[1].getNombreArchivo());
+    		  Adjunto a = new Adjunto();
+    		  a.setRutaArchivo(archivos[0]);
+    		  a.setNombreArchivo(archivos[1]);
+    		  a.setTipo(Adjunto.Tipo.DocumentoIdentidad);
+    		  adjuntos[1] = a;
+    		  
+	    	  uploadTable.setText(1, 1, archivos[2]);
 	    	  uploadTable.setWidget(1, 2, eliminarDocumentoIdentidad);
 
 	      }

@@ -146,7 +146,6 @@ public class DestinoRest   {
 					+ "             where a.solicitud.id = b.id "
 					+ "               and a.id = c.mensaje.id "
 					+ "               and a.estado = :estadoMensaje"
-					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
 					+ "               and not exists "
 					+ "                 (select cd"
