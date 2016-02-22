@@ -1,4 +1,4 @@
-package py.edu.uca.intercajas.shared;
+package py.edu.uca.intercajas.client;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;

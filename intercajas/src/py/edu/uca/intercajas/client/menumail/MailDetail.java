@@ -101,7 +101,7 @@ public class MailDetail extends ResizeComposite {
 		public void onSuccess(Method method, List<Adjunto> response) {
 			panelAdjuntos.clear();
 			for (Adjunto a : response) {
-				panelAdjuntos.add(createDownloadLink(a.getTipo().toString(), a.getRutaArchivo()));
+				panelAdjuntos.add(createDownloadLink(a.getTipo().toString(), a.getRutaArchivo(), a.getNombreArchivo()));
 			}
 		}
 		@Override
@@ -125,17 +125,18 @@ public class MailDetail extends ResizeComposite {
   }
   
   
-  public Anchor createDownloadLink(final String nombreArchivo, final String nombreInternoArchivo) {
+  public Anchor createDownloadLink(final String tipo, final String rutaArchivo, final String nombreArchivo) {
 
 
-	    Anchor link = new Anchor(nombreArchivo);
+
+	    Anchor link = new Anchor(tipo);
 ////		link.setStyleName(style.item());
 //
 //		// Add a click handler that displays a ContactPopup when it is clicked.
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 //				final String url = GWT.getModuleBaseURL() + "servlet.gupld?show=" + nombreInternoArchivo;
-				Window.open( "servlet.gupld?show=" + "/imgs/" + nombreInternoArchivo, "_blank", "status=0,toolbar=0,menubar=0,location=0");
+				Window.open( "servlet.gupld?show=" + rutaArchivo + nombreArchivo, "_blank", "status=0,toolbar=0,menubar=0,location=0");
 				
 			}
 		});
@@ -147,8 +148,6 @@ public class MailDetail extends ResizeComposite {
   
   
   public void acciones(final Destino item) {
-	  
-	  
 	  
 		opciones.clear();
 		optionsButtons.clear();
@@ -173,7 +172,6 @@ public class MailDetail extends ResizeComposite {
 							  TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow(item);
 							  b.titulo = "Reconocimiento de Tiempo de Servicio";
 							  b.mostrarDialog();
-							  b.create();
 						  }
 					  });
 					  optionsButtons.add(rts);
@@ -327,6 +325,7 @@ public class MailDetail extends ResizeComposite {
 	  recipient.setText("--");
 	  body.setHTML("");
 	  panelAdjuntos.clear();
+	  optionsButtons.clear();
 	  opciones.clear();
 	  
   }
