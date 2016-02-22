@@ -11,7 +11,7 @@
 			<tr>
 				<td width="140px">Expediente N°</td>
 				<td>
-					<g:TextBox ui:field="numero" />
+					<g:TextBox ui:field="numero" maxLength="70"/>
 				</td>
 			</tr>
 			<tr>

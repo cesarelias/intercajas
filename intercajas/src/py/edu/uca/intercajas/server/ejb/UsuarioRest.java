@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.WebParam;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -20,7 +21,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import py.edu.uca.intercajas.shared.entity.Auditoria;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Solicitud;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
@@ -84,6 +88,11 @@ public class UsuarioRest   {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void actualizar(Usuario usuario)  {
+
+		Usuario usuarioAnterior = em.find(Usuario.class, usuario.getId());
+		if (usuarioAnterior == null) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el usuario").build());
+		}
 		
 		if (usuario.getId() == null) { //nuevo usuaro
 			//creamos una clave aleatoria
@@ -92,7 +101,18 @@ public class UsuarioRest   {
 			usuario.setClave(userLogin.MD5(String.valueOf(randomNum)));
 			System.out.println("la contraseña creada y enviada al email " + usuario.getCorreo() + " es: " + String.valueOf(randomNum));
 		}
-				
+		
+		
+		if (!usuarioAnterior.getNombre().equals(usuario.getNombre()) ||
+			!usuarioAnterior.getDescripcion().equals(usuario.getDescripcion())) {
+			if (em.createQuery("select s from Auditoria s where upper(s.nombreUsuario) = upper(:nombreUsuario)", Auditoria.class)
+					.setParameter("nombreUsuario", usuarioAnterior.getNombre())
+					.setMaxResults(1)
+					.getResultList().size() > 0) {
+				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede cambiar el nombre de usuario, ya registra movimientos en auditoria").build());
+			}
+		}
+			
 		em.merge(usuario);
 		
 	}
@@ -126,6 +146,28 @@ public class UsuarioRest   {
 		
 	}
 	
-	
+	@Path("/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminar(@WebParam(name="usuario_id") Long usuario_id)  {
+		
+		Usuario u = em.find(Usuario.class, usuario_id);
+		
+		if (u == null) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el usuario").build());
+		}
+		
+		if (em.createQuery("select s from Auditoria s where nombreUsuario = :nombreUsuario", Auditoria.class)
+				.setParameter("nombreUsuario", u.getNombre())
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede eliminar usuario, existe en auditoria").build());
+		}
+		
+		em.remove(u);
+		
+	}
+
 	
 }

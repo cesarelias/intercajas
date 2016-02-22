@@ -9,31 +9,31 @@
 			<tr>
 				<td width="120px">Calle Principal</td>
 				<td>
-					<g:TextBox ui:field="callePrincipal" />
+					<g:TextBox ui:field="callePrincipal" maxLength="70"/>
 				</td>
 			</tr>
 			<tr>
 				<td>Numero de casa</td>
 				<td>
-					<g:TextBox ui:field="numeroCasa" />
+					<g:TextBox ui:field="numeroCasa" maxLength="10"/>
 				</td>
 			</tr>
 			<tr>
 				<td>Barrio</td>
 				<td>
-					<g:TextBox ui:field="barrio" />
+					<g:TextBox ui:field="barrio" maxLength="70"/>
 				</td>
 			</tr>
 			<tr>
 				<td>Ciudad</td>
 				<td>
-					<g:TextBox ui:field="ciudad" />
+					<g:TextBox ui:field="ciudad" maxLength="70"/>
 				</td>
 			</tr>
 			<tr>
 				<td>Departamento</td>
 				<td>
-					<g:TextBox ui:field="departamento" />
+					<g:TextBox ui:field="departamento" maxLength="70"/>
 				</td>
 			</tr>
 		</table>

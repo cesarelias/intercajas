@@ -3,9 +3,12 @@ package py.edu.uca.intercajas.shared.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,18 +18,28 @@ public class Mensaje extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	@ManyToOne
 	private Caja remitente;
+	@NotNull @Size(max=255)
 	private String referencia;
+	@NotNull
 	private Asunto asunto;
+	@NotNull @Column(columnDefinition = "text")
 	private String cuerpo;
+	@NotNull
 	@ManyToOne
 	@JsonIgnoreProperties({"beneficiario"})
 	private Solicitud solicitud;
+	@NotNull
 	private Estado estado;
+	@Size(max=255)
 	private String observacion; //guardamos el motivo en la descripcion al Autorizar o al Anular
-	private Date fecha;	
+	@NotNull
+	private Date fecha;
+	@NotNull
 	private boolean autorizado;
+	
 	@OneToMany(mappedBy = "mensaje")
 	@JsonIgnore
 	private List<Adjunto> adjuntos;

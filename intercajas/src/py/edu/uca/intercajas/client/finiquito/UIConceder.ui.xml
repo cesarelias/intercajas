@@ -10,45 +10,40 @@
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
 		<g:center>
-			<g:DockLayoutPanel height="100%" width="100%">
-				<g:north size="110">
-					<g:HorizontalPanel width="100%">
-						<!-- <gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" /> -->
-						<g:DecoratorPanel title="Adjuntos">
-							<gt:UploadConceder ui:field="upload" />
-						</g:DecoratorPanel>
-					</g:HorizontalPanel>
-				</g:north>
-				<g:center>
+
+			<g:TabLayoutPanel barUnit="PX" barHeight="30"
+				animationDuration="1000" ui:field="tab" height="400px">
+				<g:tab>
+					<g:header size='7'>Conceder Beneficio</g:header>
 					<g:VerticalPanel>
 						<g:HTMLPanel>
 							<table>
 								<tr>
-									<td width="600px">Numero Resolucion</td>
+									<td width="180px">Numero Resolucion</td>
 									<td>
-										<g:TextBox ui:field="numeroResolucion" />
+										<g:TextBox ui:field="numeroResolucion" maxLength="15"/>
 									</td>
 								</tr>
 								<tr>
-									<td>Tiempo de aporte efectivo en la Caja X (tx)</td>
+									<td>Tiempo efectivo (tx)</td>
 									<td>
 										<g:Label ui:field="tx" />
 									</td>
 								</tr>
 								<tr>
-									<td>Tiempo minimo de aportes requerido por la legislación vigente en la Caja X para el acceso al beneficio. (tmin)</td>
+									<td>Tiempo minimo (tmin)</td>
 									<td>
 										<g:Label ui:field="tmin" />
 									</td>
 								</tr>
 								<tr>
-									<td>Beneficio que le hubiese correspondido en la Caja X de haber completo en la misma los requisitos de edad y aportes (bt)</td>
+									<td>Monto beneficio (bt) Gs</td>
 									<td>
 										<g:IntegerBox ui:field="bt" />
 									</td>
 								</tr>
 								<tr>
-									<td>Beneficio que le corresponderia cobrar la caja X (bx)</td>
+									<td>Monto beneficio final (bx) Gs</td>
 									<td>
 										<g:Label ui:field="bx" />
 									</td>
@@ -57,11 +52,28 @@
 						</g:HTMLPanel>
 						<g:Button ui:field="calcularBx">Calcuar bx</g:Button>
 					</g:VerticalPanel>
-				</g:center>
-				<g:south size="110">
-					<g:TextArea ui:field="cuerpoMensaje"></g:TextArea>
-				</g:south>
-			</g:DockLayoutPanel>
+				</g:tab>
+
+				<g:tab>
+					<g:header size='7'>Mensaje</g:header>
+					<g:DockLayoutPanel unit="PX">
+						<g:north size="100">
+							<gt:UploadConceder ui:field="upload" />
+						</g:north>
+						<g:center>
+							<g:DockLayoutPanel unit="PX">
+								<g:north size="15">
+									<g:Label>Mensaje</g:Label>
+								</g:north>
+								<g:center>
+									<g:TextArea ui:field="cuerpoMensaje" width="100%"
+										height="100%"></g:TextArea>
+								</g:center>
+							</g:DockLayoutPanel>
+						</g:center>
+					</g:DockLayoutPanel>
+				</g:tab>
+			</g:TabLayoutPanel>
 		</g:center>
 		<g:south size="40">
 			<g:HorizontalPanel>

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.WebParam;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import org.eclipse.jetty.server.Authentication.User;
 
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.SolicitudBeneficiario;
+import py.edu.uca.intercajas.shared.entity.Usuario;
 import py.edu.uca.intercajas.shared.entity.DocumentoIdentidad.TipoDocumentoIdentidad;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
 
@@ -108,16 +111,42 @@ public class BeneficiarioRest   {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Long insertarBeneficiario(Beneficiario beneficiario)  {
-		System.out.println("PERSIST LLAMADO");
+	public void insertarBeneficiario(Beneficiario beneficiario)  {
 			em.persist(beneficiario);
 			LOG.info("Beneficiario persisted");
-			try { 
-				return beneficiario.getId();
-			} catch (Exception e) {
-				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity(e.getMessage()).build());
-			}
 	}
+	
+	@Path("/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminar(@WebParam(name="beneficiario_id") Long beneficiario_id)  {
+		
+		Beneficiario b = em.find(Beneficiario.class, beneficiario_id);
+		
+		if (b == null) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el beneficiario").build());
+		}
+		
+		if (em.createQuery("select s from Solicitud s where cotizante.id = :beneficiario_id", Solicitud.class)
+				.setParameter("beneficiario_id", beneficiario_id)
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede eliminar beneficiario, existe en solicitud").build());
+		}
+		
+		if (em.createQuery("select s from SolicitudBeneficiario s where beneficiario.id = :beneficiario_id", SolicitudBeneficiario.class)
+				.setParameter("beneficiario_id", beneficiario_id)
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede eliminar beneficiario, existe en solicitud").build());
+		}
+		
+		
+		em.remove(b);
+		
+	}
+	
 	           
 	@Path("/actualizar")
 	@POST
@@ -130,18 +159,49 @@ public class BeneficiarioRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
         }
 		
+        Beneficiario beneficiarioActual = em.find(Beneficiario.class, beneficiario.getId());
 		
-		List<Solicitud> lista = em.createQuery("select s "
-				+ "                         from Solicitud s "
-				+ "                        where s.cotizante.id = :beneficiario_id", Solicitud.class)
-				.setParameter("beneficiario_id", beneficiario.getId())
-				.getResultList();
-		
-		if (lista.size() > 0) {
-			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede modificar un beneficiario que exista en alguna solicitud").build());
+        if (user.getTipo() == Usuario.Tipo.Gestor) {
+        
+			List<Solicitud> lista = em.createQuery("select s "
+					+ "                         from Solicitud s "
+					+ "                        where s.cotizante.id = :beneficiario_id", Solicitud.class)
+					.setParameter("beneficiario_id", beneficiario.getId())
+					.getResultList();
+			
+			if (lista.size() > 0 && 
+					(beneficiarioActual.getNombres() != beneficiario.getNombres() ||
+							beneficiarioActual.getDocumento().getNumeroDocumento() != beneficiario.getDocumento().getNumeroDocumento() ||
+							beneficiarioActual.getDocumento().getTipoDocumento() != beneficiario.getDocumento().getTipoDocumento() ||
+							!beneficiarioActual.toString().equals(beneficiario.toString())
+					)
+				)
+			{
+				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede modificar el documento (numero/tipo) de un beneficiario que exista en alguna solicitud").build());
+			}
+				
+			System.out.println(beneficiario.getNombres());
+			em.merge(beneficiario);
+
+        } else if (user.getTipo() == Usuario.Tipo.Administrador) {
+        	if 		(beneficiarioActual.getNombres() != beneficiario.getNombres() ||
+					 beneficiarioActual.getDocumento().getNumeroDocumento() != beneficiario.getDocumento().getNumeroDocumento() ||
+					 beneficiarioActual.getDocumento().getTipoDocumento() != beneficiario.getDocumento().getTipoDocumento() ||
+					!beneficiarioActual.toString().equals(beneficiario.toString())
+        			)
+
+        	{
+        		//Registramos la auditoria solo cuando cambia el nombre o el documento. 
+        		userLogin.registrarAuditoria(user, "Cambio datos beneficiario (anterior/nuevo) " +
+   					  " numeroDocumento: " + beneficiarioActual.getDocumento().getNumeroDocumento() + "/" + beneficiario.getDocumento().getNumeroDocumento() +
+   					  " tipoDocumento: " +  beneficiarioActual.getDocumento().getTipoDocumento().toString() + "/" + beneficiario.getDocumento().getTipoDocumento().toString() +
+   					  " nombres: " + beneficiarioActual.toString() + "/" + beneficiario.toString());
+        	}
+			em.merge(beneficiario);
+		} else {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No tiene autorizacion para modificar datos del beneficiario").build());
 		}
 			
-		em.merge(beneficiario);
 		LOG.info("Beneficiario merged");
 	}
 

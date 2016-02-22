@@ -83,17 +83,17 @@ public class Mailboxes extends Composite {
   		
   	    if (event.getSelectedItem().getText().trim().equals("Mis Pendientes")) {
   	    	Mail m = AppUtils.Util.getMail();
-  	    	m.mostrar();
+//  	    	m.mostrar();
   	    	m.mostrarMisPendientes();
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
   	    } else if (event.getSelectedItem().getText().trim().equals("Mis Finiquitados")) {
   	    	Mail m = AppUtils.Util.getMail();
-  	    	m.mostrar();
+//  	    	m.mostrar();
   	    	m.mostrarMisFiniquitados();
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 	    } else if (event.getSelectedItem().getText().trim().equals("Pendientes")) {
   	    	Mail m = AppUtils.Util.getMail();
-  	    	m.mostrar();
+//  	    	m.mostrar();
   	    	m.mostrarPendientes();
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 	    } else if (event.getSelectedItem().getText().trim().equals("Finiquitados")) {
@@ -103,7 +103,7 @@ public class Mailboxes extends Composite {
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 	    } else if (event.getSelectedItem().getText().trim().equals("Anulados")) {
   	    	Mail m = AppUtils.Util.getMail();
-  	    	m.mostrar();
+//  	    	m.mostrar();
   	    	m.mostrarAnulados();
   	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
 	    }

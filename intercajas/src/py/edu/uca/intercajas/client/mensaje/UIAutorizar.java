@@ -7,6 +7,7 @@ import org.fusesource.restygwt.client.TextCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -69,13 +70,8 @@ public class UIAutorizar extends UIBase {
 	@UiHandler("autorizar")
 	void onSave(ClickEvent event) {
 
-		for(Adjunto a : upload.adjuntos) {
-			if (a == null) {
-				Window.alert("Es obligatorio enviar adjunto");
-				return;
-			}
-		}
-
+		if (!formularioValido()) return;
+		
 		NuevaAutorizacion nuevaAutorizacion = new NuevaAutorizacion();
 		nuevaAutorizacion.setAdjuntos(upload.adjuntos);
 		nuevaAutorizacion.setMensaje_id(mensaje.getId());
@@ -117,4 +113,18 @@ public class UIAutorizar extends UIBase {
 		});
 		
 	}
+	
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para autorizar el envio");
+
+		if (upload.adjuntos[0] == null) {
+			vf.addError("Debe adjuntar la nota Interinstitucional");
+		}
+		
+		
+		return vf.esValido();
+		
+	}
+	
 }

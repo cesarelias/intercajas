@@ -2,34 +2,41 @@ package py.edu.uca.intercajas.shared.entity;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Table(name = "caja_declarada")
 @Entity
 public class CajaDeclarada extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull @Column(name="tx_declarado")
 	private Integer txDeclarado;
+	@NotNull @Column(name="tx_bruto")
 	private Integer txBruto;
+	@NotNull @Column(name="tx_neto")
 	private Integer txNeto;
+	@NotNull
 	@ManyToOne
 	private Solicitud solicitud;
+	@NotNull
 	@ManyToOne
 	private Caja caja;
+	@NotNull
 	private Estado estado;
-	@OneToMany(mappedBy="cajaDeclarada")
+	@OneToMany(mappedBy = "cajaDeclarada")
 	@JsonIgnore
 	private List<TiempoServicioReconocido> listaTiempoServicioReconocido;
-	
-	
+
 	public enum Estado {
-		Nuevo,
-		ConAntiguedad,
-		Finiquitado
+		Nuevo, ConAntiguedad, Finiquitado
 	}
 
 	public Solicitud getSolicitud() {

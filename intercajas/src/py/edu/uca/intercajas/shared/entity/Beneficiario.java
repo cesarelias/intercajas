@@ -2,6 +2,7 @@ package py.edu.uca.intercajas.shared.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,25 +14,24 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(uniqueConstraints=
-	@UniqueConstraint(columnNames = {"numeroDocumento", "tipoDocumento"})) 
+	@UniqueConstraint(columnNames = {"numero_documento", "tipo_documento"})) 
 public class Beneficiario extends EntityBase {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message="ingrese un nombre valido")
-	@Size(min = 4, message = "El nombre debe contener al menos 4 catacteres")
+	@NotNull
+	@Size(min = 2, max=70)
 	private String nombres;
-	@NotNull(message="ingrese un apellido valido")
+	@NotNull @Size(min = 2, max=70)
 	private String apellidos;
-	@NotNull(message="ingrese una fecha de nacimiento valida")
-	@Past(message="la fecha de nacimiento debe ser una fecha pasada")
+	@NotNull
+	@Past @Column(name="fecha_nacimiento")
 	private Date fechaNacimiento;
-	@NotNull(message="ingrese masculino o femenino")
+	@NotNull
 	private Sexo sexo;
 	@Embedded
-
-	@NotNull(message="ingrese un documento valido")
+	@NotNull
 	private DocumentoIdentidad documento;
 	@Embedded
 	private Direccion direccion;

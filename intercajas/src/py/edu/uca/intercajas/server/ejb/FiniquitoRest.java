@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.server.ejb;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevoConcedido;
 import py.edu.uca.intercajas.shared.NuevoDenegado;
 import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
@@ -110,7 +112,7 @@ public class FiniquitoRest {
 		m.setSolicitud(sb.getSolicitud());
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
-		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Deniega Beneficio ");
+		m.setReferencia(sb.getSolicitud().getExpedienteNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Deniega Beneficio ");
 		m.setCuerpo(nuevoDenegado.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Denegado);
 		for (Adjunto a : nuevoDenegado.getAdjuntos()) {
@@ -120,33 +122,28 @@ public class FiniquitoRest {
 		
 		em.persist(m);
 		
-		
 		//Creamos el denegado
 		Denegado d = new Denegado();
 		d.setCajaDeclarada(cd);
 		d.setSolicitudBeneficiario(sb);
 		d.setNumeroResolucion(nuevoDenegado.getNumeroResolucion());
-		d.setMotivo(null); //TODO Motivo debe ser uno o varios
+		d.setMotivo(nuevoDenegado.getMotivo());
 		d.setAutorizado(false);
 		d.setMensaje(m);
 		
 		em.persist(d);
 		
-		
-
-
 		//Destinamos a todas las cajas declaradas
 		for (CajaDeclarada cdd : sb.getSolicitud().getCajasDeclaradas() ) {
 			Destino des = new Destino();
 			des.setMensaje(m);
 			des.setDestinatario(cdd.getCaja());
-			des.setLeido(false);
+//			des.setLeido(false);
 //			des.setEstado(Destino.Estado.Informativo);
 			em.persist(des);
 		}
 		
-		
-		
+		userLogin.registrarAuditoria(user, "Deniega beneficio - Solicitud " + m.getSolicitud().getExpedienteNumero() + " Resolucion " + d.getNumeroResolucion() + " Cotizante " + m.getSolicitud().getCotizante().toString() + " Solicitante " + sb.getBeneficiario().toString() + " Motivo " + d.getMotivo());
 	}
 
 	
@@ -200,7 +197,7 @@ public class FiniquitoRest {
 		m.setSolicitud(sb.getSolicitud());
 		m.setFecha(new Date());
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
-		m.setReferencia(sb.getSolicitud().getNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Concede Beneficio ");
+		m.setReferencia(sb.getSolicitud().getExpedienteNumero() + " - " + sb.getSolicitud().getCotizante().getNombres() + " " + sb.getSolicitud().getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " Concede Beneficio ");
 		m.setCuerpo(nuevoConcedido.getCuerpoMensaje());
 		m.setAsunto(Mensaje.Asunto.Concedido);
 		for (Adjunto a : nuevoConcedido.getAdjuntos()) {
@@ -229,10 +226,17 @@ public class FiniquitoRest {
 			Destino d = new Destino();
 			d.setMensaje(m);
 			d.setDestinatario(cdd.getCaja());
-			d.setLeido(false);
+//			d.setLeido(false);
 //			d.setEstado(Destino.Estado.Informativo);
 			em.persist(d);
 		}
+
+		//Registramos auditoria
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(0);
+		df.setMinimumFractionDigits(0);
+		userLogin.registrarAuditoria(user, "Concede beneficio - Solicitud " + m.getSolicitud().getExpedienteNumero() + " Resolucion " + c.getNumeroResolucion() + " Cotizante " + m.getSolicitud().getCotizante().toString() + " Solicitante " + sb.getBeneficiario().toString() + " Monto Final " + df.format(c.getBx()));
 
 	}
 	

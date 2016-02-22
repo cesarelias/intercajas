@@ -6,6 +6,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.RefreshMailEvent;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
@@ -60,6 +61,7 @@ public class UIAnular extends UIBase {
 	@UiHandler("anular")
 	void onSave(ClickEvent event) {
 
+		if (!formularioValido()) return;
 		
 		NuevaAnulacion nuevaAnulacion = new NuevaAnulacion();
 		nuevaAnulacion.setMensaje_id(mensaje.getId());
@@ -78,7 +80,18 @@ public class UIAnular extends UIBase {
 				close();
 			}
 		});
-
+		
+	}
+	
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para denegar beneficio");
+		
+		if (observacion.getValue().length() == 0) {
+			vf.addError("Es obligatorio ingresar la observacion");
+		}
+		
+		return vf.esValido();
 		
 	}
 

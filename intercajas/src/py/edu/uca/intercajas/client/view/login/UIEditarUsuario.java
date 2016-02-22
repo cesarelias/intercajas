@@ -6,8 +6,10 @@ import java.util.List;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Usuario;
@@ -32,6 +34,7 @@ public class UIEditarUsuario extends UIBase {
 
 	TextBox nombre = new TextBox();
 	TextBox descripcion = new TextBox();
+	TextBox correo = new TextBox();
 	TipoUsuarioEditor tipo = new TipoUsuarioEditor();
 	Button cancel = new Button("Cancelar");
 	Button guardar = new Button("Guardar");
@@ -49,10 +52,10 @@ public class UIEditarUsuario extends UIBase {
 			this.usuario = usuario;
 			titulo = "Editando usuario";
 			nombre.setText(usuario.getNombre());
-			nombre.setEnabled(false);
 			descripcion.setText(usuario.getDescripcion());
 			caja.setValue(usuario.getCaja());
 			tipo.setValue(usuario.getTipo());
+			correo.setValue(usuario.getCorreo());
 		}
 		
 		
@@ -60,6 +63,10 @@ public class UIEditarUsuario extends UIBase {
 	
 	public void initComponents() {
 
+		nombre.setMaxLength(70);
+		descripcion.setMaxLength(70);
+		
+		
 		HorizontalPanel p = new HorizontalPanel();
 		p.setWidth("100%");
 		p.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
@@ -77,10 +84,14 @@ public class UIEditarUsuario extends UIBase {
 		table.setWidget(0, 1, descripcion);
 		table.setText(1, 0, "Nombre");
 		table.setWidget(1, 1, nombre);
-		table.setText(2, 0, "Caja");
-		table.setWidget(2, 1, caja);
-		table.setText(3, 0, "Tipo");
-		table.setWidget(3, 1, tipo);
+		
+		table.setText(2, 0, "correo");
+		table.setWidget(2, 1, correo);
+		
+		table.setText(3, 0, "Caja");
+		table.setWidget(3, 1, caja);
+		table.setText(4, 0, "Tipo");
+		table.setWidget(4, 1, tipo);
 		
 		VerticalPanel v = new VerticalPanel();
 		
@@ -148,10 +159,13 @@ public class UIEditarUsuario extends UIBase {
 	
 	public void onSave() {
 		
+		if (!formularioValido()) return;
+		
 		usuario.setNombre(nombre.getValue());
 		usuario.setDescripcion(descripcion.getValue());
 		usuario.setCaja(caja.getValue());
 		usuario.setTipo(tipo.getValue());
+		usuario.setCorreo(correo.getValue());
 
 		BeneficiarioService.Util.get().actualizarUsuario(usuario, new MethodCallback<Void>() {
 
@@ -162,10 +176,31 @@ public class UIEditarUsuario extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
-				Window.alert("guardado");
 				close();
 			}
 		});
 	}
+
 	
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear el usuario");
+
+		if (nombre.getValue().length() < 2) {
+			vf.addError("Ingrese nombre del usuario");
+		}
+		
+		if (descripcion.getValue().length() < 2) {
+			vf.addError("Ingrese descripcion del usuario");
+		}
+		
+		if ( correo.getValue().length() == 0 || !AppUtils.isValidEmail(correo.getValue())) {
+			vf.addError("Ingrese una direccion de correo valida");
+		}
+		
+
+		
+		return vf.esValido();
+		
+	}
 }

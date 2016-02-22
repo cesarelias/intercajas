@@ -39,7 +39,6 @@
 			<g:FlexTable ui:field='header' styleName='{style.header}'
 				cellSpacing='0' cellPadding='1' />
 		</g:north>
-
 		<g:center>
 			<g:ScrollPanel>
 				<g:FlexTable ui:field='table' styleName='{style.table}'

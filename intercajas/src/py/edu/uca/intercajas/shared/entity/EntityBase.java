@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * EntityBase, base entity for all entities.
  */
@@ -22,7 +24,7 @@ public abstract class EntityBase implements Serializable {
 	@Basic(optional = false)
 	protected Long id;
 
-	@Version
+	@NotNull @Version
 	private Long version;
 
 	public Long getId() {

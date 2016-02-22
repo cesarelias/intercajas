@@ -5,32 +5,36 @@
 	<ui:image field='gradient' src='gradient_bg_dark.png'
 		repeatStyle='Horizontal' />
 	<ui:style>
-	.outer {
+		.outer {
 		background-color: #F2F2F2;
 		border-left: 1px solid #999;
 		border-bottom: 1px solid #999;
 		border-bottom-south: 1px solid #999;
 		cursor: pointer;
 		cursor: hand;
-	}
-	
-	@sprite .header {
+		}
+
+		@sprite .header {
 		gwt-image: 'gradient';
 		background-color: #d3d6dd;
 		table-layout: fixed;
 		width: 100%;
 		height: 100%;
-	}
-	
-	.table {
+		}
+
+		.table {
+		cursor: hand;
+		background-color: red;
 		table-layout: fixed;
 		width: 100%;
-	}
-	
-	.accion {
+		}
+
+		.accion {
 		margin-left: 10px;
 		color: blue;
-	}
+		}
+
+		
 	</ui:style>
 
 	<g:DockLayoutPanel unit="PX">
@@ -44,7 +48,7 @@
 						cellSpacing='0' cellPadding='1' />
 				</g:north>
 				<g:center>
-					<g:FlexTable ui:field='table' styleName='{style.table}'
+					<g:FlexTable ui:field='table' styleName='{style.table'
 						cellSpacing='0' cellPadding='3' />
 				</g:center>
 				<g:south size="2">

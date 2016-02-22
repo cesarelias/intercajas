@@ -17,13 +17,13 @@
 			<tr>
 				<td width="120px">Nombre</td>
 				<td>
-					<g:TextBox ui:field="nombres" />
+					<g:TextBox ui:field="nombres" maxLength="70" />
 				</td>
 			</tr>
 			<tr>
 				<td>Apellidos</td>
 				<td>
-					<g:TextBox ui:field="apellidos" />
+					<g:TextBox ui:field="apellidos" maxLength="70"/>
 				</td>
 			</tr>
 			<tr>

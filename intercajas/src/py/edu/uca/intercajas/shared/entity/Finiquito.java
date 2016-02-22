@@ -2,10 +2,14 @@ package py.edu.uca.intercajas.shared.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -20,13 +24,18 @@ public class Finiquito extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@NotNull
+	@ManyToOne @JoinColumn(name="caja_declarada_id")
 	private CajaDeclarada cajaDeclarada;
-	@ManyToOne
+	@NotNull
+	@ManyToOne @JoinColumn(name="solicitud_beneficiario_id")
 	private SolicitudBeneficiario solicitudBeneficiario;
+	@NotNull
 	@ManyToOne
 	private Mensaje mensaje;
+	@NotNull @Size(min=1, max=15) @Column(name="numero_resolucion")
 	private String numeroResolucion;
+	@NotNull
 	private boolean autorizado;
 
 	public SolicitudBeneficiario getSolicitudBeneficiario() {

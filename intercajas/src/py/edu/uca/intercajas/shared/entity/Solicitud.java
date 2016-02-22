@@ -4,25 +4,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.internal.NotNull;
 
 @Entity
 public class Solicitud extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull
 	private Date fecha;
-	private String numero;
+	@NotNull @Size(max=70) @Column(name="expediente_numero")
+	private String expedienteNumero;
 	@NotNull
 	private Estado estado;
+	@NotNull
 	@ManyToOne
 	private Beneficiario cotizante;
+	@NotNull @Column(name="tx_final")
 	private Integer txFinal;
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name="caja_gestora_id")
+	private Caja cajaGestora;
 	
 	@OneToMany(mappedBy="solicitud")
 	@JsonIgnore
@@ -64,13 +75,6 @@ public class Solicitud extends EntityBase {
 		this.fecha = fecha;
 	}
 
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
 
 	public Estado getEstado() {
 		return estado;
@@ -127,6 +131,22 @@ public class Solicitud extends EntityBase {
 
 	public void setCotizante(Beneficiario cotizante) {
 		this.cotizante = cotizante;
+	}
+
+	public Caja getCajaGestora() {
+		return cajaGestora;
+	}
+
+	public void setCajaGestora(Caja cajaGestora) {
+		this.cajaGestora = cajaGestora;
+	}
+
+	public String getExpedienteNumero() {
+		return expedienteNumero;
+	}
+
+	public void setExpedienteNumero(String expedienteNumero) {
+		this.expedienteNumero = expedienteNumero;
 	}
 
 }

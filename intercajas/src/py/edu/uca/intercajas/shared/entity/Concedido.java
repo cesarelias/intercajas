@@ -3,6 +3,7 @@ package py.edu.uca.intercajas.shared.entity;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -12,9 +13,13 @@ public class Concedido extends Finiquito {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	private BigDecimal bt;
+	@NotNull
 	private int tx;
+	@NotNull
 	private int tmin;
+	@NotNull
 	private BigDecimal bx;
 
 	public BigDecimal getBt() {

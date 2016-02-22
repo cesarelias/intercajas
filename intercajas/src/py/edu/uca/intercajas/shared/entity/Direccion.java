@@ -1,20 +1,25 @@
 package py.edu.uca.intercajas.shared.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 @Embeddable
 public class Direccion {
 	
-	@Column(length = 70) 
+	@Column(name="calle_principal",  length = 70) @Size(max=70) @Length
 	private String callePrincipal;
-	@Column(length = 7)
+	@Column(name="numero_casa",  length = 10) @Size(max=10)
 	private String numeroCasa;
-	@Column(length = 70)
+	@Column(length = 70) @Size(max=70)
 	private String barrio;
-	@Column(length = 70)
+	@Column(length = 70) @Size(max=70)
 	private String ciudad;
-	@Column(length = 70)
+	@Column(length = 70) @Size(max=70)
 	private String departamento;
+	
+	
 	public String getCallePrincipal() {
 		return callePrincipal;
 	}

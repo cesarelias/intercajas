@@ -27,7 +27,7 @@
 			<tr>
 				<td>Lugar</td>
 				<td>
-					<g:SuggestBox ui:field="lugar" />
+					<g:SuggestBox ui:field="lugar"/>
 				</td>
 			</tr>
 			<tr>

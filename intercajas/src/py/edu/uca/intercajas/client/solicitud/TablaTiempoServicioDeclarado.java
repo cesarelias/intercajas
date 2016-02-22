@@ -3,12 +3,10 @@ package py.edu.uca.intercajas.client.solicitud;
 import java.util.ArrayList;
 import java.util.List;
 
-import py.edu.uca.intercajas.client.tiemposervicio.TiempoServicioReconocidoEditor;
 import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
-import py.edu.uca.intercajas.shared.entity.TiempoServicioReconocido;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,13 +15,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 public class TablaTiempoServicioDeclarado extends UIBase {
 
@@ -204,5 +199,5 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		}
 
 	}
-
+	
 }

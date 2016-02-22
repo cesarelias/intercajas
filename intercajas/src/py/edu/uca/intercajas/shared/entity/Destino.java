@@ -2,16 +2,20 @@ package py.edu.uca.intercajas.shared.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Destino extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	@ManyToOne
 	private Caja destinatario;
-	private Boolean leido;
+//	private Boolean leido;
+//	@NotNull
 //	private Estado estado;
+	@NotNull
 	@ManyToOne
 	private Mensaje mensaje;
 	
@@ -27,13 +31,13 @@ public class Destino extends EntityBase {
 		this.destinatario = destinatario;
 	}
 
-	public Boolean getLeido() {
-		return leido;
-	}
-
-	public void setLeido(Boolean leido) {
-		this.leido = leido;
-	}
+//	public Boolean getLeido() {
+//		return leido;
+//	}
+//
+//	public void setLeido(Boolean leido) {
+//		this.leido = leido;
+//	}
 
 	public Mensaje getMensaje() {
 		return mensaje;

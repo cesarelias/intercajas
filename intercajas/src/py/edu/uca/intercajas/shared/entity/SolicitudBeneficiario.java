@@ -5,24 +5,32 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Table(name="solicitud_beneficiario")
 @Entity
 public class SolicitudBeneficiario extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	@ManyToOne
 	private Solicitud solicitud;
+	@NotNull
 	@ManyToOne
 	private Beneficiario beneficiario;
+	@NotNull		
+	private Tipo tipo;
+	private Parentesco parentesco;
+	@NotNull
+	private Estado estado;
+	
 	@OneToMany(mappedBy = "solicitudBeneficiario")
 	@JsonIgnore
 	private List<Finiquito> finiquitos;
-	private Tipo tipo;
-	private Parentesco parentesco;
-	private Estado estado;
 	
 	public enum Estado {
 		Pendiente, Finalizado

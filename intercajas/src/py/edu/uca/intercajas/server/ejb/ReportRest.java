@@ -1,22 +1,27 @@
 package py.edu.uca.intercajas.server.ejb;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -27,65 +32,73 @@ import net.sf.jasperreports.engine.JasperReport;
 @Stateless
 public class ReportRest {
 
-	@Path("/test")
+	@Resource(mappedName = "java:jboss/datasources/IntercajasDS")
+	DataSource dataSource;
+
+	@PersistenceContext
+	EntityManager em;
+	
+	@Path("/auditoriaPorUsuario")
 	@GET
 	@Produces("text/plain")
-	public String test(@QueryParam("param") String param) {
+	public String auditoriaPorUsuario(@QueryParam(value = "desde") String desde,
+			           @QueryParam(value = "hasta") String hasta,
+			           @QueryParam(value = "usuario") String usuario) {
 		System.out.println("rest working");
-
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
 		try {
-			return print(param);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			parameters.put("desde", new java.sql.Date(df.parse(desde).getTime()));
+			parameters.put("hasta", new java.sql.Date(df.parse(hasta).getTime()));
+			parameters.put("usuario", usuario);
+		} catch (ParseException e) {
 			e.printStackTrace();
+			return null;
 		}
-
-		return null;
+		return print("/home/cesar/docs/git/intercajas/reports/auditoria.jrxml", parameters);
 	}
 
-	public Connection getConnection() throws SQLException {
-
-		Connection con = null;
-		DataSource ds = null;
+	
+	@Path("/totalizacion")
+	@GET
+	@Produces("text/plain")
+	public String totalizacion(@QueryParam(value = "param") Long solicitud_id) {
+		System.out.println("rest working");
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("solicitud_id", solicitud_id);
+		return print("/home/cesar/docs/git/intercajas/reports/totalizacion.jrxml", parameters);
+	}	
+	
+	public String print(String reportName, Map<String, Object> parameters) {
 
 		try {
-			Context init = new InitialContext();
-			Context ctx = (Context) init.lookup("java:jboss/datasources");
-			ds = (DataSource) ctx.lookup("IntercajasDS");
-			ctx.close();
+			String filePath = "/home/cesar/principal/reports/";
+			String fileName = "rep-" + new Date().getTime() + ".pdf";
 
-			con = ds.getConnection();
-			return con;
-		} catch (NamingException e) {
+			// Compile jrxml file.
+			JasperReport jasperReport = JasperCompileManager
+					.compileReport(reportName);
+
+			// Parameters for report
+
+			JasperPrint jasperPrint = JasperFillManager.fillReport(
+					jasperReport, parameters, dataSource.getConnection());
+
+			// Make sure the output directory exists.
+			File outDir = new File(filePath);
+			outDir.mkdirs();
+
+			// Export to PDF.
+			JasperExportManager.exportReportToPdfFile(jasperPrint, filePath	+ fileName);
+
+			return fileName;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 
 	}
 
-	public String print(String param) throws SQLException {
-
-		String fileName = "rep-" + new Date().getTime() + ".pdf";
-
-		HashMap<String, Object> hm = new HashMap<>();
-
-		hm.put("nombre", param);
-
-		try {
-			JasperReport jasperReport = JasperCompileManager
-					.compileReport("/tmp/jasper/auditoria.jrxml");
-			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperReport, hm, getConnection());
-			JasperExportManager.exportReportToPdfFile(jasperPrint,
-					"/home/cesar/principal/reports/" + fileName);
-
-			return fileName;
-
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
 }

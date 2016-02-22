@@ -22,7 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import py.edu.uca.intercajas.server.CalculoTiempo;
+import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
 import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.NuevaSolicitud;
@@ -30,6 +30,7 @@ import py.edu.uca.intercajas.shared.NuevoReconocimientoTiempoServicio;
 import py.edu.uca.intercajas.shared.RangoTiempo;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Concedido;
@@ -159,45 +160,32 @@ public class SolicitudRest   {
 		m.setFecha(new Date()); //la fecha no se si es al crear o al autorizar
 		m.setRemitente(em.find(Caja.class, user.getCaja().getId()));
 		
-//		Destino destino = destinoOriginario(m, user);
-//		if (destino == null || destino.getEstado() != Destino.Estado.Pendiente) {
-//			throw new IllegalArgumentException("No existe el detino");
-//		}
-//		
-//        if (destino.getEstado() != Destino.Estado.Pendiente) {
-//        	throw new IllegalArgumentException("Destino no tiene estado Pendiente");
-//        }
-//
-//        destino.setEstado(Destino.Estado.Atendido);
-//		em.persist(destino);
-		
-		//m.setReferencia( );//la referencia cargamos al autorizar
 		for (Adjunto a : nuevoReconocimientoTiempoServicio.getAdjuntos()) {
 			a.setMensaje(m);
 			em.persist(a);
 		}
 		em.persist(m);
 
+		List<RangoTiempo> rangos = new ArrayList<RangoTiempo>();
 		for (TiempoServicioReconocido tsr : nuevoReconocimientoTiempoServicio.getListaTiempoServicioReconocido()) {
+			rangos.add(new RangoTiempo(tsr.getInicio(), tsr.getFin()));
 			tsr.setCajaDeclarada(usuarioCajaDeclarada); //Esto asegura que los tiempos reconocidos provienen de la caja asociada al usuario!
 			tsr.setAutorizado(false);
 			tsr.setMensaje(m);
 			em.persist(tsr);
 		}
 		
-//		Esto lo hacemos ahora al Autorizar, no al crear el nuevo reconocimiento de tiempo de servicio
-//		usuarioCajaDeclarada.setEstado(CajaDeclarada.Estado.ConAntiguedad);
-//		em.persist(usuarioCajaDeclarada);
-
 		//Enviamos a todas las cajas declaradas
 		for (CajaDeclarada c : s.getCajasDeclaradas() ) {
 			Destino d = new Destino();
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
-			d.setLeido(false);
+//			d.setLeido(false);
 //			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 		}
+		
+		userLogin.registrarAuditoria(user, "Nuevo Reconocimiento Tiempo Servicio" + s.getExpedienteNumero() + " Cotizante: " + s.getCotizante().toString() + " Reconoce " +CalculoTiempo.leeMeses(CalculoTiempo.txBruto(rangos)));
 		
 		LOG.info("Solicitud titular persisted");
 
@@ -229,6 +217,9 @@ public class SolicitudRest   {
 		Solicitud solicitud = nuevaSolicitud.getSolicitud();
 		Mensaje m = nuevaSolicitud.getMensaje();
 		
+		Beneficiario b = em.find(Beneficiario.class, solicitud.getCotizante().getId());
+		solicitud.setCotizante(b); //eso es necesario, cuando damos de alta a un beneficiario al crear la solicitud
+
 		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(solicitud);
 		m.setFecha(new Date());
@@ -255,12 +246,13 @@ public class SolicitudRest   {
 			Destino d = new Destino();
 			d.setMensaje(m);
 			d.setDestinatario(c.getCaja());
-			d.setLeido(false);
+//			d.setLeido(false);
 //			d.setEstado(Destino.Estado.Pendiente);
 			em.persist(d);
 			
 		}
 		
+		solicitud.setCajaGestora(user.getCaja()); //Donde inicia es caja gestora
 		solicitud.setTxFinal(0); //iniciamos con 0 meses
 		solicitud.setFecha(new Date()); //fecha del dia
 		em.persist(solicitud);
@@ -271,6 +263,8 @@ public class SolicitudRest   {
 			sb.setEstado(SolicitudBeneficiario.Estado.Pendiente);
 			em.persist(sb);
 		}
+
+		userLogin.registrarAuditoria(user, "Nueva Solicitud " + solicitud.getExpedienteNumero() + " Cotizante: " + solicitud.getCotizante().toString());
 		
 		LOG.info("Solicitud titular persisted");
 		

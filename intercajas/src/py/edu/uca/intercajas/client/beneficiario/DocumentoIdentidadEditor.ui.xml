@@ -16,7 +16,7 @@
 			<tr>
 				<td width="120px">Numero Documento</td>
 				<td>
-					<g:TextBox ui:field="numeroDocumento" />
+					<g:TextBox ui:field="numeroDocumento" maxLength="70"/>
 				</td>
 			</tr>
 		</table>

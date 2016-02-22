@@ -11,34 +11,23 @@
 
 	<g:DockLayoutPanel unit="PX" width="720px" height="470px">
 		<g:center>
-			<g:DockLayoutPanel height="100%" width="100%">
+			<g:DockLayoutPanel unit="PX">
 				<g:north size="110">
-					<g:HorizontalPanel width="100%">
-						<!-- <gt:SolicitudTitularEditor ui:field="solicitudTitularEditor" /> -->
-						<g:DecoratorPanel title="Adjuntos">
-							<gt:UploadAutorizar ui:field="upload" />
-						</g:DecoratorPanel>
-					</g:HorizontalPanel>
+					<gt:UploadAutorizar ui:field="upload" />
 				</g:north>
 				<g:west size="300">
-					<g:VerticalPanel>
-						<g:HTMLPanel>
-							<table>
-								<tr>
-									<td width="120px">Observacion</td>
-								</tr>
-								<tr>
-									<td>
-										<g:TextArea ui:field="observacion" />
-									</td>
-								</tr>
-							</table>
-						</g:HTMLPanel>
-					</g:VerticalPanel>
+					<g:DockLayoutPanel unit="PX">
+						<g:north size="20">
+							<g:Label>Observacion (opcional)</g:Label>
+						</g:north>
+						<g:center>
+							<g:TextArea ui:field="observacion" width="100%" height="100%"/>
+						</g:center>
+					</g:DockLayoutPanel>
 				</g:west>
-				<g:center>
+				<g:east size="350">
 					<g:HTML ui:field="detalle"></g:HTML>
-				</g:center>
+				</g:east>
 			</g:DockLayoutPanel>
 		</g:center>
 		<g:south size="40">

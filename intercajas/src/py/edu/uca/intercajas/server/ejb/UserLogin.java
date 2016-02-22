@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import org.eclipse.jetty.server.Authentication.User;
 
 import py.edu.uca.intercajas.shared.UserDTO;
+import py.edu.uca.intercajas.shared.entity.Auditoria;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
@@ -28,6 +29,7 @@ public class UserLogin {
 	
 	private Collection<UserDTO> usuarios = new ArrayList<UserDTO>();
 
+	//TODO debemos hacer que expire al cambiar de fecha!, es decir, en un nuevo dia, es obligatorio el re-login
 	final long DURATION = 1000 * 60 * 60 * 24 * 1; //24 hora dura una sesion
 	
 	public UserDTO login(String name, String password, String sessionId) { 
@@ -52,6 +54,7 @@ public class UserLogin {
     		user.setExpire(new Date(System.currentTimeMillis() + DURATION));
     		user.setCaja(u.getCaja());
     		user.setTipo(u.getTipo());
+    		user.setFechaLogin(new Date());
     		usuarios.add(user);
     		return user;
 
@@ -165,5 +168,16 @@ public class UserLogin {
 		}
 	}
 	
+	public void registrarAuditoria(UserDTO user, String operacion) {
+		
+		Auditoria a = new Auditoria();
+		a.setCajaSiglas(user.getCaja().getSiglas());
+		a.setFecha(new Date());
+		a.setNombreUsuario(user.getName());
+		a.setOperacion(operacion);
+		
+		em.persist(a);
+		
+	}
 	
 }
