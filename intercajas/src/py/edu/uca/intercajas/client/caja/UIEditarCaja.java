@@ -5,6 +5,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
 
@@ -64,7 +65,9 @@ public class UIEditarCaja extends UIBase {
 
 		FlexTable table = new FlexTable();
 		
+		nombre.setMaxLength(70);
 		nombre.setWidth("300px");
+		nombre.setMaxLength(15);
 		siglas.setWidth("120px");
 		tmin.setWidth("120px");
 		
@@ -108,6 +111,8 @@ public class UIEditarCaja extends UIBase {
 	public void onSave() {
 		
 
+		if (!formularioValido()) return;
+		
 		caja.setNombre(nombre.getValue());
 		caja.setSiglas(siglas.getValue());
 		
@@ -147,5 +152,23 @@ public class UIEditarCaja extends UIBase {
 //			}
 //		});
 	}
-	
+
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la concesion de beneficio");
+
+		
+		try {
+			tminInt = Integer.valueOf(tmin.getValue());
+		} catch (Exception e) {
+			vf.addError("Favor ingrese el numeros de meses de tmin");
+		}
+		
+		if (tminInt == null  || tminInt < 1 || tminInt > 1200) {
+			vf.addError("Favor ingrese el numeros de meses de tmin entre los valores 1 y 1200");
+		}
+		
+		return vf.esValido();
+		
+	}
 }
