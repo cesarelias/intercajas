@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-02-22T08:20:43 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auditoria" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7e5e4909-2720-41a8-a923-2f552bdf5539">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="desde" class="java.sql.Date"/>
+	<parameter name="hasta" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[select * from auditoria where nombreUsuario like $P{usuario}
+and cast(fecha as date) between $P{desde} and $P{hasta} 
+ order by id desc]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="version" class="java.lang.Long"/>
+	<field name="cajasiglas" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="nombreusuario" class="java.lang.String"/>
+	<field name="operacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="24" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="50" y="1" width="140" height="19" uuid="b8e47a12-6585-44a4-b29f-30a7558834ea"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF(EQUALS($P{usuario},"%"),"Todos",$P{usuario})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="50" height="19" uuid="c7ab2abc-2dfe-4197-90c8-8c0c3f19d1ed"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="50" height="19" uuid="1062aeca-52af-4c08-8a6a-c38ebce76e5a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rango]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="20" width="170" height="19" uuid="8b6783cc-d8d1-4acc-b2cb-843e298a56f0"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format( $P{desde}) + " al " + new SimpleDateFormat("dd/MM/yyyy").format( $P{hasta})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="1" width="230" height="19" uuid="6fefd8e7-9175-494d-84ed-b5637e8b1cc9"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha de Impresion : " + new SimpleDateFormat("dd/MM/yyyy hh:mm").format( new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="-1" width="100" height="20" uuid="21b1c595-e14f-4674-910d-7b19ba8dca56"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="-1" width="100" height="20" uuid="984dc143-3c50-4a30-8256-ff92b46b61a3"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="-1" width="344" height="20" uuid="ca528cca-c7dd-4df9-a116-0c2f756eaea7"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[operacion]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="30" uuid="159bbc5d-8f92-4073-b652-3a6cff048508"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="30" uuid="b9d0a50a-bf0a-4660-884a-824febca1bd1"/>
+				<textFieldExpression><![CDATA[$F{nombreusuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="345" height="55" uuid="bddfd84b-3d09-4830-ad47-8c2c1bd71711"/>
+				<textFieldExpression><![CDATA[$F{operacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

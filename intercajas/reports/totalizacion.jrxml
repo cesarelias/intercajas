@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-02-19T12:52:53 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="totalizacion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="2b572900-9dbe-4654-8f0c-e44a37b716c7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="solicitud_id" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select  c.expedientenumero, c.fecha, a.txneto, b.siglas, c.fecha, c.txfinal, d.nombres || ' ' || d.apellidos as cotizante, d.numeroDocumento, d.tipoDocumento, gestora.siglas as cajaGestora
+  from cajadeclarada a, caja b, solicitud c, beneficiario d, caja gestora
+ where a.caja_id = b.id
+   and a.solicitud_id = c.id
+   and c.cotizante_id = d.id
+   and c.cajagestora_id = gestora.id
+   and a.solicitud_id = $P{solicitud_id}]]>
+	</queryString>
+	<field name="expedientenumero" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="txneto" class="java.lang.Integer"/>
+	<field name="siglas" class="java.lang.String"/>
+	<field name="COLUMN_5" class="java.sql.Timestamp"/>
+	<field name="txfinal" class="java.lang.Integer"/>
+	<field name="cotizante" class="java.lang.String"/>
+	<field name="numerodocumento" class="java.lang.String"/>
+	<field name="tipodocumento" class="java.lang.Integer"/>
+	<field name="cajagestora" class="java.lang.String"/>
+	<variable name="txneto_anhos" class="java.lang.String" resetType="None" calculation="System">
+		<variableExpression><![CDATA[($F{txneto}/12 ) + " años " + ($F{txneto}%12 ) + " meses"]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="10" y="14" width="535" height="50" backcolor="#EDE7E6" uuid="a5a17e39-b46b-484a-93aa-ff3bcf99e982"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="14" width="534" height="50" uuid="6aa35db7-059c-41f3-a262-201ba0fdbd43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALIZACION DE TIEMPO DE SERVICIO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="460" y="5" width="100" height="30" uuid="f82b288e-e2fc-46f4-9441-41a4a587aa7c"/>
+				<textFieldExpression><![CDATA[$F{cajagestora}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="350" y="5" width="100" height="30" uuid="727ef125-ea9d-48aa-a638-f6a4709e6054"/>
+				<text><![CDATA[Caja Gestora]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="68" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="0" width="100" height="20" uuid="5d99eb50-aa99-425f-a859-e58eb04a1881"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numerodocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="220" height="20" uuid="2c700a0c-e9b4-4b51-a942-ef8ca3287e70"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="30" width="100" height="20" uuid="5d271a42-dc16-49fe-be02-0afa64b1e498"/>
+				<text><![CDATA[Expediente Numero]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="30" width="100" height="20" uuid="4bec5782-546c-490a-9415-9382b50b7124"/>
+				<textFieldExpression><![CDATA[$F{expedientenumero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="230" y="30" width="80" height="20" uuid="813d2a8e-f70d-4767-aebf-fd0747ed59d1"/>
+				<text><![CDATA[Fecha Solicitud]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="30" width="100" height="20" uuid="aa62bd39-c7ab-4163-a855-8c5f257b816e"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="140" y="0" width="150" height="20" uuid="4ea1a69d-0750-4251-afa6-0004a5a9b816"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{txneto_anhos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="0" width="138" height="20" uuid="d6486477-9b20-4abe-895a-de50866f8898"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{siglas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="31" splitType="Immediate">
+			<textField>
+				<reportElement x="140" y="9" width="150" height="20" uuid="68f77c7d-792f-4d2e-9727-d171afeabbc6"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{txfinal}/12 ) + " años " + ($F{txfinal}%12 ) + " meses"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="9" width="140" height="20" uuid="09225e33-0f7d-44c0-a3da-bbb19226475a"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tiempo Neto]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="43" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
