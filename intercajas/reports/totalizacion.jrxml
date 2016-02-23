@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-02-19T12:52:53 -->
+<!-- 2016-02-23T08:26:14 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="totalizacion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="2b572900-9dbe-4654-8f0c-e44a37b716c7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
 	<parameter name="solicitud_id" class="java.lang.Long"/>
 	<queryString>
-		<![CDATA[select  c.expedientenumero, c.fecha, a.txneto, b.siglas, c.fecha, c.txfinal, d.nombres || ' ' || d.apellidos as cotizante, d.numeroDocumento, d.tipoDocumento, gestora.siglas as cajaGestora
-  from cajadeclarada a, caja b, solicitud c, beneficiario d, caja gestora
+		<![CDATA[select  c.expediente_numero, c.fecha, a.tx_neto, b.siglas, c.tx_final, d.nombres || ' ' || d.apellidos as cotizante, d.numero_documento, d.tipo_documento, gestora.siglas as cajaGestora
+  from caja_declarada a, caja b, solicitud c, beneficiario d, caja gestora
  where a.caja_id = b.id
    and a.solicitud_id = c.id
    and c.cotizante_id = d.id
-   and c.cajagestora_id = gestora.id
+   and c.caja_gestora_id = gestora.id
    and a.solicitud_id = $P{solicitud_id}]]>
 	</queryString>
-	<field name="expedientenumero" class="java.lang.String"/>
+	<field name="expediente_numero" class="java.lang.String"/>
 	<field name="fecha" class="java.sql.Timestamp"/>
-	<field name="txneto" class="java.lang.Integer"/>
+	<field name="tx_neto" class="java.lang.Integer"/>
 	<field name="siglas" class="java.lang.String"/>
-	<field name="COLUMN_5" class="java.sql.Timestamp"/>
-	<field name="txfinal" class="java.lang.Integer"/>
+	<field name="tx_final" class="java.lang.Integer"/>
 	<field name="cotizante" class="java.lang.String"/>
-	<field name="numerodocumento" class="java.lang.String"/>
-	<field name="tipodocumento" class="java.lang.Integer"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="tipo_documento" class="java.lang.Integer"/>
 	<field name="cajagestora" class="java.lang.String"/>
 	<variable name="txneto_anhos" class="java.lang.String" resetType="None" calculation="System">
-		<variableExpression><![CDATA[($F{txneto}/12 ) + " años " + ($F{txneto}%12 ) + " meses"]]></variableExpression>
+		<variableExpression><![CDATA[($F{tx_neto}/12 ) + " años " + ($F{tx_neto}%12 ) + " meses"]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -63,7 +62,7 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{numerodocumento}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="130" y="0" width="220" height="20" uuid="2c700a0c-e9b4-4b51-a942-ef8ca3287e70"/>
@@ -78,7 +77,7 @@
 			</staticText>
 			<textField>
 				<reportElement x="118" y="30" width="100" height="20" uuid="4bec5782-546c-490a-9415-9382b50b7124"/>
-				<textFieldExpression><![CDATA[$F{expedientenumero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{expediente_numero}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="230" y="30" width="80" height="20" uuid="813d2a8e-f70d-4767-aebf-fd0747ed59d1"/>
@@ -115,7 +114,7 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{txfinal}/12 ) + " años " + ($F{txfinal}%12 ) + " meses"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{tx_final}/12 ) + " años " + ($F{tx_final}%12 ) + " meses"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="9" width="140" height="20" uuid="09225e33-0f7d-44c0-a3da-bbb19226475a"/>

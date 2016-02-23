@@ -202,6 +202,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 				vf.addError("Seleccione a los herederos");
 			} else {
 				int cantConyuges = 0;
+				int cantAscendientes = 0;
 				Set<Long> listaUnica = new HashSet<Long>();
 				for (int i=0; i< tablaSolicitudBeneficiario.listaBeneficiario.size(); i++) {
 					Beneficiario b = tablaSolicitudBeneficiario.listaBeneficiario.get(i);
@@ -212,6 +213,8 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 					
 					if (tablaSolicitudBeneficiario.listaParentescoEditors.get(i).getValue() == SolicitudBeneficiario.Parentesco.Conyuge) {
 						cantConyuges++;
+					} else if (tablaSolicitudBeneficiario.listaParentescoEditors.get(i).getValue() == SolicitudBeneficiario.Parentesco.Ascendiente) {
+						cantAscendientes++;
 					}
 				}
 				
@@ -222,6 +225,11 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 				if (cantConyuges>1) {
 					vf.addError("Declaro mas un derechohabiente con parentesco Conyuge, favor verifique");
 				}
+				
+				if (cantAscendientes>2) {
+					vf.addError("Declaro mas dos derechohabiente con parentesco Ascendiente, favor verifique");
+				}
+
 				
 			}
 		}

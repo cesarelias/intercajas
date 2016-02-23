@@ -144,7 +144,6 @@ public class UIConceder extends UIBase {
 			@Override
 			public void onSuccess(Method method, Void response) {
 				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
-				Window.alert("Enviado!");
 				close();
 			}
 			

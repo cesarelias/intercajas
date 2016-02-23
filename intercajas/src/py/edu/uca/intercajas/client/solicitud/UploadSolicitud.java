@@ -35,6 +35,8 @@ public class UploadSolicitud extends UIBase {
 	
 	public UploadSolicitud() {
 
+		try {
+		
 		uploadTable = new FlexTable();
 
 		solicitud = createUploaderSolicutud();
@@ -55,6 +57,10 @@ public class UploadSolicitud extends UIBase {
 		initWidget(v);
 		
 		addEliminarHander();
+		
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+		}
 
 	}
 
@@ -94,6 +100,7 @@ public class UploadSolicitud extends UIBase {
 	
 
 	SingleUploader createUploaderSolicutud() {
+		try {
 		SingleUploader defaultUploader = new SingleUploader(FileInputType.LABEL);
 		defaultUploader.setValidExtensions("pdf");
 		defaultUploader.setMultipleSelection(false);
@@ -101,6 +108,11 @@ public class UploadSolicitud extends UIBase {
 		defaultUploader.setAvoidRepeatFiles(false);
 		defaultUploader.addOnFinishUploadHandler(onFinishSolicitud);
 		return defaultUploader;
+		} catch (Exception e) {
+			Window.alert(e.getMessage());
+			return null;
+		}
+		
 	}
 
 	SingleUploader createUploaderDocumentoIdentidad() {

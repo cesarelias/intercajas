@@ -42,6 +42,9 @@ public class MyCustomizedUploadServlet extends UploadAction {
    */
   @Override
   public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
+	  
+	  
+	  System.out.println("************************************************************");
     String response = "";
     
     for (FileItem item : sessionFiles) {

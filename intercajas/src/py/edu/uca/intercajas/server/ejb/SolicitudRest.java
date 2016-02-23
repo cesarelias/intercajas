@@ -219,7 +219,16 @@ public class SolicitudRest   {
 		
 		Beneficiario b = em.find(Beneficiario.class, solicitud.getCotizante().getId());
 		solicitud.setCotizante(b); //eso es necesario, cuando damos de alta a un beneficiario al crear la solicitud
+		
+		//Persistimos la solicitud
+		solicitud.setCajaGestora(user.getCaja()); //Donde inicia es caja gestora
+		solicitud.setTxFinal(0); //iniciamos con 0 meses
+		solicitud.setFecha(new Date()); //fecha del dia
+		em.persist(solicitud);
+		//fin persis solicitud
 
+		
+		m.setSolicitud(solicitud);
 		m.setEstado(Mensaje.Estado.Pendiente);
 		m.setSolicitud(solicitud);
 		m.setFecha(new Date());
@@ -252,11 +261,6 @@ public class SolicitudRest   {
 			
 		}
 		
-		solicitud.setCajaGestora(user.getCaja()); //Donde inicia es caja gestora
-		solicitud.setTxFinal(0); //iniciamos con 0 meses
-		solicitud.setFecha(new Date()); //fecha del dia
-		em.persist(solicitud);
-
 		
 		for (SolicitudBeneficiario sb : nuevaSolicitud.getListaSolicitudBeneficiario()) {
 			sb.setSolicitud(solicitud);

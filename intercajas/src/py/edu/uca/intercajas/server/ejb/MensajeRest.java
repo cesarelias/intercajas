@@ -388,6 +388,7 @@ public class MensajeRest   {
 
 		mensaje.setFecha(new Date());
 		mensaje.setReferencia(solicitud.getExpedienteNumero() + " - " + solicitud.getCotizante().getNombres() + " " + solicitud.getCotizante().getApellidos() + " - " + user.getCaja().getSiglas() + " reconoce " +  CalculoTiempo.leeMeses(txBruto) + " de servicios");
+		
 		em.persist(mensaje);
 		
 				

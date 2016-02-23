@@ -78,13 +78,13 @@ public class Gestion extends Composite {
 		initWidget(binder.createAndBindUi(this));
 		
 		if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Administrador) {
-			addItemUsuarios(new ItemMenu("Gestion de Usuarios"));
-			addItemBeneficiario(new ItemMenu("Gestion de Beneficiario"));
+			addItemUsuarios(new ItemMenu("Gestión de Usuarios"));
+			addItemBeneficiario(new ItemMenu("Gestión de Beneficiario"));
 			addItemInformeAuditoria(new ItemMenu("Informe Auditoria"));
-			addItemCaja(new ItemMenu("Caja de Jubilacion"));
+			addItemCaja(new ItemMenu("Gestión Caja de Jubilacion"));
 		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Gestor) {
 			addItemSolicitudTitular(new ItemMenu("Nueva Solicitud"));
-			addItemBeneficiario(new ItemMenu("Gestion de Beneficiario"));
+			addItemBeneficiario(new ItemMenu("Gestión de Beneficiario"));
 		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Superior) {
 //			addItemAnularSolicitud(new ItemMenu("Anular Solicitud"));
 		}

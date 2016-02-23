@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
@@ -86,6 +87,9 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 	@UiHandler("save")
 	void onSave(ClickEvent event){
 
+		
+		if (!formularioValido()) return;
+		
 //		CajaDeclarada cd = new CajaDeclarada();
 //		Caja c = new Caja();
 //		c.setSiglas("CAJADEC");
@@ -129,6 +133,20 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 				empleador = empleadorSelected;
 			}
 		});
+		
+	}
+	
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para agregar tiempo de servicio");
+
+		if (empleador == null) {
+			vf.addError("Seleccione un empleador");
+		}
+		
+		
+		return vf.esValido();
+		
 		
 	}
 	

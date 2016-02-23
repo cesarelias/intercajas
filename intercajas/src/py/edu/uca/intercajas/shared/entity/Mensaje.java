@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -18,26 +19,28 @@ public class Mensaje extends EntityBase {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
+//	@NotNull(message="remitente no puede ser nulo")
+	//si puede ser nulo, el envio de TOTALIZACION lo envia el sistema, no una caja de jubilacion
 	@ManyToOne
+	@JoinColumn(name="remitente_id")
 	private Caja remitente;
-	@NotNull @Size(max=255)
+	@NotNull(message="refrencia no puede ser nulo") @Size(max=255)
 	private String referencia;
-	@NotNull
+	@NotNull(message="asunto no puede ser nulo")
 	private Asunto asunto;
-	@NotNull @Column(columnDefinition = "text")
+	@NotNull(message="cuerpo no puede ser nulo") @Column(columnDefinition = "text")
 	private String cuerpo;
-	@NotNull
+	@NotNull(message="solicitud no puede ser nulo")
 	@ManyToOne
 	@JsonIgnoreProperties({"beneficiario"})
 	private Solicitud solicitud;
-	@NotNull
+	@NotNull(message="estado no puede ser nulo") 
 	private Estado estado;
 	@Size(max=255)
 	private String observacion; //guardamos el motivo en la descripcion al Autorizar o al Anular
-	@NotNull
+	@NotNull(message="fecha no puede ser nulo")
 	private Date fecha;
-	@NotNull
+	@NotNull(message="autorizado no puede ser nulo")
 	private boolean autorizado;
 	
 	@OneToMany(mappedBy = "mensaje")

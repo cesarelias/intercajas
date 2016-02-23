@@ -76,7 +76,6 @@ public class UIAnular extends UIBase {
 			@Override
 			public void onSuccess(Method method, Void response) {
 				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
-				Window.alert("Mensaje anulado");
 				close();
 			}
 		});

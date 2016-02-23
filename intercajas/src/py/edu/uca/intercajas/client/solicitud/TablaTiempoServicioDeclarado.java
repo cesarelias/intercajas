@@ -58,10 +58,11 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		// TODO falta que las filas de las declaraciones tenga SCROLL
 
 		// Initialize the header.
+		header.setWidth("760px");
 		header.getColumnFormatter().setWidth(0, "60px");
-		header.getColumnFormatter().setWidth(1, "220px");
-		header.getColumnFormatter().setWidth(2, "60px");
-		header.getColumnFormatter().setWidth(3, "110px");
+		header.getColumnFormatter().setWidth(1, "300px");
+		header.getColumnFormatter().setWidth(2, "80px");
+		header.getColumnFormatter().setWidth(3, "80px");
 		header.getColumnFormatter().setWidth(4, "110px");
 
 		header.setText(0, 0, "Caja");
@@ -70,11 +71,12 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 		header.setText(0, 3, "Fin");
 		header.setText(0, 4, "Tiempo");
 
-		// Initialize the table.
+		// Initialize the table.	
+		table.setWidth("760px");
 		table.getColumnFormatter().setWidth(0, "60px");
-		table.getColumnFormatter().setWidth(1, "220px");
-		table.getColumnFormatter().setWidth(2, "60px");
-		table.getColumnFormatter().setWidth(3, "110px");
+		table.getColumnFormatter().setWidth(1, "300px");
+		table.getColumnFormatter().setWidth(2, "80px");
+		table.getColumnFormatter().setWidth(3, "80px");
 		table.getColumnFormatter().setWidth(4, "110px");
 
 	}

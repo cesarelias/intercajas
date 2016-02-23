@@ -14,7 +14,7 @@
 			<g:TabLayoutPanel barUnit="PX" barHeight="30"
 				animationDuration="1000" ui:field="tab" height="400px">
 				<g:tab>
-					<g:header size='7'>Conceder Beneficio</g:header>
+					<g:header size='7'>Denegar Beneficio</g:header>
 					<g:VerticalPanel>
 						<g:HTMLPanel>
 							<table>
