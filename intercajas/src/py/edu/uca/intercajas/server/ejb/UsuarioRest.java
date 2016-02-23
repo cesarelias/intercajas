@@ -10,6 +10,7 @@ import javax.jws.WebParam;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,9 +19,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Auditoria;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
@@ -87,7 +90,12 @@ public class UsuarioRest   {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public void actualizar(Usuario usuario)  {
+	public void actualizar(Usuario usuario, @Context HttpServletRequest req) { 
+	
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
+        }
 
 		Usuario usuarioAnterior = em.find(Usuario.class, usuario.getId());
 		if (usuarioAnterior == null) {
@@ -112,6 +120,10 @@ public class UsuarioRest   {
 				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede cambiar el nombre de usuario, ya registra movimientos en auditoria").build());
 			}
 		}
+		
+		userLogin.registrarAuditoria(user, "Cambio datos usuario (anterior/nuevo) " +
+		                                " descripcion: " + usuarioAnterior.getDescripcion() + "/" + usuario.getDescripcion() +
+		                                " activo? " + usuarioAnterior.isActivo() + "/" + usuario.isActivo());
 			
 		em.merge(usuario);
 		

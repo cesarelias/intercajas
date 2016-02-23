@@ -23,7 +23,9 @@ public class Usuario extends EntityBase implements Serializable {
 	@NotNull @ManyToOne
 	private Caja caja;
 	@NotNull
-	private Tipo tipo;	
+	private Tipo tipo;
+	@NotNull
+	private boolean activo;
 
 	public enum Tipo {
 		Gestor, Superior, Administrador
@@ -75,6 +77,14 @@ public class Usuario extends EntityBase implements Serializable {
 
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 
 }

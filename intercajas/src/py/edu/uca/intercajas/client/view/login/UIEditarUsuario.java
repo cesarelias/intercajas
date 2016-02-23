@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -35,6 +36,7 @@ public class UIEditarUsuario extends UIBase {
 	TextBox nombre = new TextBox();
 	TextBox descripcion = new TextBox();
 	TextBox correo = new TextBox();
+	CheckBox activo = new CheckBox();
 	TipoUsuarioEditor tipo = new TipoUsuarioEditor();
 	Button cancel = new Button("Cancelar");
 	Button guardar = new Button("Guardar");
@@ -48,6 +50,7 @@ public class UIEditarUsuario extends UIBase {
 		if (usuario == null) {
 			titulo = "Nuevo usuario";
 			this.usuario = new Usuario();
+			this.usuario.setActivo(true);
 		} else {
 			this.usuario = usuario;
 			titulo = "Editando usuario";
@@ -56,6 +59,7 @@ public class UIEditarUsuario extends UIBase {
 			caja.setValue(usuario.getCaja());
 			tipo.setValue(usuario.getTipo());
 			correo.setValue(usuario.getCorreo());
+			activo.setValue(usuario.isActivo());
 		}
 		
 		
@@ -90,8 +94,13 @@ public class UIEditarUsuario extends UIBase {
 		
 		table.setText(3, 0, "Caja");
 		table.setWidget(3, 1, caja);
+
 		table.setText(4, 0, "Tipo");
 		table.setWidget(4, 1, tipo);
+		
+		table.setText(5, 0, "Activo?");
+		table.setWidget(5, 1, activo);
+		
 		
 		VerticalPanel v = new VerticalPanel();
 		
@@ -99,6 +108,7 @@ public class UIEditarUsuario extends UIBase {
 		v.add(p);
 		
 		initWidget(v);
+		
 	
 		cancel.addClickHandler(new ClickHandler() {
 			@Override
@@ -166,6 +176,7 @@ public class UIEditarUsuario extends UIBase {
 		usuario.setCaja(caja.getValue());
 		usuario.setTipo(tipo.getValue());
 		usuario.setCorreo(correo.getValue());
+		usuario.setActivo(activo.getValue());
 
 		BeneficiarioService.Util.get().actualizarUsuario(usuario, new MethodCallback<Void>() {
 

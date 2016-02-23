@@ -64,7 +64,7 @@
 		<g:south size="40">
 			<g:HorizontalPanel>
 				<g:Button ui:field="cancelar">Cancelar</g:Button>
-				<g:Button ui:field="enviar">Crear solicitud</g:Button>
+				<g:Button ui:field="enviar">Crear</g:Button>
 			</g:HorizontalPanel>
 		</g:south>
 	</g:DockLayoutPanel>

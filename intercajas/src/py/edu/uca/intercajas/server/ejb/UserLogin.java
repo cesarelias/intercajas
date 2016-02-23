@@ -39,7 +39,8 @@ public class UserLogin {
 	    			  "select u "
 	    			+ "  from Usuario u"
 	    			+ " where u.nombre = :nombre "
-	    			+ "   and u.clave = :clave",
+	    			+ "   and u.clave = :clave "
+	    			+ "   and u.activo = true",
 	    			 Usuario.class)
 	    			.setParameter("nombre", name)
 	    			.setParameter("clave", MD5(password))
