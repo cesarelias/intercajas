@@ -170,7 +170,7 @@ public class MailDetail extends ResizeComposite {
 						  @Override
 						  public void onClick(ClickEvent event) {
 							  TiempoServicioReconocidoEditorWorkFlow b = new TiempoServicioReconocidoEditorWorkFlow(item);
-							  b.titulo = "Reconocimiento de Tiempo de Servicio";
+//							  b.titulo = "Reconocimiento de Tiempo de Servicio";
 							  b.mostrarDialog();
 						  }
 					  });

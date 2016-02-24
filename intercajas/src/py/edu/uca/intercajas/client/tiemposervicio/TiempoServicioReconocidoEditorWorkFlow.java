@@ -44,6 +44,8 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 	
 	public TiempoServicioReconocidoEditorWorkFlow(Destino destino) {
 		
+		titulo = "Nuevo Reconocimiento de Tiempo de Servicio";
+		
 		this.solicitud = destino.getMensaje().getSolicitud();
 		this.destino   = destino; //usamos la fila del maillist (destino) para pasar al estado Atendido
 		
