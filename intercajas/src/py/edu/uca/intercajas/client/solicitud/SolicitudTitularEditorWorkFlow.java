@@ -153,14 +153,8 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 
 		if (cotizanteSolicitante.getValue()) {
 			tab.getTabWidget(1).getParent().setVisible(false);
-//			tablaSolicitudBeneficiario.listaBeneficiario.clear();
-//			tablaSolicitudBeneficiario.refreshTable();
-//			tablaSolicitudBeneficiario.setVisible(false);
 		} else {
 			tab.getTabWidget(1).getParent().setVisible(true);
-//			tablaSolicitudBeneficiario.listaBeneficiario.clear();
-//			tablaSolicitudBeneficiario.refreshTable();
-//			tablaSolicitudBeneficiario.setVisible(true);
 		}
 		
 	}
@@ -186,7 +180,7 @@ public class SolicitudTitularEditorWorkFlow extends UIBase {
 			cajasDiferentes.add(tsd.getCaja().getSiglas());
 		}
 		if (cajasDiferentes.size() < 2) {
-			vf.addError("Debe declarar al menos dos cajas de jubilaciones");
+			vf.addError("Debe declarar al menos dos cajas de jubilaciones diferentes");
 		}
 		
 		if (solicitudTitularEditor.numero.getValue().length() < 3) {
