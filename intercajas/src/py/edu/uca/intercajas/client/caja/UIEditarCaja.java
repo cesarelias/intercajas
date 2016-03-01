@@ -37,11 +37,11 @@ public class UIEditarCaja extends UIBase {
 		initComponents();
 
 		if (caja == null) {
-			titulo = "Nueva caja de jubilacion";
+			titulo = "Nueva caja de jubilación";
 			this.caja = new Caja();
 		} else {
 			this.caja = caja;
-			titulo = "Editando caja de jubilacion";
+			titulo = "Editando caja de jubilación";
 			nombre.setText(caja.getNombre());
 //			nombre.setEnabled(false);
 			
@@ -67,7 +67,7 @@ public class UIEditarCaja extends UIBase {
 		
 		nombre.setMaxLength(70);
 		nombre.setWidth("300px");
-		nombre.setMaxLength(15);
+		siglas.setMaxLength(15);
 		siglas.setWidth("120px");
 		tmin.setWidth("120px");
 		

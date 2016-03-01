@@ -117,7 +117,7 @@ public class ListaUsuarios extends UIBase {
   public ListaUsuarios(int maxRows) {
     this.maxRows = maxRows;
     
-    this.titulo = "Usuarios";
+    this.titulo = "Lista de Usuarios";
     
     table = new DataGrid<Usuario>(maxRows,
         GWT.<TableResources> create(TableResources.class));

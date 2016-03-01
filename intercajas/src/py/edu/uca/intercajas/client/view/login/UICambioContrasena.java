@@ -2,17 +2,15 @@ package py.edu.uca.intercajas.client.view.login;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -22,15 +20,6 @@ import com.google.gwt.user.client.ui.TextBox;
 public class UICambioContrasena extends UIBase implements ClickHandler {	
 
 	
-//	public Login(UIHome uiHome){
-//		this.uiHome=uiHome;
-//		initComponents();
-//		style();
-//		widgetListener();		
-//	}
-	
-	
-	private FlowPanel panel;
 	private Grid grid;
 	private Button btnLogin;
 	private Button btnCancel;
@@ -50,10 +39,8 @@ public class UICambioContrasena extends UIBase implements ClickHandler {
 		
 		this.usuario = usuario;
 		
-		titulo = "Cambio de contraseña";
+		titulo = "Cambiar mi contraseña";
 		txtUsuario.setText(usuario.getName());
-		txtPassword.setText("323698");
-		
 		
 	}
 	
@@ -66,7 +53,7 @@ public class UICambioContrasena extends UIBase implements ClickHandler {
 	private void initComponents(){
 
 		lblNombre = new Label("Usuario");
-		lblPassword = new Label("Contraseña anterior");
+		lblPassword = new Label("Contraseña actual");
 		lblNewPassword = new Label("Nueva contraseña");
 		lblNewPasswordConfirm = new Label("Confirme contraseña");
 		btnLogin = new Button("Cambiar");
@@ -104,14 +91,7 @@ public class UICambioContrasena extends UIBase implements ClickHandler {
 	
 	public void login() {
 		
-		if (txtNewPassword.getValue().length() < 5) {
-			Window.alert("La contaseña debe contener al menos cinco caracteres");
-			return;
-		}
-		if (!txtNewPassword.getValue().equals(txtNewPasswordConfirm.getValue())) {
-			Window.alert("Verifique los datos introducidos!");
-			return;
-		}
+		if (!formularioValido()) return;
 		
 		LoginService.Util.getInstance().changePassword(usuario.getName(), txtPassword.getValue(), txtNewPassword.getValue(), new AsyncCallback<Boolean>() {
 
@@ -153,5 +133,18 @@ public class UICambioContrasena extends UIBase implements ClickHandler {
 		login();
 	}
 	
+	public boolean formularioValido() {
 		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la concesion de beneficio");
+		
+		if (txtNewPassword.getValue().length() < 5) {
+			vf.addError("La contaseña debe contener al menos cinco caracteres");
+		}
+		if (!txtNewPassword.getValue().equals(txtNewPasswordConfirm.getValue())) {
+			vf.addError("Verifique los datos introducidos!");
+		}
+		
+		return vf.esValido();
+		
+	}	
 }

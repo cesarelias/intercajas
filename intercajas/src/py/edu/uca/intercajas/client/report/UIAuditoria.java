@@ -157,6 +157,13 @@ public class UIAuditoria extends UIBase  {
 			vf.addError("Fecha hasta no valida");
 		}
 		
+		if (AppUtils.esFecha(desde) && AppUtils.esFecha(hasta)) {
+			if (hasta.getValue().before(desde.getValue())) {
+				vf.addError("Rango de fecha del desde - hasta no valido");
+			}
+		}
+
+		
 		return vf.esValido();
 	}
 	

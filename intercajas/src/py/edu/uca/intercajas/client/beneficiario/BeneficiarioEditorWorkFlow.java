@@ -223,11 +223,11 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 		if (beneficiarioEditor.nombres.getValue().length() < 2 ){
 			vf.addError("Ingrese nombre del beneficiario");
 		}
-		
+
 		if (beneficiarioEditor.apellidos.getValue().length() < 2) {
 			vf.addError("Ingrese apellido del beneficiario");
 		}
-		
+
 		if (!AppUtils.esFecha(beneficiarioEditor.fechaNacimiento)) {
 			vf.addError("Ingrese una fecha de nacimiento valida");
 		} else {
@@ -235,13 +235,13 @@ public class BeneficiarioEditorWorkFlow extends UIBase {
 				vf.addError("La fecha de nacimiento no puede ser posterior a hoy");
 			}
 		}
-		
+
 		if (beneficiarioEditor.documento.numeroDocumento.getValue().length() == 0 ){
 			vf.addError("Ingrese numero de documento");
 		}
-		
-		
+
 		return vf.esValido();
-			
+
 	}
+
 }

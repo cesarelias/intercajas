@@ -118,7 +118,7 @@ public class ListaBeneficiarios extends UIBase {
   public ListaBeneficiarios(int maxRows) {
     this.maxRows = maxRows;
     
-    this.titulo = "Beneficiarios";
+    this.titulo = "Lista de Beneficiarios";
     
     table = new DataGrid<Beneficiario>(maxRows,
         GWT.<TableResources> create(TableResources.class));

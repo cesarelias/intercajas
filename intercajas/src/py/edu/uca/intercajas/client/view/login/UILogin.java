@@ -7,6 +7,7 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.shared.UserDTO;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -80,7 +81,7 @@ public class UILogin extends Composite implements ClickHandler {
 		
 		lblNombre = new Label("Usuario");
 		lblPassword = new Label("Contraseña");
-		btnLogin = new Button("Iniciar Sesion");
+		btnLogin = new Button("Iniciar Sesión");
 		txtPassword = new PasswordTextBox();
 		txtUsuario = new TextBox();
 		grid = new Grid(3,2);
@@ -112,7 +113,7 @@ public class UILogin extends Composite implements ClickHandler {
 		logos.setSize("100%", "100%");
 		logos.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		logos.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		logos.add(new HTML("<font color='blue' size='6'>Bienvenido al sistema intercajas</font>"));
+//		logos.add(new HTML("<font color='blue' size='6'>Bienvenido al sistema intercajas</font>"));
 		
 		
 		VerticalPanel v = new VerticalPanel();//Esto es el panel central, donde se centra todo
@@ -133,38 +134,7 @@ public class UILogin extends Composite implements ClickHandler {
 	
 	public void login() {
 		
-		
-//		btnLogin.setEnabled(false);
-//		BeneficiarioService.Util.get().reporteTotalizacion(Long.valueOf(txtUsuario.getValue()), new TextCallback() {
-//			@Override
-//			public void onSuccess(Method method, String response) {
-//				btnLogin.setEnabled(true);
-////				Window.open( "servlet.gupld?show=" + "reports/" + response, "_parent", "");
-//				Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=test.pdf", "_parent", "");
-//			}
-//			
-//			@Override
-//			public void onFailure(Method method, Throwable exception) {
-//				btnLogin.setEnabled(true);
-//				Window.alert(exception.getMessage());
-//			}
-//		});
-//		
-//		BeneficiarioService.Util.get().reporTest(txtUsuario.getValue(), new TextCallback() {
-//			@Override
-//			public void onSuccess(Method method, String response) {
-//				btnLogin.setEnabled(true);
-////				Window.open( "servlet.gupld?show=" + "reports/" + response, "_parent", "");
-//				Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=test.pdf", "_parent", "");
-//			}
-//			
-//			@Override
-//			public void onFailure(Method method, Throwable exception) {
-//				btnLogin.setEnabled(true);
-//				Window.alert(exception.getMessage());
-//			}
-//		});
-		
+		if (!formularioValido()) return;
 		
 		LoginService.Util.getInstance().loginServer(txtUsuario.getValue(), txtPassword.getValue(), new AsyncCallback<UserDTO>()
                 {
@@ -244,5 +214,23 @@ public class UILogin extends Composite implements ClickHandler {
 	    return optionPanel;
 
 	}
+
+	public boolean formularioValido() {
+		
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la concesion de beneficio");
+
 	
+		if (txtUsuario.getValue().length() == 0){
+			vf.addError("Ingrese un nombre de usuario");
+		}
+		
+		if (txtPassword.getValue().length() == 0){
+			vf.addError("Ingrese una contraseña");
+		}
+
+		
+		
+		return vf.esValido();
+		
+	}
 }

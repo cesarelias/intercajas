@@ -1,6 +1,7 @@
 package py.edu.uca.intercajas.client.tiemposervicio;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
@@ -8,6 +9,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
+import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.solicitud.events.PeriodoAporteDeclaradoChangedEvent;
 import py.edu.uca.intercajas.shared.UIBase;
@@ -138,12 +140,35 @@ public class TiempoServicioReconocidoEditor extends UIBase  {
 	
 	public boolean formularioValido() {
 		
+		Date hoy = LoginService.Util.currentUser.getFechaLogin(); 
+		
 		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para agregar tiempo de servicio");
 
 		if (empleador == null) {
 			vf.addError("Seleccione un empleador");
 		}
 		
+		if (!AppUtils.esFecha(inicio)) {
+			vf.addError("Fecha de inicio no valida");
+		} else {
+			if (inicio.getValue().after(hoy)) {
+				vf.addError("Fecha de inicio no puede ser posterior a la fecha de hoy");
+			}
+		}
+		
+		if (!AppUtils.esFecha(fin)) {
+			vf.addError("Fecha fin no valida");
+		} else {
+			if (fin.getValue().after(hoy)) {
+				vf.addError("Fecha fin no puede ser posterior a la fecha de hoy");
+			}
+		}
+		
+		if (AppUtils.esFecha(inicio) && AppUtils.esFecha(fin)) {
+			if (fin.getValue().before(inicio.getValue())) {
+				vf.addError("Rango de fecha del inicio al fin no valido");
+			}
+		}
 		
 		return vf.esValido();
 		

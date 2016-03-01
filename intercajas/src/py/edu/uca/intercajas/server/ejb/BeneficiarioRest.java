@@ -187,6 +187,7 @@ public class BeneficiarioRest   {
         	if 		(beneficiarioActual.getNombres() != beneficiario.getNombres() ||
 					 beneficiarioActual.getDocumento().getNumeroDocumento() != beneficiario.getDocumento().getNumeroDocumento() ||
 					 beneficiarioActual.getDocumento().getTipoDocumento() != beneficiario.getDocumento().getTipoDocumento() ||
+					!beneficiarioActual.getFechaNacimiento().equals(beneficiario.getFechaNacimiento()) ||
 					!beneficiarioActual.toString().equals(beneficiario.toString())
         			)
 

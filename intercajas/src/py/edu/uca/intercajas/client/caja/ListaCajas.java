@@ -123,7 +123,7 @@ public class ListaCajas extends UIBase {
 	public ListaCajas(int maxRows) {
 		this.maxRows = maxRows;
 
-		this.titulo = "Cajas";
+		this.titulo = "Lista de Cajas de Jubilaciones";
 
 		table = new DataGrid<Caja>(maxRows,
 				GWT.<TableResources> create(TableResources.class));

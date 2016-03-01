@@ -152,7 +152,7 @@ public class UIConceder extends UIBase {
 				new UIErrorRestDialog(method, exception);
 			}
 		});
-		
+
 	}
 	
 	@UiHandler("calcularBx")

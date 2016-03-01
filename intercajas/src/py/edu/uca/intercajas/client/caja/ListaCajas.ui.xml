@@ -13,7 +13,7 @@
 		</ui:style>
 
 	<g:DockLayoutPanel ui:field="dock" unit="PX" width="320px"
-		height="400px">
+		height="480px">
 		<g:north size="80">
 			<g:DockLayoutPanel unit="PX">
 				<g:center>
