@@ -57,8 +57,8 @@ public class UploadAutorizar extends UIBase {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
 	    	  for (int i=0; i< archivos.length; i+=2) {
 	    		  Adjunto a = new Adjunto();
-	    		  a.setRutaArchivo(archivos[i]);
-	    		  a.setNombreArchivo(archivos[i+1]);
+	    		  a.setRutaArchivo(archivos[0]);
+	    		  a.setNombreArchivo(archivos[1]);
 	    		  a.setTipo(Adjunto.Tipo.NotaInterinstitucional);
 	    		  adjuntos[0] = a;
 	    		  

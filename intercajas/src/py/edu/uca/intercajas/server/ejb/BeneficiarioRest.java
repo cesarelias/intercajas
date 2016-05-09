@@ -112,8 +112,18 @@ public class BeneficiarioRest   {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void insertarBeneficiario(Beneficiario beneficiario)  {
-			em.persist(beneficiario);
-			LOG.info("Beneficiario persisted");
+		
+		if (em.createQuery("select b from Beneficiario b where b.documento.numeroDocumento = :numeroDocumento and b.documento.tipoDocumento = :tipoDocumento", Beneficiario.class)
+				.setParameter("numeroDocumento", beneficiario.getDocumento().getNumeroDocumento())
+				.setParameter("tipoDocumento", beneficiario.getDocumento().getTipoDocumento())
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede agregar beneficiario, existe el numero de documento").build());
+		}
+	
+		em.persist(beneficiario);
+		LOG.info("Beneficiario persisted");
+		
 	}
 	
 	@Path("/eliminar")
@@ -159,6 +169,20 @@ public class BeneficiarioRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
         }
 		
+		if (em.createQuery("select b"
+				+ "           from Beneficiario b"
+				+ "          where b.documento.numeroDocumento = :numeroDocumento"
+				+ "            and b.documento.tipoDocumento = :tipoDocumento "
+				+ "            and b.id <> :id", Beneficiario.class)
+				.setParameter("numeroDocumento", beneficiario.getDocumento().getNumeroDocumento())
+				.setParameter("tipoDocumento", beneficiario.getDocumento().getTipoDocumento())
+				.setParameter("id", beneficiario.getId())
+				.setMaxResults(1)
+				.getResultList().size() > 0) {
+			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede modificar beneficiario, existe el numero de documento").build());
+		}
+
+        
         Beneficiario beneficiarioActual = em.find(Beneficiario.class, beneficiario.getId());
 		
         if (user.getTipo() == Usuario.Tipo.Gestor) {

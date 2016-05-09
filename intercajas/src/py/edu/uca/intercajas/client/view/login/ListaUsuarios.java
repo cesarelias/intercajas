@@ -185,6 +185,32 @@ public class ListaUsuarios extends UIBase {
     fetch(start);
   }
   
+
+  @UiHandler("del")
+  void onDel(ClickEvent event) {
+
+		Usuario usuario = selectionModel.getSelectedObject();
+		if (usuario == null) {
+			Window.alert("Seleccione una fila para eliminar");
+			return;
+		}
+
+		
+	  BeneficiarioService.Util.get().eliminarUsuario(usuario.getId(), new MethodCallback<Void>() {
+
+		@Override
+		public void onFailure(Method method, Throwable exception) {
+			new UIErrorRestDialog(method, exception);
+		}
+
+		@Override
+		public void onSuccess(Method method, Void response) {
+			refreshTable();
+		}
+	});
+	  
+  }
+  
   
   @UiHandler("edit")
   void onEdit(ClickEvent event) {

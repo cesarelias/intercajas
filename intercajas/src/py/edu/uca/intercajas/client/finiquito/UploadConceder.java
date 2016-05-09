@@ -62,8 +62,8 @@ public class UploadConceder extends UIBase {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
     		  Adjunto a = new Adjunto();
-    		  a.setNombreArchivo(archivos[0]);
-    		  a.setRutaArchivo(archivos[1]);
+    		  a.setRutaArchivo(archivos[0]);
+    		  a.setNombreArchivo(archivos[1]);
     		  a.setTipo(Adjunto.Tipo.Resolucion);
     		  adjuntos[0] = a;
 	    	  
@@ -80,8 +80,8 @@ public class UploadConceder extends UIBase {
 				String[] archivos = uploader.getServerMessage().getMessage()
 						.split("\\|");
 				Adjunto a = new Adjunto();
-				a.setNombreArchivo(archivos[0]);
-				a.setRutaArchivo(archivos[1]);
+				a.setRutaArchivo(archivos[0]);
+				a.setNombreArchivo(archivos[1]);
 				a.setTipo(Adjunto.Tipo.Liquidacion);
 				adjuntos[1] = a;
 

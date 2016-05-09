@@ -56,8 +56,8 @@ public class UploadReconocimientoTiempoServicio extends UIBase {
 	      if (uploader.getStatus() == Status.SUCCESS) {
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
     		  Adjunto a = new Adjunto();
-    		  a.setNombreArchivo(archivos[0]);
-    		  a.setRutaArchivo(archivos[1]);
+    		  a.setRutaArchivo(archivos[0]);
+    		  a.setNombreArchivo(archivos[1]);
     		  a.setTipo(Adjunto.Tipo.ReconocimientoTiempoServicio);
     		  adjuntos[0] = a;
 	    		  

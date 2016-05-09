@@ -24,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import py.edu.uca.intercajas.server.GwMessage;
 import py.edu.uca.intercajas.shared.CalculoTiempo;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
 import py.edu.uca.intercajas.shared.NuevaAutorizacion;
@@ -55,25 +56,35 @@ public class MensajeRest   {
 
 	@EJB
 	ReportRest reporteRest;
+	
+	@EJB
+	GwMessage gwMessage;
 
 	@Path("/test")
 	@GET
 	public String test() {
 		System.out.println("rest working");
 		
-		List<Finiquito> finiquitos = em.createQuery("select f "
-                + "  from Finiquito f, CajaDeclarada cd "
-                + " where f.cajaDeclarada.id = cd.id "
-                + "   and f.autorizado = true "
-                + "   and cd.id = :caja_declarada_id",Finiquito.class)
-                .setParameter("caja_declarada_id", 2L)
-                .getResultList();
 		
-		for (Finiquito f : finiquitos) {
-			System.out.println(f.getNumeroResolucion());
-		}
+		System.out.println(System.getProperty("principalDir").toString());
+		
+		gwMessage.sendEmail("cesarelias.py@gmail.com", "no-reply", "Asunto prueba", "Mensaje de prueba");
+		
+//		
+//		List<Finiquito> finiquitos = em.createQuery("select f "
+//                + "  from Finiquito f, CajaDeclarada cd "
+//                + " where f.cajaDeclarada.id = cd.id "
+//                + "   and f.autorizado = true "
+//                + "   and cd.id = :caja_declarada_id",Finiquito.class)
+//                .setParameter("caja_declarada_id", 2L)
+//                .getResultList();
+//		
+//		for (Finiquito f : finiquitos) {
+//			System.out.println(f.getNumeroResolucion());
+//		}
 		
 		return "rest working";
+		
 	}
 	
 	@Path("/{id}")

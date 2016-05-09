@@ -23,6 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import py.edu.uca.intercajas.server.GwMessage;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.Auditoria;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
@@ -42,6 +43,9 @@ public class UsuarioRest   {
 	
 	@EJB
 	UserLogin userLogin;
+	
+	@EJB
+	GwMessage gwMessage;
 
 	@Path("/test")
 	@GET
@@ -97,33 +101,59 @@ public class UsuarioRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
         }
 
-		Usuario usuarioAnterior = em.find(Usuario.class, usuario.getId());
-		if (usuarioAnterior == null) {
-			throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el usuario").build());
-		}
-		
 		if (usuario.getId() == null) { //nuevo usuaro
+			
+			//verificamos que no exista el nombreUsuario
+			if (em.createQuery("select u from Usuario u where u.nombre = :nombre", Usuario.class)
+					.setParameter("nombre", usuario.getNombre())
+					.setMaxResults(1)
+					.getResultList().size() > 0) {
+				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede agregar usuario, existe el nombre de usuario").build());
+			}
+			
 			//creamos una clave aleatoria
 			int randomNum = 1000 + (int)(Math.random() * 9999); 
 			//TODO falta enviar el correo!
 			usuario.setClave(userLogin.MD5(String.valueOf(randomNum)));
-			System.out.println("la contraseña creada y enviada al email " + usuario.getCorreo() + " es: " + String.valueOf(randomNum));
-		}
-		
-		
-		if (!usuarioAnterior.getNombre().equals(usuario.getNombre()) ||
-			!usuarioAnterior.getDescripcion().equals(usuario.getDescripcion())) {
-			if (em.createQuery("select s from Auditoria s where upper(s.nombreUsuario) = upper(:nombreUsuario)", Auditoria.class)
-					.setParameter("nombreUsuario", usuarioAnterior.getNombre())
+			
+			gwMessage.sendEmail(usuario.getCorreo(), "no-reply", "Nuevo Usuario", "Bienvenido al sistema Intercajas " + usuario.getDescripcion() + " su nombre de usuario es: " + usuario.getNombre() + " y su contraseña asignada es " + String.valueOf(randomNum));
+	
+
+		} else {
+			
+					
+			
+			Usuario usuarioAnterior = em.find(Usuario.class, usuario.getId());
+			if (usuarioAnterior == null) {
+				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No existe el usuario").build());
+			}
+			
+			if (em.createQuery("select u from Usuario u where u.nombre = :nombre and id <> :id", Usuario.class)
+					.setParameter("nombre", usuario.getNombre())
+					.setParameter("id", usuario.getId())
 					.setMaxResults(1)
 					.getResultList().size() > 0) {
-				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede cambiar el nombre de usuario, ya registra movimientos en auditoria").build());
+				throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede modificar usuario, existe el nombre de usuario").build());
 			}
+
+			
+			if (!usuarioAnterior.getNombre().equals(usuario.getNombre()) ||
+					!usuarioAnterior.getDescripcion().equals(usuario.getDescripcion())) {
+				if (em.createQuery("select s from Auditoria s where upper(s.nombreUsuario) = upper(:nombreUsuario)", Auditoria.class)
+						.setParameter("nombreUsuario", usuarioAnterior.getNombre())
+						.setMaxResults(1)
+						.getResultList().size() > 0) {
+					throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("No puede cambiar el nombre de usuario, ya registra movimientos en auditoria").build());
+				}
+			}
+			
+			gwMessage.sendEmail(usuario.getCorreo(), "no-reply", "Cambio en cuenta", "Su cuenta de usuario sufrio un cambio Descripcion: " + usuario.getDescripcion() + " nombre de usuario : " + usuario.getNombre() + " Activo? " + usuario.isActivo());
+			
+			userLogin.registrarAuditoria(user, "Cambio datos usuario (anterior/nuevo) " +
+					" descripcion: " + usuarioAnterior.getDescripcion() + "/" + usuario.getDescripcion() +
+					" activo? " + usuarioAnterior.isActivo() + "/" + usuario.isActivo());
 		}
 		
-		userLogin.registrarAuditoria(user, "Cambio datos usuario (anterior/nuevo) " +
-		                                " descripcion: " + usuarioAnterior.getDescripcion() + "/" + usuario.getDescripcion() +
-		                                " activo? " + usuarioAnterior.isActivo() + "/" + usuario.isActivo());
 			
 		em.merge(usuario);
 		
@@ -152,7 +182,8 @@ public class UsuarioRest   {
 		usuario.setClave(userLogin.MD5(String.valueOf(randomNum)));
 		
 		//TODO falta enviar el correo!
-		System.out.println("contraseña restrablecida y enviada al email " + correo + " es: " + String.valueOf(randomNum));
+		gwMessage.sendEmail(usuario.getCorreo(), "no-reply", "Cambio de contraseña", " Su contraseña asignada es " + String.valueOf(randomNum));
+		
 				
 		em.persist(usuario);
 		

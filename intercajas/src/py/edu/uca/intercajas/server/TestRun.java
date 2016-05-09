@@ -14,11 +14,15 @@ public class TestRun {
 
 	public static void main(String[] args) {
 
+		String principalDir = "/home/cesar/";
 		
-		int randomNum = 1000 + (int)(Math.random() * 9999); 		
+		if (principalDir.substring(principalDir.length() -1, principalDir.length()).equals("/")) {
+			principalDir = principalDir.substring(0, principalDir.length()-1); 
+			
+		}
+		System.out.println(principalDir);
 		
-		System.out.println(randomNum);
-		
+	
 	}
 	public void txFinal() {
 		/*

@@ -257,6 +257,14 @@ public interface BeneficiarioService extends RestService {
 	@Produces("application/json")
 	public void eliminarEmpleador(@WebParam(name="empleador_id") Long empleador_id, MethodCallback<Void> callback); 
 	
+	
+	@Path("usuario/eliminar")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public void eliminarUsuario(@WebParam(name="usuario_id") Long usuario_id, MethodCallback<Void> callback);
+
+	
 	////REPORTES
 	@Path("report/auditoriaPorUsuario")
 	@GET

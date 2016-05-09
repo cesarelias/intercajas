@@ -58,8 +58,8 @@ public class UILogin extends Composite implements ClickHandler {
 		initComponents();
 		widgetListener();
 		
-		txtUsuario.setText("cesar");
-		txtPassword.setText("123456");
+//		txtUsuario.setText("cesar");
+//		txtPassword.setText("123456");
 	}
 	
 	
