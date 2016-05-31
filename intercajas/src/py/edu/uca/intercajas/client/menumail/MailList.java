@@ -25,6 +25,8 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Destino;
 import py.edu.uca.intercajas.shared.entity.Mensaje;
 import py.edu.uca.intercajas.shared.entity.Solicitud;
@@ -65,6 +67,8 @@ public class MailList extends ResizeComposite {
   }
 
   
+  public Long beneficiarioIdFilter;
+  public Long cajaIdFilter;
   
   private static final Binder binder = GWT.create(Binder.class);
   static final int VISIBLE_EMAIL_COUNT = 8;
@@ -108,12 +112,22 @@ public class MailList extends ResizeComposite {
   
   public void registerEvent() {
 	    
+	  
+	  
 	    AppUtils.EVENT_BUS.addHandler(RefreshMailEvent.TYPE, new RefreshMailEvent.Handler() {
+
 			@Override
-			public void refresh() {
+			public void refresh(Long beneficiarioIdFilter, Long cajaIdFilter) {
+				// TODO Auto-generated method stub
+				MailList.this.beneficiarioIdFilter = beneficiarioIdFilter;
+				MailList.this.cajaIdFilter = cajaIdFilter;
 				update();
+				
 			}
+
 		});
+	    
+
   }
   /**
    * Sets the listener that will be notified when an item is selected.
@@ -253,7 +267,8 @@ public class MailList extends ResizeComposite {
     navBar.update(startIndex, max);
     
     if (modo == Modo.MisPendientes) {
-    	BeneficiarioService.Util.get().findMisPendientes(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    	
+    	BeneficiarioService.Util.get().findMisPendientes(startIndex, VISIBLE_EMAIL_COUNT, beneficiarioIdFilter, cajaIdFilter, new MethodCallback<List<Destino>>() {
     		
     		@Override
     		public void onSuccess(Method method, List<Destino> response) {

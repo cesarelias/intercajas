@@ -68,7 +68,7 @@ public class TiempoServicioReconocidoEditorWorkFlow extends UIBase {
 		Mensaje mensaje = new Mensaje();
 		mensaje.setAsunto(Mensaje.Asunto.ReconocimientoTiempoServicio);
 		mensaje.setCuerpo(cuerpoMensaje.getValue());
-		mensaje.setReferencia(solicitud.getExpedienteNumero() + " " + " falta el titular del beneficio");
+		mensaje.setReferencia(solicitud.getExpedienteNumero() + " "); // + " falta el titular del beneficio");
 		mensaje.setSolicitud(solicitud);
 
 		NuevoReconocimientoTiempoServicio n = new NuevoReconocimientoTiempoServicio(solicitud, tablaTiempoServicioReconocido.listaTiempoServicioReconocido, mensaje, upload.adjuntos);

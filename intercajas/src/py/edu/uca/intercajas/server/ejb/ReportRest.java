@@ -21,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import py.edu.uca.intercajas.server.pdfSign.Signatures;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -93,7 +94,14 @@ public class ReportRest {
 			// Export to PDF.
 			JasperExportManager.exportReportToPdfFile(jasperPrint, filePath	+ fileName);
 
-			return fileName;
+
+			//Firmamos
+			String fileNameSigned = "rep-" + new Date().getTime() + ".pdf";
+			Signatures s = new Signatures();
+			s.signPdf(filePath + fileName, filePath + fileNameSigned);
+			
+			return fileNameSigned;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

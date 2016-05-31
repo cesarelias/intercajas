@@ -7,13 +7,22 @@ public class RefreshMailEvent extends GwtEvent<RefreshMailEvent.Handler> {
 
 	public static Type<Handler> TYPE = new Type<Handler>();
 
+	Long beneficiarioIdFilter;
+	Long cajaIdFilter;
 	
 	public interface Handler extends EventHandler {
-		void refresh();
+		void refresh(Long beneficiarioIdFilter, Long cajaIdFilter);
 	}
 	
-	public  RefreshMailEvent() {
+	public  RefreshMailEvent(Long beneficiarioIdFilter, Long cajaIdFilter) {
+		this.beneficiarioIdFilter = beneficiarioIdFilter;
+		this.cajaIdFilter = cajaIdFilter;
 	}
+
+	public RefreshMailEvent() {
+		
+	}
+	
 	
 	@Override
 	public Type<Handler> getAssociatedType() {
@@ -22,7 +31,7 @@ public class RefreshMailEvent extends GwtEvent<RefreshMailEvent.Handler> {
 
 	@Override
 	protected void dispatch(Handler handler) {
-		handler.refresh();
+		handler.refresh(beneficiarioIdFilter, cajaIdFilter);
 	}
 
 }

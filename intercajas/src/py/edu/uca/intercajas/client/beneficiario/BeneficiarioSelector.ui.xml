@@ -10,6 +10,7 @@
 				</td>
 				<td>
 					<g:Button ui:field="choose">Buscar</g:Button>
+					<g:Button ui:field="clear">Limpiar</g:Button>
 				</td>
 			</tr>
 		</table>

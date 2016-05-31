@@ -105,7 +105,7 @@ public interface BeneficiarioService extends RestService {
 	@Path("destino/findMisPendientes")
 	@GET
 	@Produces("application/json")
-	public void findMisPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findMisPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, @QueryParam("beneficiario_id") Long beneficiario_id, @QueryParam("remitente_id") Long remitente_id, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findMisFiniquitados")
 	@GET

@@ -1,27 +1,28 @@
 package py.edu.uca.intercajas.server;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import com.google.gwt.dev.util.collect.HashMap;
 import com.ibm.icu.math.BigDecimal;
 
+import py.edu.uca.intercajas.server.pdfSign.Signatures;
 import py.edu.uca.intercajas.shared.entity.Caja;
 
 public class TestRun {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-		String principalDir = "/home/cesar/";
-		
-		if (principalDir.substring(principalDir.length() -1, principalDir.length()).equals("/")) {
-			principalDir = principalDir.substring(0, principalDir.length()-1); 
-			
-		}
-		System.out.println(principalDir);
-		
+		Security.addProvider(new BouncyCastleProvider());
+		Signatures s = new Signatures();
+			s.verifySignatures("cesar", "/home/cesar/Descargas/firmas/decreto_firmado_cesar.pdf");
 	
 	}
 	public void txFinal() {

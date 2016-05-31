@@ -104,27 +104,27 @@ public class Mail extends UIBase {
   
   public void mostrarMisPendientes() {
 	  mailList.modo = MailList.Modo.MisPendientes;
-	  mailList.update();
+	  //mailList.update();
   }
   
   public void mostrarMisFiniquitados() {
 	  mailList.modo = MailList.Modo.MisFiniquitados;
-	  mailList.update();
+//	  mailList.update();
   }
   
   public void mostrarPendientes() {
 	  mailList.modo = MailList.Modo.Pendientes;
-	  mailList.update();
+//	  mailList.update();
   }
 
   public void mostrarFiniquitados() {
 	  mailList.modo = MailList.Modo.Finquitados;
-	  mailList.update();
+//	  mailList.update();
   }
   
   public void mostrarAnulados() {
 	  mailList.modo = MailList.Modo.Anulados;
-	  mailList.update();
+//	  mailList.update();
   }
 
 

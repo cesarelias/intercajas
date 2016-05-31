@@ -16,20 +16,50 @@
 package py.edu.uca.intercajas.client.menumail;
 
 
+import java.io.IOException;
+import java.util.List;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
 import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.beneficiario.BeneficiarioEditorWorkFlow;
+import py.edu.uca.intercajas.client.beneficiario.BeneficiarioSelector;
+import py.edu.uca.intercajas.client.beneficiario.BeneficiarioSelector.Listener;
+import py.edu.uca.intercajas.client.caja.ListaCajas;
+import py.edu.uca.intercajas.shared.entity.Beneficiario;
+import py.edu.uca.intercajas.shared.entity.Caja;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.ValueListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.SimpleKeyProvider;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 /**
@@ -63,12 +93,16 @@ public class Mailboxes extends Composite {
   }
 
   private Tree tree;
-
+  
+  ValueListBox<Caja> caja;
+  Long beneficiarioIdFilter;
+  Long cajaIdFilter;
+  
   /**
    * Constructs a new mailboxes widget.
    */
   public Mailboxes() {
-	  
+	 
     Images images = GWT.create(Images.class);
     
     tree = new Tree(images);
@@ -118,7 +152,24 @@ public class Mailboxes extends Composite {
 
     root.setState(true);
 
-    initWidget(tree);
+    
+//    // Create a static tree and a container to hold it
+//    Tree staticTree = createStaticTree();
+//    staticTree.setAnimationEnabled(true);
+//    ScrollPanel staticTreeWrapper = new ScrollPanel(staticTree);
+//    staticTreeWrapper.setSize("300px", "300px");
+//
+//    // Wrap the static tree in a DecoratorPanel
+//    DecoratorPanel staticDecorator = new DecoratorPanel();
+//    staticDecorator.setWidget(staticTreeWrapper);
+    
+    
+    
+    VerticalPanel vp = new VerticalPanel();
+    
+    vp.add(tree);
+    vp.add(crearFiltros());
+    initWidget(vp);
   }
 
   /**
@@ -151,4 +202,98 @@ public class Mailboxes extends Composite {
     builder.appendEscaped(title);
     return builder.toSafeHtml();
   }
+  
+  private Tree crearFiltros() {
+
+	  
+//	  Anchor beneficiario = new Anchor("Beneficiario");
+//	  beneficiario.addClickHandler(new ClickHandler() {
+//		@Override
+//		public void onClick(ClickEvent event) {
+//			ListaBeneficiarios lb = new ListaBeneficiarios(10);
+//			lb.setListener(new Listener() {
+//				@Override
+//				public void onSelected(Beneficiario beneficiarioSelected) {
+//					AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), cajaIdFilter));
+//				}
+//			});
+//			lb.mostrarDialog();
+//		}
+//	});
+	  
+	  
+	  caja = new ValueListBox<Caja>(
+				
+				new Renderer<Caja>() {
+					@Override
+					public String render(Caja object) {
+						return object.getSiglas();
+					}
+					@Override
+					public void render(Caja object, Appendable appendable)
+							throws IOException {
+						// TODO Auto-generated method stub
+					}
+				},
+				new SimpleKeyProvider<Caja>() {
+					@Override
+					public Object getKey(Caja item) {
+						return item == null ? null : item.getId();
+					}
+			});
+			
+	  try {
+	  BeneficiarioService.Util.get().findCajaAll(new MethodCallback<List<Caja>>() {
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				new UIErrorRestDialog(method, exception);
+			}
+
+			@Override
+			public void onSuccess(Method method, List<Caja> response) {
+				Caja cajaTodos = new Caja();
+				cajaTodos.setSiglas("TODOS");
+				response.add(0,cajaTodos);
+				caja.setAcceptableValues(response);
+			}
+		});
+	  } catch (Exception e) {
+		  Window.alert(e.getMessage());
+	  }
+
+	  
+	  caja.addValueChangeHandler(new ValueChangeHandler<Caja>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Caja> event) {
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioIdFilter,event.getValue().getId()));
+			}
+	  });
+	  
+	  
+	  
+	  Tree staticTree = new Tree();
+	  staticTree.setAnimationEnabled(true);
+	  TreeItem filtrarItem = staticTree.addTextItem("Filtrar");
+	  
+	  BeneficiarioSelector bs = new BeneficiarioSelector();
+	  bs.setClearVisible(true); 
+	  bs.setListener(new Listener() {
+		@Override
+		public void onSelected(Beneficiario beneficiarioSelected) {
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), cajaIdFilter));
+		}
+	});
+
+	  
+	  VerticalPanel vp = new VerticalPanel();
+	  vp.add(new HTML("<b>Caja de Jubilacion<b>"));
+	  vp.add(caja);
+	  vp.add(new HTML("<b>Beneficiario<b>"));
+	  vp.add(bs);
+	  
+	  filtrarItem.addItem(vp);
+  	  return staticTree;
+  	  
+  }
+  
 }

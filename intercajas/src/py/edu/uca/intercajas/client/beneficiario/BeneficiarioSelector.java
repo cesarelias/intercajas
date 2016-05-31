@@ -16,6 +16,7 @@
 package py.edu.uca.intercajas.client.beneficiario;
 
 import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.beneficiario.ListaBeneficiarios.Listener;
 import py.edu.uca.intercajas.client.beneficiario.events.BeneficiarioChangedEvent;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 
@@ -49,8 +50,8 @@ public class BeneficiarioSelector extends Composite implements
   @UiField
   Button choose;
 
-//  @UiField
-//  Button clear;
+  @UiField
+  Button clear;
 
   @UiField
   NameLabel nameLabel;
@@ -60,10 +61,20 @@ public class BeneficiarioSelector extends Composite implements
   private final OptionalFieldEditor<Beneficiario, NameLabel> editor;
 //  private final GestionBeneficiario gestionBeneficiario;
 
+  
+	public interface Listener {
+		void onSelected(Beneficiario beneficiarioSelected);
+	}
+ 
+	Listener listener;
+  
   public BeneficiarioSelector() {
 	
+	
+	  
     initWidget(GWT.<Binder> create(Binder.class).createAndBindUi(this));
     editor = OptionalFieldEditor.of(nameLabel);
+    clear.setVisible(false);
   }
 
   public OptionalFieldEditor<Beneficiario, NameLabel> asEditor() {
@@ -93,6 +104,7 @@ public class BeneficiarioSelector extends Composite implements
 		}
 	});
     
+    
     new ListaBeneficiarios(10).mostrarDialog();
 //    factory.schoolCalendarRequest().getRandomPerson().to(
 //        new Receiver<PersonProxy>() {
@@ -104,10 +116,10 @@ public class BeneficiarioSelector extends Composite implements
 //        }).fire();
   }
 
-//  @UiHandler("clear")
-//  void onClear(ClickEvent event) {
-//    setValue(null);
-//  }
+  @UiHandler("clear")
+  void onClear(ClickEvent event) {
+    setValue(null);
+  }
 
   /**
    * This method is not called by the Editor framework.
@@ -117,9 +129,21 @@ public class BeneficiarioSelector extends Composite implements
 	this.beneficiario = beneficiario;  
     nameLabel.setVisible(beneficiario != null);
     nameLabel.setTexto(beneficiario.toString());
+    
+	if (listener!=null) {
+		listener.onSelected(beneficiario);
+	}
   }
   
   public Beneficiario getBeneficiario() {
 	  return this.beneficiario;
   }
+  
+  public void setClearVisible(boolean visible) {
+	  clear.setVisible(visible);
+  }
+  public void setListener(Listener listener) {
+		this.listener = listener;
+  }
+
 }

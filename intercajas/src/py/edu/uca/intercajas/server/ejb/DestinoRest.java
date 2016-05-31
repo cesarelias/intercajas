@@ -63,7 +63,10 @@ public class DestinoRest   {
 	@Produces("application/json")
 	public List<Destino> findMisPendientes(@QueryParam("startRow") int startRow,
 										@QueryParam("maxResults") int maxResults,
+										@QueryParam("beneficiario_id") Long beneficiario_id,
+										@QueryParam("remitente_id") Long remitente_id,
 										@Context HttpServletRequest req) {
+		
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
@@ -76,13 +79,15 @@ public class DestinoRest   {
 		
 		
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
-			
+
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
 					+ "               and a.id = c.mensaje.id "
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and c.destinatario.id = :caja_id "
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
 					+ "               and not exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -95,6 +100,8 @@ public class DestinoRest   {
 					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
 					.setFirstResult(startRow)
 					.setMaxResults(maxResults)
+					.setParameter("beneficiario_id", beneficiario_id)
+					.setParameter("remitente_id", remitente_id)
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			

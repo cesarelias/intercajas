@@ -7,11 +7,19 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.fileupload.FileItem;
 
+import py.edu.uca.intercajas.server.ejb.UserLogin;
+import py.edu.uca.intercajas.server.pdfSign.Signatures;
+import py.edu.uca.intercajas.shared.UserDTO;
 import sun.reflect.generics.visitor.Reifier;
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
@@ -28,6 +36,11 @@ import gwtupload.shared.UConsts;
  */
 public class MyCustomizedUploadServlet extends UploadAction {
 
+	
+	@EJB
+	UserLogin userLogin;
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	Hashtable<String, String> receivedContentTypes = new Hashtable<String, String>();
@@ -47,6 +60,13 @@ public class MyCustomizedUploadServlet extends UploadAction {
 	public String executeAction(HttpServletRequest request,
 			List<FileItem> sessionFiles) throws UploadActionException {
 
+		
+		UserDTO user = userLogin.getValidUser(request.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
+		
 		principalDir = getPrincipal();
 
 		String response = "";
@@ -74,6 +94,18 @@ public class MyCustomizedUploadServlet extends UploadAction {
 					File file = new File(newFileName);
 
 					item.write(file);
+					
+					try {
+						Signatures s = new Signatures();
+						System.out.println("Verificando Firma***************************************");
+						if (!s.verifySignatures(user.getName(), newFileName)){
+							throw new UploadActionException("Documento no firmado correctamente");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						throw new UploadActionException("Documento no firmado correctamente");
+					}
+					
 
 					// / Save a list with the received files
 					receivedFiles.put(item.getFieldName(), file);
