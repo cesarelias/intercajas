@@ -368,8 +368,6 @@ public class MensajeRest   {
 			em.persist(s);
 		}
 		
-		
-		
 		userLogin.registrarAuditoria(user, "Autoriza Finiquito Solicitud : " + finiquitoAutorizado.getSolicitudBeneficiario().getSolicitud().getExpedienteNumero() + " Resolucion Finiquito " + finiquitoAutorizado.getNumeroResolucion());
 		
 	}
