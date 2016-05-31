@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -39,6 +41,7 @@ public class Mensaje extends EntityBase {
 	@Size(max=255)
 	private String observacion; //guardamos el motivo en la descripcion al Autorizar o al Anular
 	@NotNull(message="fecha no puede ser nulo")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fecha;
 	@NotNull(message="autorizado no puede ser nulo")
 	private boolean autorizado;

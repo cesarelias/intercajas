@@ -17,6 +17,7 @@ package py.edu.uca.intercajas.client.menumail;
 
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
@@ -40,6 +41,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -59,6 +61,8 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.view.client.SimpleKeyProvider;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -93,7 +97,8 @@ public class Mailboxes extends Composite {
   }
 
   private Tree tree;
-  
+
+  DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
   ValueListBox<Caja> caja;
   Long beneficiarioIdFilter;
   Long cajaIdFilter;
@@ -265,7 +270,8 @@ public class Mailboxes extends Composite {
 	  caja.addValueChangeHandler(new ValueChangeHandler<Caja>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Caja> event) {
-				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioIdFilter,event.getValue().getId()));
+				setCajaIdFilter(event.getValue().getId());
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(getBeneficiarioIdFilter(),event.getValue().getId()));
 			}
 	  });
 	  
@@ -280,20 +286,58 @@ public class Mailboxes extends Composite {
 	  bs.setListener(new Listener() {
 		@Override
 		public void onSelected(Beneficiario beneficiarioSelected) {
-			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), cajaIdFilter));
+			setBeneficiarioIdFilter(beneficiarioSelected.getId());
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), getCajaIdFilter()));
 		}
 	});
 
+	  DateBox fechaDesde = new DateBox();
+	  DateBox fechaHasta = new DateBox();
+	  
+	  fechaDesde.setFormat(new DateBox.DefaultFormat(dateFormat));
+	  fechaHasta.setFormat(new DateBox.DefaultFormat(dateFormat));
+	  fechaHasta.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		@Override
+		public void onValueChange(ValueChangeEvent<Date> event) {
+			Window.alert(event.getValue().toString());
+		}
+	  });
 	  
 	  VerticalPanel vp = new VerticalPanel();
 	  vp.add(new HTML("<b>Caja de Jubilacion<b>"));
 	  vp.add(caja);
 	  vp.add(new HTML("<b>Beneficiario<b>"));
 	  vp.add(bs);
+	  vp.add(new HTML("<b>Fecha desde<b>"));
+//	  HorizontalPanel hp = new HorizontalPanel();
+	  vp.add(fechaDesde);
+	  vp.add(new HTML("<b>Fecha hasta<b>"));
+	  vp.add(fechaHasta);
+//	  vp.add(hp);
+
 	  
 	  filtrarItem.addItem(vp);
   	  return staticTree;
   	  
   }
+
+public Long getBeneficiarioIdFilter() {
+	return beneficiarioIdFilter;
+}
+
+public void setBeneficiarioIdFilter(Long beneficiarioIdFilter) {
+	this.beneficiarioIdFilter = beneficiarioIdFilter;
+}
+
+public Long getCajaIdFilter() {
+	return cajaIdFilter;
+}
+
+public void setCajaIdFilter(Long cajaIdFilter) {
+	this.cajaIdFilter = cajaIdFilter;
+}
+  
+  
+  
   
 }

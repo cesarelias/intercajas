@@ -16,6 +16,7 @@
 package py.edu.uca.intercajas.client.menumail;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
@@ -25,6 +26,7 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.solicitud.events.SolicitudCreatedEvent;
+import py.edu.uca.intercajas.shared.BandejaParam;
 import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import py.edu.uca.intercajas.shared.entity.Caja;
 import py.edu.uca.intercajas.shared.entity.Destino;
@@ -67,6 +69,7 @@ public class MailList extends ResizeComposite {
   }
 
   
+  public BandejaParam parametros = new BandejaParam();
   public Long beneficiarioIdFilter;
   public Long cajaIdFilter;
   
@@ -268,7 +271,14 @@ public class MailList extends ResizeComposite {
     
     if (modo == Modo.MisPendientes) {
     	
-    	BeneficiarioService.Util.get().findMisPendientes(startIndex, VISIBLE_EMAIL_COUNT, beneficiarioIdFilter, cajaIdFilter, new MethodCallback<List<Destino>>() {
+    	parametros = new BandejaParam();
+    	parametros.setStartRow(startIndex);
+    	parametros.setMaxResults(VISIBLE_EMAIL_COUNT);
+    	parametros.setBeneficiario_id(beneficiarioIdFilter);
+    	parametros.setRemitente_id(cajaIdFilter);
+    	parametros.setFecha_desde(null);
+    	parametros.setFecha_hasta(null);
+    	BeneficiarioService.Util.get().findMisPendientes(parametros, new MethodCallback<List<Destino>>() {
     		
     		@Override
     		public void onSuccess(Method method, List<Destino> response) {

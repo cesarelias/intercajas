@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 
+import py.edu.uca.intercajas.shared.BandejaParam;
 import py.edu.uca.intercajas.shared.ConsultaEstadoMensaje;
 import py.edu.uca.intercajas.shared.ConsultaEstadoSolicitudBeneficiario;
 import py.edu.uca.intercajas.shared.NuevaAnulacion;
@@ -103,9 +104,10 @@ public interface BeneficiarioService extends RestService {
 	
 	////BANDEJA
 	@Path("destino/findMisPendientes")
-	@GET
+	@POST
 	@Produces("application/json")
-	public void findMisPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, @QueryParam("beneficiario_id") Long beneficiario_id, @QueryParam("remitente_id") Long remitente_id, MethodCallback<List<Destino>> destinos);
+	//public void findMisPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, @QueryParam("beneficiario_id") Long beneficiario_id, @QueryParam("remitente_id") Long remitente_id, MethodCallback<List<Destino>> destinos);
+	public void findMisPendientes(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findMisFiniquitados")
 	@GET

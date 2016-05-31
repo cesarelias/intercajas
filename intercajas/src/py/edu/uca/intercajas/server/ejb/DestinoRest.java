@@ -1,14 +1,20 @@
 package py.edu.uca.intercajas.server.ejb;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import py.edu.uca.intercajas.shared.BandejaParam;
 import py.edu.uca.intercajas.shared.UserDTO;
 import py.edu.uca.intercajas.shared.entity.CajaDeclarada;
 import py.edu.uca.intercajas.shared.entity.Destino;
@@ -36,6 +43,10 @@ public class DestinoRest   {
 	@EJB
 	UserLogin userLoign;
 
+	
+	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	
+	
 	@Path("/test")
 	@GET
 	public String test() {
@@ -59,26 +70,21 @@ public class DestinoRest   {
 	}
 	
 	@Path("/findMisPendientes")
-	@GET
+	@POST
 	@Produces("application/json")
-	public List<Destino> findMisPendientes(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults,
-										@QueryParam("beneficiario_id") Long beneficiario_id,
-										@QueryParam("remitente_id") Long remitente_id,
-										@Context HttpServletRequest req) {
-		
-		
+	public List<Destino> findMisPendientes(BandejaParam parametros, @Context HttpServletRequest req) {
+	
+	
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
-		if (maxResults > 500) {
-			maxResults = 500;
-		}
-		
-		
-		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
+        if (parametros.maxResults == null || parametros.maxResults > 500) {
+        	parametros.maxResults = 500;
+        }
+
+        if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
@@ -88,6 +94,8 @@ public class DestinoRest   {
 					+ "               and c.destinatario.id = :caja_id "
 					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
 					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (:fecha_desde >= :fecha_desde and  coalesce(:fecha_desde,'') = '')"
+//					+ "               and (a.fecha <= :fecha_hasta or :fecha_hasta is null)"
 					+ "               and not exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -98,11 +106,13 @@ public class DestinoRest   {
 					, Destino.class)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
 					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
-					.setParameter("beneficiario_id", beneficiario_id)
-					.setParameter("remitente_id", remitente_id)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
 					.setParameter("caja_id", user.getCaja().getId())
+					.setParameter("fecha_desde", parametros.fecha_desde)
+//					.setParameter("fecha_hasta", ull)
 					.getResultList();
 			
 		} else if (user.getTipo() == Usuario.Tipo.Superior) {
@@ -119,8 +129,8 @@ public class DestinoRest   {
 					, Destino.class)
 					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
 					.setParameter("estadoMensaje", Mensaje.Estado.Pendiente)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			
