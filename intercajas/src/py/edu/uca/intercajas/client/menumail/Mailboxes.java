@@ -102,6 +102,8 @@ public class Mailboxes extends Composite {
   ValueListBox<Caja> caja;
   Long beneficiarioIdFilter;
   Long cajaIdFilter;
+  Date fechaDesde;
+  Date fechaHasta;
   
   /**
    * Constructs a new mailboxes widget.
@@ -271,7 +273,7 @@ public class Mailboxes extends Composite {
 			@Override
 			public void onValueChange(ValueChangeEvent<Caja> event) {
 				setCajaIdFilter(event.getValue().getId());
-				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(getBeneficiarioIdFilter(),event.getValue().getId()));
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter,event.getValue().getId(), fechaDesde, fechaHasta));
 			}
 	  });
 	  
@@ -287,7 +289,7 @@ public class Mailboxes extends Composite {
 		@Override
 		public void onSelected(Beneficiario beneficiarioSelected) {
 			setBeneficiarioIdFilter(beneficiarioSelected.getId());
-			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), getCajaIdFilter()));
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), getCajaIdFilter(), fechaDesde, fechaHasta));
 		}
 	});
 
@@ -296,12 +298,42 @@ public class Mailboxes extends Composite {
 	  
 	  fechaDesde.setFormat(new DateBox.DefaultFormat(dateFormat));
 	  fechaHasta.setFormat(new DateBox.DefaultFormat(dateFormat));
+	  
+	  fechaDesde.getTextBox().addValueChangeHandler(new ValueChangeHandler<String>() {
+		
+		@Override
+		public void onValueChange(ValueChangeEvent<String> event) {
+			Mailboxes.this.fechaDesde = null;
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+		}
+	  });
+	  fechaDesde.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		
+		@Override
+		public void onValueChange(ValueChangeEvent<Date> event) {
+			Mailboxes.this.fechaDesde = event.getValue();
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));			
+		}
+	  });
+	  fechaHasta.getTextBox().addValueChangeHandler(new ValueChangeHandler<String>() {
+		
+		@Override
+		public void onValueChange(ValueChangeEvent<String> event) {
+			Mailboxes.this.fechaHasta = null;
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+		}
+	  });
+	  
+	  
 	  fechaHasta.addValueChangeHandler(new ValueChangeHandler<Date>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<Date> event) {
-			Window.alert(event.getValue().toString());
+			Mailboxes.this.fechaHasta = event.getValue();
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
 		}
 	  });
+	 
+	  
 	  
 	  VerticalPanel vp = new VerticalPanel();
 	  vp.add(new HTML("<b>Caja de Jubilacion<b>"));

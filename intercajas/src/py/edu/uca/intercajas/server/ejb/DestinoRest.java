@@ -50,6 +50,11 @@ public class DestinoRest   {
 	@Path("/test")
 	@GET
 	public String test() {
+		
+		Date d = null;
+		System.out.println(em.createQuery("from Mensaje e where (e.fecha = :fecha or cast(:fecha as date) is null))").setParameter("fecha", null).getResultList().size());
+		
+		
 		System.out.println("rest working");
 		return "rest working";
 	}
@@ -86,6 +91,9 @@ public class DestinoRest   {
 
         if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 
+        	if (parametros.fecha_desde != null) System.out.println(parametros.getFecha_desde());
+        	if (parametros.fecha_hasta != null) System.out.println(parametros.getFecha_hasta());
+        	
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
@@ -94,8 +102,8 @@ public class DestinoRest   {
 					+ "               and c.destinatario.id = :caja_id "
 					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
 					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
-					+ "               and (:fecha_desde >= :fecha_desde and  coalesce(:fecha_desde,'') = '')"
-//					+ "               and (a.fecha <= :fecha_hasta or :fecha_hasta is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"
 					+ "               and not exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -112,7 +120,7 @@ public class DestinoRest   {
 					.setParameter("remitente_id", parametros.remitente_id)
 					.setParameter("caja_id", user.getCaja().getId())
 					.setParameter("fecha_desde", parametros.fecha_desde)
-//					.setParameter("fecha_hasta", ull)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
 					.getResultList();
 			
 		} else if (user.getTipo() == Usuario.Tipo.Superior) {

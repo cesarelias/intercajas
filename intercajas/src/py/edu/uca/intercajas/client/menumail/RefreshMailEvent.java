@@ -1,5 +1,7 @@
 package py.edu.uca.intercajas.client.menumail;
 
+import java.util.Date;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -9,14 +11,18 @@ public class RefreshMailEvent extends GwtEvent<RefreshMailEvent.Handler> {
 
 	Long beneficiarioIdFilter;
 	Long cajaIdFilter;
+	Date fechaDesde;
+	Date fechaHasta;
 	
 	public interface Handler extends EventHandler {
-		void refresh(Long beneficiarioIdFilter, Long cajaIdFilter);
+		void refresh(Long beneficiarioIdFilter, Long cajaIdFilter, Date fechaDesde, Date fechaHasta);
 	}
 	
-	public  RefreshMailEvent(Long beneficiarioIdFilter, Long cajaIdFilter) {
+	public  RefreshMailEvent(Long beneficiarioIdFilter, Long cajaIdFilter, Date fechaDesde, Date fechaHasta) {
 		this.beneficiarioIdFilter = beneficiarioIdFilter;
 		this.cajaIdFilter = cajaIdFilter;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
 	}
 
 	public RefreshMailEvent() {
@@ -31,7 +37,7 @@ public class RefreshMailEvent extends GwtEvent<RefreshMailEvent.Handler> {
 
 	@Override
 	protected void dispatch(Handler handler) {
-		handler.refresh(beneficiarioIdFilter, cajaIdFilter);
+		handler.refresh(beneficiarioIdFilter, cajaIdFilter, fechaDesde, fechaHasta);
 	}
 
 }

@@ -70,8 +70,6 @@ public class MailList extends ResizeComposite {
 
   
   public BandejaParam parametros = new BandejaParam();
-  public Long beneficiarioIdFilter;
-  public Long cajaIdFilter;
   
   private static final Binder binder = GWT.create(Binder.class);
   static final int VISIBLE_EMAIL_COUNT = 8;
@@ -120,11 +118,16 @@ public class MailList extends ResizeComposite {
 	    AppUtils.EVENT_BUS.addHandler(RefreshMailEvent.TYPE, new RefreshMailEvent.Handler() {
 
 			@Override
-			public void refresh(Long beneficiarioIdFilter, Long cajaIdFilter) {
-				// TODO Auto-generated method stub
-				MailList.this.beneficiarioIdFilter = beneficiarioIdFilter;
-				MailList.this.cajaIdFilter = cajaIdFilter;
+			public void refresh(Long beneficiarioIdFilter, Long cajaIdFilter,
+					Date fechaDesde, Date fechaHasta) {
+				
+				//Filtros 
+			    parametros.setBeneficiario_id(beneficiarioIdFilter);
+				parametros.setRemitente_id(cajaIdFilter);
+				parametros.setFecha_desde(fechaDesde);
+				parametros.setFecha_hasta(fechaHasta);
 				update();
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -268,16 +271,13 @@ public class MailList extends ResizeComposite {
 
     // Update the nav bar.
     navBar.update(startIndex, max);
-    
+
+
+
     if (modo == Modo.MisPendientes) {
     	
-    	parametros = new BandejaParam();
     	parametros.setStartRow(startIndex);
     	parametros.setMaxResults(VISIBLE_EMAIL_COUNT);
-    	parametros.setBeneficiario_id(beneficiarioIdFilter);
-    	parametros.setRemitente_id(cajaIdFilter);
-    	parametros.setFecha_desde(null);
-    	parametros.setFecha_hasta(null);
     	BeneficiarioService.Util.get().findMisPendientes(parametros, new MethodCallback<List<Destino>>() {
     		
     		@Override
