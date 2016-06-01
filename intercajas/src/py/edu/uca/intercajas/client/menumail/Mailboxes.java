@@ -288,8 +288,12 @@ public class Mailboxes extends Composite {
 	  bs.setListener(new Listener() {
 		@Override
 		public void onSelected(Beneficiario beneficiarioSelected) {
-			setBeneficiarioIdFilter(beneficiarioSelected.getId());
-			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioSelected.getId(), getCajaIdFilter(), fechaDesde, fechaHasta));
+			if (beneficiarioSelected == null) {
+				beneficiarioIdFilter = null;
+			} else {
+				Mailboxes.this.beneficiarioIdFilter = beneficiarioSelected.getId();
+			}
+			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(beneficiarioIdFilter, getCajaIdFilter(), fechaDesde, fechaHasta));
 		}
 	});
 

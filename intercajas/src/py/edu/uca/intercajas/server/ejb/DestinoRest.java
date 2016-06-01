@@ -133,6 +133,10 @@ public class DestinoRest   {
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id "
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"
 					+ " order by a.fecha desc "
 					, Destino.class)
 					.setParameter("estadoSolicitud", Solicitud.Estado.Finiquitado)
@@ -140,6 +144,12 @@ public class DestinoRest   {
 					.setFirstResult(parametros.startRow)
 					.setMaxResults(parametros.maxResults)
 					.setParameter("caja_id", user.getCaja().getId())
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
+					.setParameter("caja_id", user.getCaja().getId())
+					.setParameter("fecha_desde", parametros.fecha_desde)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
+
 					.getResultList();
 			
 		}

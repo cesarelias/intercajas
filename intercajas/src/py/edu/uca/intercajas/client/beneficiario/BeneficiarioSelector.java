@@ -126,9 +126,11 @@ public class BeneficiarioSelector extends Composite implements
    */
   private void setValue(Beneficiario beneficiario) {
     //editor.setValue(beneficiario);
-	this.beneficiario = beneficiario;  
-    nameLabel.setVisible(beneficiario != null);
-    nameLabel.setTexto(beneficiario.toString());
+	this.beneficiario = beneficiario;
+	nameLabel.setVisible(beneficiario !=  null);
+	if (beneficiario != null) {
+		nameLabel.setTexto(beneficiario.toString());
+	} 
     
 	if (listener!=null) {
 		listener.onSelected(beneficiario);
