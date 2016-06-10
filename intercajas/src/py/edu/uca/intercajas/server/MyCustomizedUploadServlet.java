@@ -97,13 +97,15 @@ public class MyCustomizedUploadServlet extends UploadAction {
 					
 					try {
 						Signatures s = new Signatures();
-						System.out.println("Verificando Firma***************************************");
 						if (!s.verifySignatures(user.getName(), newFileName)){
-							throw new UploadActionException("Documento no firmado correctamente");
+							//throw new UploadActionException("Documento no firmado correctamente");
+							//throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Documento no firmado correctamente").build());
+							return "ErrorFirma";
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
-						throw new UploadActionException("Documento no firmado correctamente");
+						throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Documento no firmado correctamente..").build());
+						//throw new UploadActionException("Documento no firmado correctamente");
 					}
 					
 

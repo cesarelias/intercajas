@@ -4,6 +4,9 @@ import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
+import py.edu.uca.intercajas.client.AppUtils;
+import py.edu.uca.intercajas.client.UIErrorRestDialog;
+import py.edu.uca.intercajas.client.UIValidarFormulario;
 import py.edu.uca.intercajas.client.menumail.Mailboxes.Images;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Adjunto;
@@ -35,8 +38,6 @@ public class UploadSolicitud extends UIBase {
 	
 	public UploadSolicitud() {
 
-		try {
-		
 		uploadTable = new FlexTable();
 
 		solicitud = createUploaderSolicutud();
@@ -58,15 +59,19 @@ public class UploadSolicitud extends UIBase {
 		
 		addEliminarHander();
 		
-		} catch (Exception e) {
-			Window.alert(e.getMessage());
-		}
-
 	}
 
 	private IUploader.OnFinishUploaderHandler onFinishSolicitud = new IUploader.OnFinishUploaderHandler() {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
+	    	  
+	    	  if (uploader.getServerMessage().getMessage() == "ErrorFirma") {
+	    		  UIValidarFormulario vf = new UIValidarFormulario("Firma no valida:");
+	    		  vf.addError("Verifique la firma digital del documento adjunto");
+	    		  vf.esValido();
+	    		  return;
+	    	  }
+	    	  
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
     		  Adjunto a = new Adjunto();
     		  a.setRutaArchivo(archivos[0]);
@@ -77,6 +82,7 @@ public class UploadSolicitud extends UIBase {
 	    	  
 	    	  uploadTable.setText(0, 1, archivos[2]);
 	    	  uploadTable.setWidget(0, 2, eliminarSolicitud);
+	    	  
 	      }
 	    }
 	};
@@ -84,6 +90,15 @@ public class UploadSolicitud extends UIBase {
 	private IUploader.OnFinishUploaderHandler onFinishDocumentoIdentidad = new IUploader.OnFinishUploaderHandler() {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
+	    	  
+	    	  if (uploader.getServerMessage().getMessage() == "ErrorFirma") {
+	    		  UIValidarFormulario vf = new UIValidarFormulario("Firma no valida:");
+	    		  vf.addError("Verifique la firma digital del documento adjunto");
+	    		  vf.esValido();
+	    		  return;
+	    	  }
+	    	  
+	    	  
 	    	  String[] archivos = uploader.getServerMessage().getMessage().split("\\|");
     		  Adjunto a = new Adjunto();
     		  a.setRutaArchivo(archivos[0]);
@@ -93,7 +108,6 @@ public class UploadSolicitud extends UIBase {
     		  
 	    	  uploadTable.setText(1, 1, archivos[2]);
 	    	  uploadTable.setWidget(1, 2, eliminarDocumentoIdentidad);
-
 	      }
 	    }
 	};
@@ -109,7 +123,9 @@ public class UploadSolicitud extends UIBase {
 		defaultUploader.addOnFinishUploadHandler(onFinishSolicitud);
 		return defaultUploader;
 		} catch (Exception e) {
-			Window.alert(e.getMessage());
+			UIValidarFormulario vf = new UIValidarFormulario("Favor verifique");
+			vf.addError(e.getMessage());
+			vf.esValido();
 			return null;
 		}
 		
