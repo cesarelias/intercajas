@@ -1,14 +1,11 @@
 package py.edu.uca.intercajas.server.ejb;
 
 import java.io.File;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -21,13 +18,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import py.edu.uca.intercajas.server.pdfSign.Signatures;
-import py.edu.uca.intercajas.shared.entity.Beneficiario;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRElementsVisitor;
+import py.edu.uca.intercajas.server.jasper.SubReportVisitor;
+import py.edu.uca.intercajas.server.pdfSign.Signatures;
 
 @Path("/report")
 @Stateless
@@ -66,11 +64,22 @@ public class ReportRest {
 	@GET
 	@Produces("text/plain")
 	public String totalizacion(@QueryParam(value = "param") Long solicitud_id) {
-		System.out.println("rest working");
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("solicitud_id", solicitud_id);
 		return print("/home/cesar/docs/git/intercajas/reports/totalizacion.jrxml", parameters);
 	}	
+	
+	@Path("/solicitudDetalle")
+	@GET
+	@Produces("text/plain")
+	public String solicitudDetalle(@QueryParam(value = "param") Long solicitud_id) {
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("solicitud_id", solicitud_id);
+		return print("/home/cesar/docs/git/intercajas/reports/SolicitudDetalle.jrxml", parameters);
+	}	
+	
+	
+	
 	
 	public String print(String reportName, Map<String, Object> parameters) {
 
@@ -78,9 +87,14 @@ public class ReportRest {
 			String filePath = "/home/cesar/principal/reports/";
 			String fileName = "rep-" + new Date().getTime() + ".pdf";
 
+//			parameters.put("SUBREPORT_DIR", "/home/cesar/docs/git/intercajas/reports/");
+			
 			// Compile jrxml file.
-			JasperReport jasperReport = JasperCompileManager
-					.compileReport(reportName);
+			JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+			JRElementsVisitor.visitReport(jasperReport, new SubReportVisitor("")); // the magic is here!
+
+			//JasperReport jasperReport = JasperCompileManager
+					//.compileReport(reportName);
 
 			// Parameters for report
 
@@ -108,5 +122,5 @@ public class ReportRest {
 		}
 
 	}
-
+	
 }

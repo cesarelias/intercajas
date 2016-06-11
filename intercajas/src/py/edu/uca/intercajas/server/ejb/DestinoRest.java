@@ -125,6 +125,8 @@ public class DestinoRest   {
 			
 		} else if (user.getTipo() == Usuario.Tipo.Superior) {
 			
+			System.out.println("entro aqui");
+			
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "

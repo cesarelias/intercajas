@@ -280,6 +280,14 @@ public interface BeneficiarioService extends RestService {
 	@Produces("text/plain")
 	public void reporteTotalizacion(@QueryParam(value = "param") Long soliciutd_id, TextCallback archivo); 
 	
+	
+	
+	@Path("report/solicitudDetalle")
+	@GET
+	@Produces("text/plain")
+	public void solicitudDetalle(@QueryParam(value = "param") Long solicitud_id, TextCallback archivo);
+
+	
 	//FIN REPORTES
 	
 	/**

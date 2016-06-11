@@ -19,7 +19,9 @@ import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.TextCallback;
 
+import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.LoginService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
@@ -69,15 +71,38 @@ public class MailDetail extends ResizeComposite {
   @UiField HTML body;
   @UiField HorizontalPanel panelAdjuntos;
   @UiField FlowPanel opciones;
+  @UiField Anchor imprimirSolicitudDetalle;
+  Destino item;
 
   HorizontalPanel optionsButtons = new HorizontalPanel();
   
   public MailDetail() {
     initWidget(binder.createAndBindUi(this));
+    initComponents();
 //    panelAdjuntos.getElement().getStyle().setPadding(20, Unit.PX);
   }
 
+  public void initComponents() {
+	  imprimirSolicitudDetalle.addClickHandler(new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			BeneficiarioService.Util.get().solicitudDetalle(item.getMensaje().getSolicitud().getId(), new TextCallback() {
+				@Override
+				public void onSuccess(Method method, String response) {
+					Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=solicitudDetalle.pdf", "_parent", "");
+					
+				}
+				@Override
+				public void onFailure(Method method, Throwable exception) {
+					Window.alert(exception.getMessage());
+				}
+			});
+
+		}
+	});
+  }
   public void setItem(Destino item) {
+	this.item = item;
     subject.setText(item.getMensaje().getReferencia());
     if (item.getMensaje().getRemitente() == null) {
     	sender.setText("SistemaIntercajas");

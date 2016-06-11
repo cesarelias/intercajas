@@ -143,6 +143,7 @@ public class Gestion extends Composite {
 		});
 	}	
 	
+	//TODO esto ya no se usa, no se puede anular una solicitud.
 	private void addItemAnularSolicitud(final ItemMenu itemMenu) {
 		final Anchor link = new Anchor(itemMenu.nombre);
 		link.setStyleName(style.item());

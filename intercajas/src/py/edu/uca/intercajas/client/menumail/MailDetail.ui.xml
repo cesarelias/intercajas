@@ -48,7 +48,12 @@
 	      				</g:HorizontalPanel>
 	      				<g:HorizontalPanel>
 		      				<g:Label styleName='{style.titulo}'>Para:</g:Label> <g:Label styleName='{style.headerItem}'   ui:field='recipient'/>
-					        <g:HorizontalPanel ui:field="panelAdjuntos"/> 
+					        <g:HorizontalPanel ui:field="panelAdjuntos"/>
+					        <g:HorizontalPanel>
+					            <g:Label>|</g:Label>
+					            <g:Anchor ui:field="imprimirMensaje">Imprimir Mensaje</g:Anchor>
+					        	<g:Anchor ui:field="imprimirSolicitudDetalle">Imprimir Solicitud Detalle</g:Anchor>  
+				        	</g:HorizontalPanel>
 	      				</g:HorizontalPanel>
 	      			</g:VerticalPanel>
 <!-- 				      	<g:Button>Enviar</g:Button> -->

@@ -103,8 +103,10 @@ public class MyCustomizedUploadServlet extends UploadAction {
 							return "ErrorFirma";
 						}
 					} catch (Exception e) {
+						System.out.println("No se encuentra el certificado del usuario");
 						e.printStackTrace();
-						throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Documento no firmado correctamente..").build());
+						return "ErrorFirma";
+//						throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity("Documento no firmado correctamente..").build());
 						//throw new UploadActionException("Documento no firmado correctamente");
 					}
 					

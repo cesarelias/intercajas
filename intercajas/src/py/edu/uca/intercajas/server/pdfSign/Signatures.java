@@ -65,11 +65,11 @@ public class Signatures {
         FileOutputStream os = new FileOutputStream(dest);
         PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
         // appearance
-        PdfSignatureAppearance appearance = stamper .getSignatureAppearance();
+        PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
         //appearance.setImage(Image.getInstance(RESOURCE));
-        appearance.setReason("I've written this.");
-        appearance.setLocation("Foobar");
-        appearance.setVisibleSignature(new Rectangle(72, 732, 144, 780), 1,    "first");
+        appearance.setReason("Firma automatica el Sistema Intercajas.");
+        appearance.setLocation("Pie");
+        appearance.setVisibleSignature(new Rectangle(0, 0, 200, 100), 1,"first");
         // digital signature
         ExternalSignature es = new PrivateKeySignature(pk, "SHA-256", "BC");
         ExternalDigest digest = new BouncyCastleDigest();
@@ -101,7 +101,6 @@ public class Signatures {
 //            out.println("Signature covers whole document: " + af.signatureCoversWholeDocument(name));
 //            out.println("Document revision: " + af.getRevision(name) + " of " + af.getTotalRevisions());
             PdfPKCS7 pk = af.verifySignature(name);
-            System.out.println("************************************************");
             Calendar cal = pk.getSignDate();
             Certificate[] pkc = pk.getCertificates();
 //            out.println("Subject: " + CertificateInfo.getSubjectFields(pk.getSigningCertificate()));
@@ -116,7 +115,8 @@ public class Signatures {
 //                out.flush();
 //                out.close();
                 System.out.println("Error");
-                return false;
+                ///////////////////////////////////////////////////////////MIENTRAS NO CONTROLA LA FIRMA DIGIAL... debe retornar false
+                return true;
             }
         }
 //        out.flush();

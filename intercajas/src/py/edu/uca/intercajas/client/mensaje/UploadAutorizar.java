@@ -12,6 +12,7 @@ import py.edu.uca.intercajas.shared.entity.Adjunto;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -55,7 +56,6 @@ public class UploadAutorizar extends UIBase {
 	private IUploader.OnFinishUploaderHandler onFinishNotaInterinstitucional = new IUploader.OnFinishUploaderHandler() {
 	    public void onFinish(IUploader uploader) {
 	      if (uploader.getStatus() == Status.SUCCESS) {
-	    	  
 	    	  if (uploader.getServerMessage().getMessage() == "ErrorFirma") {
 	    		  UIValidarFormulario vf = new UIValidarFormulario("Firma no valida:");
 	    		  vf.addError("Verifique la firma digital del documento adjunto");
@@ -77,6 +77,7 @@ public class UploadAutorizar extends UIBase {
 	    	  uploadTable.setWidget(0, 2, eliminarNotaInterinstitucional);
 	      }
 	    }
+
 	};
 
 
