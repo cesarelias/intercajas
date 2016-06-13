@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-02-23T08:26:14 -->
+<!-- 2016-06-09T14:15:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="totalizacion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="2b572900-9dbe-4654-8f0c-e44a37b716c7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
@@ -32,10 +32,10 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<rectangle>
-				<reportElement x="10" y="14" width="535" height="50" backcolor="#EDE7E6" uuid="a5a17e39-b46b-484a-93aa-ff3bcf99e982"/>
+				<reportElement x="80" y="14" width="470" height="50" backcolor="#EDE7E6" uuid="a5a17e39-b46b-484a-93aa-ff3bcf99e982"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="10" y="14" width="534" height="50" uuid="6aa35db7-059c-41f3-a262-201ba0fdbd43"/>
+				<reportElement x="20" y="-20" width="500" height="50" uuid="6aa35db7-059c-41f3-a262-201ba0fdbd43"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
