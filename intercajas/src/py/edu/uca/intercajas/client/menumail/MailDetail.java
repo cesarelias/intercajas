@@ -72,6 +72,7 @@ public class MailDetail extends ResizeComposite {
   @UiField HorizontalPanel panelAdjuntos;
   @UiField FlowPanel opciones;
   @UiField Anchor imprimirSolicitudDetalle;
+  @UiField Anchor imprimirMensaje;
   Destino item;
 
   HorizontalPanel optionsButtons = new HorizontalPanel();
@@ -86,7 +87,7 @@ public class MailDetail extends ResizeComposite {
 	  imprimirSolicitudDetalle.addClickHandler(new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			BeneficiarioService.Util.get().solicitudDetalle(item.getMensaje().getSolicitud().getId(), new TextCallback() {
+			BeneficiarioService.Util.get().reporteSolicitudDetalle(item.getMensaje().getSolicitud().getId(), new TextCallback() {
 				@Override
 				public void onSuccess(Method method, String response) {
 					Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=solicitudDetalle.pdf", "_parent", "");
@@ -100,6 +101,24 @@ public class MailDetail extends ResizeComposite {
 
 		}
 	});
+	  
+	  imprimirMensaje.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				BeneficiarioService.Util.get().reporteMensaje(item.getId(), new TextCallback() {
+					@Override
+					public void onSuccess(Method method, String response) {
+						Window.open( "servlet.gupld?show=" + "reports/" + response + "&nombreDescarga=mensaje.pdf", "_parent", "");
+						
+					}
+					@Override
+					public void onFailure(Method method, Throwable exception) {
+						Window.alert(exception.getMessage());
+					}
+				});
+
+			}
+		});
   }
   public void setItem(Destino item) {
 	this.item = item;

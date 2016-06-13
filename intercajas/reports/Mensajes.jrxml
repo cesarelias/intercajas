@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-11T09:27:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Mensajes" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a36b1b6e-a936-4b35-82dd-975194adb79c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="solicitud_id" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select coalesce(b.siglas,'SistemaIntercajas') as cajaRemitente, a.fecha, 
+       case a.asunto
+         when 0 then
+         'Nueva Solicitud'
+         when 1 then
+           'Reconocimiento Tiempo Servicio'
+         when 2 then
+           'Totalizacion Tiempo Servicio'
+         when 3 then
+           'Concedido'
+         when 4 then
+           'Denegado'
+         else
+            '------'
+       end as Asunto
+       ,a.referencia 
+  from mensaje a left outer join caja b on (a.remitente_id = b.id)
+ where a.autorizado = true
+    and a.solicitud_id = $P{solicitud_id}
+    order by a.id]]>
+	</queryString>
+	<field name="cajaremitente" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="asunto" class="java.lang.String"/>
+	<field name="referencia" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="29" width="70" height="13" uuid="0ec0f820-cb5b-4d66-b5c2-9c5622e2204e"/>
+				<textElement>
+					<font size="8" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Remitente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="80" height="13" uuid="0b1f453d-2056-49c6-ab6a-47d7114c4721"/>
+				<textElement>
+					<font size="8" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de envío]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="29" width="118" height="13" uuid="da084c94-b73b-49ba-91f4-6729524e9ab0"/>
+				<textElement>
+					<font size="8" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Asunto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="29" width="260" height="13" uuid="5309619d-7ea0-4119-89c1-f99eec7e46e2"/>
+				<textElement>
+					<font size="8" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Referencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="6" width="160" height="20" uuid="4bdad162-06ac-4cd7-9b52-6f91abea88f8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mensajes]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="3" width="70" height="13" uuid="7e0fc8a6-6b9a-4a59-bc77-41693479fdfb"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cajaremitente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="0" y="3" width="80" height="13" uuid="d992fd4b-6400-4cb9-b0d2-805495313c32"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="3" width="118" height="27" uuid="e27f501a-e58a-4cb0-9d24-4cb6c84a6ad5"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asunto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="3" width="260" height="27" uuid="aeb33757-5dd7-4a77-8ab4-26b97be1042f"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="19">
+			<textField>
+				<reportElement x="0" y="0" width="125" height="14" uuid="56cf7330-21bc-4566-8e74-e141f4152d0b"/>
+				<textFieldExpression><![CDATA["Fin de mensajes . . ."]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

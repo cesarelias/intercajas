@@ -78,7 +78,16 @@ public class ReportRest {
 		return print("/home/cesar/docs/git/intercajas/reports/SolicitudDetalle.jrxml", parameters);
 	}	
 	
-	
+
+	@Path("/mensaje")
+	@GET
+	@Produces("text/plain")
+	public String mensaje(@QueryParam(value = "param") Long destino_id) {
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("destino_id", destino_id);
+		return print("/home/cesar/docs/git/intercajas/reports/Mensaje.jrxml", parameters);
+	}	
+
 	
 	
 	public String print(String reportName, Map<String, Object> parameters) {

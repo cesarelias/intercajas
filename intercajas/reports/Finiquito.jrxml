@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-11T12:19:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Finiquito" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5ecf3a09-1249-4453-acc5-024df4b9b3f7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="solicitud_id" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select 'Denegado' as tipo, d.siglas, e.nombres || ' ' || e.apellidos as nombres, b.numero_resolucion,  
+      case c.motivo
+         when 0 then
+             'No Reune Edad'
+         when 1 then
+             'No Reune Antiguedad'
+         when 2 then
+             'No Reune Edad ni Antiguedad'
+          when 3 then
+             'No es Afiliado'
+          when 4 then
+             'Otro'
+          end as detalle
+    from solicitud_beneficiario a, finiquito b, denegado c, caja d, beneficiario e, caja_declarada f
+ where a.id = b.solicitud_beneficiario_id
+   and b.caja_declarada_id = f.id
+   and b.id = c.id
+   and a.beneficiario_id = e.id
+   and f.caja_id = d.id
+   and b.autorizado = true
+   and a.solicitud_id =  $P{solicitud_id}
+
+union
+select 'Concedido' as tipo, d.siglas, e.nombres || ' ' || e.apellidos as nombres, b.numero_resolucion, trim(to_char(c.bt, '9G9999G999G999')) || ' X ' || c.tx || ' / ' || c.tmin || ' = ' || trim(to_char(c.bx, '9G9999G999G999')) as detalle
+  from solicitud_beneficiario a, finiquito b, concedido c, caja d, beneficiario e, caja_declarada f
+ where a.id = b.solicitud_beneficiario_id
+   and b.caja_declarada_id = f.id
+   and b.id = c.id
+   and a.beneficiario_id = e.id
+   and f.caja_id = d.id
+   and b.autorizado = true
+   and a.solicitud_id = $P{solicitud_id}
+order by tipo, siglas]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="siglas" class="java.lang.String"/>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="numero_resolucion" class="java.lang.String"/>
+	<field name="detalle" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="49" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="150" y="32" width="70" height="14" uuid="dff7b7c4-eacd-4c19-a992-2f4deb5212be">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Resolución N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="32" width="90" height="14" uuid="ec4e8a7a-3813-451d-b332-81a89695921d"/>
+				<box bottomPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Caja de Jubilación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="32" width="265" height="14" uuid="fe3b3300-e418-4474-b4e0-efcbc1055952"/>
+				<box bottomPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Detalle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="7" width="160" height="20" uuid="37b7624b-7c55-407e-ad7b-a23c09fa20dd"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Finiquitos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="32" width="60" height="14" uuid="d73c2d44-d15d-4631-bfac-67d672c46a39"/>
+				<box bottomPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="32" width="110" height="14" uuid="bcc61007-0302-47a2-b6c8-e773bd9dd6e0"/>
+				<box bottomPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="150" y="0" width="70" height="14" uuid="2f559cd6-179a-4f38-b982-369663b4aea5"/>
+				<textFieldExpression><![CDATA[$F{numero_resolucion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="90" height="14" uuid="0d87a076-9d74-422a-ba28-f4c78b166f53"/>
+				<textFieldExpression><![CDATA[$F{siglas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="265" height="14" uuid="e17d85a0-4652-4b84-bf96-97ad4a4f62ea"/>
+				<textFieldExpression><![CDATA[$F{detalle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="60" height="14" uuid="07e0388d-0413-4395-a945-cbf15cda322d"/>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="110" height="14" uuid="1815e835-d232-40f3-bb59-975478661039"/>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

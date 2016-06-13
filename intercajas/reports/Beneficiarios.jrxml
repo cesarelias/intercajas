@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-11T08:52:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Beneficiarios" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="82591c02-54d4-4c42-9118-5ef31925a7b1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="SolicitudID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select a.id,
+            b.nombres || ' ' || b.apellidos as nombres, 
+             b.numero_documento,
+         case a.parentesco
+             when 0 then
+              'Conyuge'
+             when 1 then
+              'Descendiente'
+             when 2 then
+              'Ascendiente'
+             else
+              'No Aplica'
+             end as parentesco,
+         case a.estado 
+            when 0 then
+               'Pendiente'
+            when 1 then
+               'Finalizado'
+            end as estado,
+          case a.tipo
+             when 0 then
+               'Titular'
+             when 1 then
+               'Derechohabiente'
+              end as tipo
+   from solicitud_beneficiario a, beneficiario b
+  where a.beneficiario_id = b.id
+     and a.solicitud_id = $P{SolicitudID}]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="parentesco" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="39" width="80" height="20" uuid="bdb8be57-60a2-4124-8390-2516a47b8714"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Documento Nº]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="39" width="160" height="20" uuid="b6823a15-585b-4157-bded-89b90de5e2ab"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="241" y="39" width="100" height="20" uuid="7e52a7db-bfa5-4d24-b70b-eda901a64ea5"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Parentesco]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="9" width="160" height="21" uuid="369cf4fa-44ba-462a-aa41-a31d935c554e"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitante(s)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="346" y="39" width="114" height="20" uuid="1c50b0d9-a7f6-44b9-ad88-95d63c46770e"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="12" uuid="bd86d1ea-daa6-427b-8074-e846165ed73a"/>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="0" width="160" height="12" uuid="a21899e7-48b4-4739-a57f-7f85cd49a6ec"/>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="0" width="100" height="12" uuid="1ae94090-67b6-4a41-96d5-938eee417396"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{parentesco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="0" width="114" height="12" uuid="2cf1cb0d-2ddc-454f-aa5c-e1ee67e1821f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

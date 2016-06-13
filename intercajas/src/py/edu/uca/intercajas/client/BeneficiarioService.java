@@ -285,8 +285,13 @@ public interface BeneficiarioService extends RestService {
 	@Path("report/solicitudDetalle")
 	@GET
 	@Produces("text/plain")
-	public void solicitudDetalle(@QueryParam(value = "param") Long solicitud_id, TextCallback archivo);
+	public void reporteSolicitudDetalle(@QueryParam(value = "param") Long solicitud_id, TextCallback archivo);
 
+	@Path("report/mensaje")
+	@GET
+	@Produces("text/plain")
+	public void reporteMensaje(@QueryParam(value = "param") Long solicitud_id, TextCallback archivo);
+	
 	
 	//FIN REPORTES
 	

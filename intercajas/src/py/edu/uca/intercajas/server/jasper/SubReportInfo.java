@@ -39,7 +39,7 @@ public class SubReportInfo {
 				return matcher.group(1);
 			}
 		}
-		throw new IllegalStateException("No fue posible obtener el nombre del subreporte dada la expresin: '" + expression +"'." );
+		throw new IllegalStateException("No fue posible obtener el nombre del subreporte dada la expresion: '" + expression +"'." );
 	}
 	
 }

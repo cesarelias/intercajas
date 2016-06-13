@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-12T13:28:36 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Solicitud" pageWidth="595" pageHeight="200" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="60975ad0-317f-435f-92c5-85bb7715f5fb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="SolicitudID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select case a.estado
+            when 0 then
+              'Nuevo'
+            when 1 then
+             'Con Antiguedad'
+            when 2 then
+              'Finiquitado'
+            else
+              '---'
+            end as estado,
+            diasTramite(a.id) as diasTramite
+, a.expediente_numero, a.fecha, a.tx_final, c.siglas as cajaGestora, d.numero_documento , d.nombres || ' ' || d.apellidos as beneficiarioCotizante
+  from solicitud a, caja c, beneficiario d
+ where a.caja_gestora_id = c.id
+   and a.cotizante_id = d.id
+   and a.id = $P{SolicitudID}]]>
+	</queryString>
+	<field name="estado" class="java.lang.String"/>
+	<field name="diastramite" class="java.lang.Integer"/>
+	<field name="expediente_numero" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="tx_final" class="java.lang.Integer"/>
+	<field name="cajagestora" class="java.lang.String"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="beneficiariocotizante" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="132" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="100" y="40" width="80" height="14" uuid="2747674e-707b-4377-9de5-47ee7571e564"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="80" width="100" height="14" uuid="d21ce473-501a-44f1-9677-32c0478b5452"/>
+				<text><![CDATA[Tiempo Totalizado]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="100" width="140" height="14" uuid="731280d4-4510-4867-9846-0d2d892974d6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="100" width="100" height="14" uuid="9c6a2da4-2183-447a-b0c9-20c384c54231"/>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="60" width="140" height="14" uuid="4911d67f-5633-493b-9494-26efdd6afd1d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{expediente_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="60" width="100" height="14" uuid="76766112-e66c-4a2e-b3cf-59a5e9ddca35"/>
+				<text><![CDATA[Expediente Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="330" y="40" width="254" height="14" uuid="a5950501-961c-4b21-9391-0fb6afbcfca8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cajagestora}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="40" width="80" height="14" uuid="2f22ae58-e41a-4a7c-8d49-b4cc928f7d29"/>
+				<text><![CDATA[Caja Gestora]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="330" y="60" width="254" height="14" uuid="0c47bf73-98a0-45f0-aacf-22ac2186f642"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{beneficiariocotizante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="60" width="80" height="14" uuid="febe5c66-7e25-4008-8460-3c46894db842"/>
+				<text><![CDATA[Cotizante]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="14" uuid="4f00edb5-8a7e-4075-963e-b475572e73d2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="80" width="140" height="14" uuid="605ae96f-e69d-4154-8d55-76d51697dddf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{tx_final}/12 ) + " años " + ($F{tx_final}%12 ) + " meses"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="9" width="160" height="21" uuid="adac5150-3a2d-4def-81bf-fa7898f36ee4"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitud]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="330" y="80" width="254" height="14" uuid="f3eb9238-258d-4838-8e22-1b3df8b1ee92"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="80" width="80" height="14" uuid="6792c2f4-e846-46d6-810e-1e62c15181cc"/>
+				<text><![CDATA[Documento Nº]]></text>
+			</staticText>
+			<textField pattern="#,##0">
+				<reportElement x="330" y="100" width="105" height="14" uuid="12ac403b-9e03-4aaa-8af2-f8634a45190d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{diastramite}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="100" width="80" height="14" uuid="97034913-f899-4722-975a-7277d64ba16e"/>
+				<text><![CDATA[Dias Trámite]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>
