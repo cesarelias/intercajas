@@ -88,6 +88,69 @@ public class ReportRest {
 		return print("/home/cesar/docs/git/intercajas/reports/Mensaje.jrxml", parameters);
 	}	
 
+	@Path("/tramitesPorCaja")
+	@GET
+	@Produces("text/plain")
+	public String tramitesPorCaja(@QueryParam(value = "caja_id") Long caja_id,
+			                             @QueryParam(value = "estado0") Integer estado0,
+			                             @QueryParam(value = "estado1") Integer estado1,
+			                             @QueryParam(value = "estado2") Integer estado2,
+			                             @QueryParam(value = "fecha_desde") String fechaDesde,
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta) {
+		
+		
+		
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		try {
+			
+			if (fechaDesde != null) parameters.put("fecha_desde", new java.sql.Date(df.parse(fechaDesde).getTime()));
+			if (fechaHasta != null) parameters.put("fecha_hasta", new java.sql.Date(df.parse(fechaHasta).getTime()));
+			parameters.put("estado0", estado0);
+			parameters.put("estado1", estado1);
+			parameters.put("estado2", estado2);
+			parameters.put("caja_id", caja_id);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return print("/home/cesar/docs/git/intercajas/reports/TramitesPorCaja.jrxml", parameters);
+	}	
+	
+	@Path("/tramitesMiCaja")
+	@GET
+	@Produces("text/plain")
+	public String tramitesMiCaja(@QueryParam(value = "caja_id") Long caja_id,
+			                             @QueryParam(value = "estado0") Integer estado0,
+			                             @QueryParam(value = "estado1") Integer estado1,
+			                             @QueryParam(value = "estado2") Integer estado2,
+			                             @QueryParam(value = "fecha_desde") String fechaDesde,
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta) {
+		
+		
+		
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		try {
+			
+			if (fechaDesde != null) parameters.put("fecha_desde", new java.sql.Date(df.parse(fechaDesde).getTime()));
+			if (fechaHasta != null) parameters.put("fecha_hasta", new java.sql.Date(df.parse(fechaHasta).getTime()));
+			parameters.put("estado0", estado0);
+			parameters.put("estado1", estado1);
+			parameters.put("estado2", estado2);
+			parameters.put("caja_id", caja_id);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return print("/home/cesar/docs/git/intercajas/reports/TramitesMiCaja.jrxml", parameters);
+	}	
 	
 	
 	public String print(String reportName, Map<String, Object> parameters) {

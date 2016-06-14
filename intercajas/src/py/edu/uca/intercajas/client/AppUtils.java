@@ -3,6 +3,8 @@ package py.edu.uca.intercajas.client;
 import py.edu.uca.intercajas.client.caja.ListaCajas;
 import py.edu.uca.intercajas.client.menumail.Mail;
 import py.edu.uca.intercajas.client.menumail.MenuMail;
+import py.edu.uca.intercajas.client.report.UITramitesMiCaja;
+import py.edu.uca.intercajas.client.report.UITramitesPorCaja;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.tiemposervicio.ListaEmpleadores;
 import py.edu.uca.intercajas.client.view.login.UILogin;
@@ -63,6 +65,9 @@ public class AppUtils {
 			// s.mostrarDialog();
 			//
 
+//			UITramitesMiCaja a = new UITramitesMiCaja();
+//			a.mostrarDialog();
+			
 		} catch (Exception e) {
 			Window.alert(e.getMessage());
 		}

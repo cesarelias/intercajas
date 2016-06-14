@@ -293,6 +293,27 @@ public interface BeneficiarioService extends RestService {
 	public void reporteMensaje(@QueryParam(value = "param") Long solicitud_id, TextCallback archivo);
 	
 	
+	@Path("report/tramitesPorCaja")
+	@GET
+	@Produces("text/plain")
+	public void reporteTramitesPorCaja(@QueryParam(value = "caja_id") Long caja_id,
+			                             @QueryParam(value = "estado0") Integer estado0,
+			                             @QueryParam(value = "estado1") Integer estado1,
+			                             @QueryParam(value = "estado2") Integer estado2,
+			                             @QueryParam(value = "fecha_desde") String fechaDesde,
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta, TextCallback archivo);
+
+	@Path("report/tramitesMiCaja")
+	@GET
+	@Produces("text/plain")
+	public void reporteTramitesMiCaja(@QueryParam(value = "caja_id") Long caja_id,
+			                             @QueryParam(value = "estado0") Integer estado0,
+			                             @QueryParam(value = "estado1") Integer estado1,
+			                             @QueryParam(value = "estado2") Integer estado2,
+			                             @QueryParam(value = "fecha_desde") String fechaDesde,
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta, TextCallback archivo);	
+	
+	
 	//FIN REPORTES
 	
 	/**

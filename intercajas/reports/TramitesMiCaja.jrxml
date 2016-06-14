@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-14T11:20:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TramitesMiCaja" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="41c705b9-9feb-4660-8958-0104d55590fb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="caja_id" class="java.lang.Long"/>
+	<parameter name="estado0" class="java.lang.Integer"/>
+	<parameter name="estado1" class="java.lang.Integer"/>
+	<parameter name="estado2" class="java.lang.Integer"/>
+	<parameter name="fecha_desde" class="java.sql.Date"/>
+	<parameter name="fecha_hasta" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[select b.siglas, c.expediente_numero, c.fecha, 
+    case a.estado
+      when 0 then
+       'Nuevo'
+       when 1 then 
+       'Con Antiguedad' 
+       when 2 then
+        'Finiquitado'
+       else
+        '---'
+        end as estado,
+        d.numero_documento,
+        d.nombres || ' ' || d.apellidos as nombres,
+        diasTramiteCaja(a.id) as diasTramiteCaja,
+        diasTramite(a.solicitud_id) as diasTramite
+     from caja_declarada a, caja b, solicitud c, beneficiario d
+  where a.solicitud_id = c.id
+    and c.cotizante_id = d.id
+    and a.caja_id = b.id
+    and (c.fecha >= $P{fecha_desde} or $P{fecha_desde}::timestamp is null)
+    and (c.fecha <= $P{fecha_hasta} or $P{fecha_hasta}::timestamp is null)
+    and (a.caja_id = $P{caja_id} or 0 = 0)
+    and a.estado in ($P{estado0},$P{estado1},$P{estado2})
+order by c.fecha]]>
+	</queryString>
+	<field name="siglas" class="java.lang.String"/>
+	<field name="expediente_numero" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="diastramitecaja" class="java.lang.Integer"/>
+	<field name="diastramite" class="java.lang.Integer"/>
+	<variable name="diastramitecaja1" class="java.lang.Integer" resetType="Column" calculation="Average">
+		<variableExpression><![CDATA[$F{diastramitecaja}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="450" y="40" width="94" height="16" uuid="1c168c41-ff5c-4676-aac8-f99271dd8bbe"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="10" y="23" width="534" height="50" backcolor="#DEDEDE" uuid="f47bf176-951e-40f5-8f14-14187217eb9f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TRÁMITES - CAJA DE JUBILAICON - " + $F{siglas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="71" splitType="Stretch">
+			<textField>
+				<reportElement x="115" y="10" width="339" height="20" uuid="c725002b-8bb8-4ddb-aa0a-4e7e49fef3d1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($P{estado0}!= null)&&$P{estado0} == 0 ? "/ Nuevo" : "") + 
+(($P{estado1}!= null)&&$P{estado1} == 1 ? " / Con Antiguedad" : "") + 
+(($P{estado2}!= null)&&$P{estado2} == 2 ? " / Finiquitado" : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="45" y="10" width="60" height="20" uuid="09500f47-5b7a-4772-8ac1-00f9a2233140"/>
+				<text><![CDATA[Estados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="45" y="36" width="70" height="20" uuid="5a49df4b-ae9e-4941-b923-67ed0bf3ec00"/>
+				<text><![CDATA[Fecha desde]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="121" y="36" width="100" height="20" uuid="953326ae-5132-4f19-953c-0a95f95d6345"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha_desde} == null ? "Todos" : $P{fecha_desde}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="235" y="36" width="70" height="20" uuid="0dec625d-4d2d-44ae-a74d-209ba234b32c"/>
+				<text><![CDATA[Fecha hasta]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="315" y="36" width="100" height="20" uuid="28b0684c-73cf-4129-9a24-9695b8149103"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha_hasta} == null ? "Todos" : $P{fecha_hasta}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="40" y="9" width="1" height="47" uuid="67255310-bc5b-4417-b2c8-a7f13799d6a9"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="46" y="21" width="137" height="24" uuid="8c260ae1-f20e-4621-82c3-4cc78ac31666"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Expediente N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="21" width="69" height="24" uuid="c2b1b489-a6d6-4292-8654-91fae1849e5b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Fecha Solicitud]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="252" y="21" width="112" height="24" uuid="44ae8942-6400-46e2-8b5b-c591be0f9a11"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="21" width="53" height="24" uuid="7364b38f-60ae-4112-9066-fa8f22a2fa10"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Días de Tramite]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="46" y="0" width="137" height="15" uuid="4b2bf29b-5082-456b-a5cc-f933c8796d06"/>
+				<textFieldExpression><![CDATA[$F{expediente_numero}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="183" y="0" width="69" height="15" uuid="27375da3-c7da-4e15-8048-51f6d03d6f78"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="0" width="112" height="15" uuid="b7531494-97a4-4d33-87b3-ae576963d1c5"/>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="391" y="0" width="53" height="15" uuid="f04f95ef-3c98-4cf9-8688-3d15f1851ef0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{diastramitecaja}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="28" splitType="Stretch">
+			<textField pattern="#,##0">
+				<reportElement x="391" y="0" width="53" height="20" uuid="0f5369e3-37b1-4130-9cc1-2b250cafb280"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{diastramitecaja1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="320" y="0" width="59" height="20" uuid="e3a23f24-201a-4889-8064-f4886548042b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Promedio]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="8" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</summary>
+</jasperReport>
