@@ -119,6 +119,10 @@ public class MailDetail extends ResizeComposite {
 
 			}
 		});
+	  
+	  imprimirMensaje.setVisible(false);
+	  imprimirSolicitudDetalle.setVisible(false);
+
   }
   public void setItem(Destino item) {
 	this.item = item;
@@ -163,6 +167,11 @@ public class MailDetail extends ResizeComposite {
     } else {
     	body.setHTML(new SafeHtmlBuilder().appendEscapedLines(item.getMensaje().getCuerpo()).toSafeHtml());
     }
+
+
+    //Aparecen los botones de impresion
+    imprimirMensaje.setVisible(true);
+	imprimirSolicitudDetalle.setVisible(true);
 
     
     
@@ -371,6 +380,8 @@ public class MailDetail extends ResizeComposite {
 	  panelAdjuntos.clear();
 	  optionsButtons.clear();
 	  opciones.clear();
+	  imprimirMensaje.setVisible(false);
+	  imprimirSolicitudDetalle.setVisible(false);
 	  
   }
   

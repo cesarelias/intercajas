@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-11T15:33:10 -->
+<!-- 2016-06-14T18:04:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Mensaje" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a36b1b6e-a936-4b35-82dd-975194adb79c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
+	<parameter name="usuario" class="java.lang.String"/>
 	<parameter name="destino_id" class="java.lang.Long"/>
 	<queryString>
 		<![CDATA[select coalesce(b.siglas,'SistemaIntercajas') as cajaRemitente, a.fecha, 
@@ -43,13 +44,25 @@
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="46" splitType="Stretch">
+		<band height="82" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="12" width="550" height="28" uuid="cc9d51dc-e1ac-4a6e-8452-2861458eaeb9"/>
+				<reportElement x="0" y="50" width="550" height="28" uuid="cc9d51dc-e1ac-4a6e-8452-2861458eaeb9"/>
 				<textElement textAlignment="Left">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="460" y="0" width="95" height="14" uuid="c190db3e-e880-4b21-9abb-eb75d5ec80c9"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="460" y="14" width="95" height="14" uuid="51313db7-176c-4e2b-afb2-03b6d4989138"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="460" y="28" width="95" height="14" uuid="bcad3e39-5cc7-4dd8-9334-c18f7ee7d67f"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>

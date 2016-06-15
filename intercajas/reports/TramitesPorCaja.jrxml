@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-14T09:46:01 -->
+<!-- 2016-06-14T18:08:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TramitesPorCaja" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="41c705b9-9feb-4660-8958-0104d55590fb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
@@ -10,6 +10,7 @@
 	<parameter name="estado2" class="java.lang.Integer"/>
 	<parameter name="fecha_desde" class="java.sql.Date"/>
 	<parameter name="fecha_hasta" class="java.sql.Date"/>
+	<parameter name="usuario" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select b.siglas, c.expediente_numero, c.fecha, 
     case a.estado
@@ -53,14 +54,22 @@ order by c.fecha]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="10" y="7" width="534" height="50" backcolor="#DEDEDE" uuid="fcb4749a-9f37-4d8f-9b3f-1d556d8a84bf"/>
+				<reportElement mode="Opaque" x="0" y="19" width="550" height="50" backcolor="#DEDEDE" uuid="fcb4749a-9f37-4d8f-9b3f-1d556d8a84bf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TRÁMITES POR CAJA DE JUBILACIÓN]]></text>
 			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="450" y="22" width="95" height="14" uuid="f906f17f-0f01-4c16-9b0f-91dd582c56b3"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="36" width="95" height="14" uuid="0d195f4c-8674-4cbe-b61f-f6549bcf18d5"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
 			<textField pattern="dd/MM/yyyy HH:mm">
-				<reportElement x="450" y="40" width="94" height="16" uuid="1c168c41-ff5c-4676-aac8-f99271dd8bbe"/>
+				<reportElement x="450" y="50" width="95" height="14" uuid="f6d42508-9d00-4d13-b24f-e0e436aa0835"/>
 				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 			</textField>
 		</band>
@@ -89,8 +98,7 @@ order by c.fecha]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fecha_desde} == null ? "Todos" : $P{fecha_desde}
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{fecha_desde} == null ? "Todos" : $P{fecha_desde}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="235" y="36" width="70" height="20" uuid="0dec625d-4d2d-44ae-a74d-209ba234b32c"/>

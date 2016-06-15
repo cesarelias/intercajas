@@ -9,14 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -26,6 +32,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
 import py.edu.uca.intercajas.server.jasper.SubReportVisitor;
 import py.edu.uca.intercajas.server.pdfSign.Signatures;
+import py.edu.uca.intercajas.shared.UserDTO;
 
 @Path("/report")
 @Stateless
@@ -37,14 +44,25 @@ public class ReportRest {
 	@PersistenceContext
 	EntityManager em;
 	
+	@EJB
+	UserLogin userLogin;
+	
 	@Path("/auditoriaPorUsuario")
 	@GET
 	@Produces("text/plain")
 	public String auditoriaPorUsuario(@QueryParam(value = "desde") String desde,
 			           @QueryParam(value = "hasta") String hasta,
-			           @QueryParam(value = "usuario") String usuario) {
-		System.out.println("rest working");
+			           @QueryParam(value = "usuario") String usuario, @Context HttpServletRequest req) {
+		
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+
 		
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		
@@ -72,8 +90,17 @@ public class ReportRest {
 	@Path("/solicitudDetalle")
 	@GET
 	@Produces("text/plain")
-	public String solicitudDetalle(@QueryParam(value = "param") Long solicitud_id) {
+	public String solicitudDetalle(@QueryParam(value = "param") Long solicitud_id, @Context HttpServletRequest req) {
+		
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+
 		parameters.put("solicitud_id", solicitud_id);
 		return print("/home/cesar/docs/git/intercajas/reports/SolicitudDetalle.jrxml", parameters);
 	}	
@@ -82,8 +109,17 @@ public class ReportRest {
 	@Path("/mensaje")
 	@GET
 	@Produces("text/plain")
-	public String mensaje(@QueryParam(value = "param") Long destino_id) {
+	public String mensaje(@QueryParam(value = "param") Long destino_id, @Context HttpServletRequest req) {
+		
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+
 		parameters.put("destino_id", destino_id);
 		return print("/home/cesar/docs/git/intercajas/reports/Mensaje.jrxml", parameters);
 	}	
@@ -96,11 +132,17 @@ public class ReportRest {
 			                             @QueryParam(value = "estado1") Integer estado1,
 			                             @QueryParam(value = "estado2") Integer estado2,
 			                             @QueryParam(value = "fecha_desde") String fechaDesde,
-			                             @QueryParam(value = "fecha_hasta") String fechaHasta) {
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta, @Context HttpServletRequest req) {
 		
 		
-		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+
 		
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		
@@ -128,11 +170,17 @@ public class ReportRest {
 			                             @QueryParam(value = "estado1") Integer estado1,
 			                             @QueryParam(value = "estado2") Integer estado2,
 			                             @QueryParam(value = "fecha_desde") String fechaDesde,
-			                             @QueryParam(value = "fecha_hasta") String fechaHasta) {
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta, @Context HttpServletRequest req) {
 		
 		
-		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+
 		
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		
@@ -152,6 +200,43 @@ public class ReportRest {
 		return print("/home/cesar/docs/git/intercajas/reports/TramitesMiCaja.jrxml", parameters);
 	}	
 	
+	@Path("/tramitesSolicitud")
+	@GET
+	@Produces("text/plain")
+	public String tramitesSolicitud(@QueryParam(value = "estado0") Integer estado0,
+			                        @QueryParam(value = "estado1") Integer estado1,
+			                        @QueryParam(value = "estado2") Integer estado2,
+			                        @QueryParam(value = "fecha_desde") String fechaDesde,
+			                        @QueryParam(value = "fecha_hasta") String fechaHasta, @Context HttpServletRequest req) {
+		
+		
+		UserDTO user = userLogin.getValidUser(req.getSession().getId());
+        if (user == null) {
+        	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
+        }
+        
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("usuario", user.getName());
+		
+		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		try {
+			
+			if (fechaDesde != null) parameters.put("fecha_desde", new java.sql.Date(df.parse(fechaDesde).getTime()));
+			if (fechaHasta != null) parameters.put("fecha_hasta", new java.sql.Date(df.parse(fechaHasta).getTime()));
+			parameters.put("estado0", estado0);
+			parameters.put("estado1", estado1);
+			parameters.put("estado2", estado2);
+			parameters.put("usuario", user.getName());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return print("/home/cesar/docs/git/intercajas/reports/TramitesSolicitud.jrxml", parameters);
+	}	
+
 	
 	public String print(String reportName, Map<String, Object> parameters) {
 

@@ -126,27 +126,32 @@ public class Mailboxes extends Composite {
   	    	Mail m = AppUtils.Util.getMail();
 //  	    	m.mostrar();
   	    	m.mostrarMisPendientes();
-  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+//  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
   	    } else if (event.getSelectedItem().getText().trim().equals("Mis Finiquitados")) {
   	    	Mail m = AppUtils.Util.getMail();
 //  	    	m.mostrar();
   	    	m.mostrarMisFiniquitados();
-  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+//  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
 	    } else if (event.getSelectedItem().getText().trim().equals("Pendientes")) {
   	    	Mail m = AppUtils.Util.getMail();
 //  	    	m.mostrar();
   	    	m.mostrarPendientes();
-  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+//  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
 	    } else if (event.getSelectedItem().getText().trim().equals("Finiquitados")) {
   	    	Mail m = AppUtils.Util.getMail();
   	    	m.mostrar();
   	    	m.mostrarFiniquitados();
-  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+//  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
 	    } else if (event.getSelectedItem().getText().trim().equals("Anulados")) {
   	    	Mail m = AppUtils.Util.getMail();
 //  	    	m.mostrar();
   	    	m.mostrarAnulados();
-  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+//  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent());
+  	    	AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
 	    }
   	  }
   	});
@@ -307,10 +312,13 @@ public class Mailboxes extends Composite {
 		
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			Mailboxes.this.fechaDesde = null;
-			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+			if (!AppUtils.esFecha(event.getValue().trim())) { 
+				Mailboxes.this.fechaDesde = null; //esto es asi porque este evento se dispara cuando es una fecha invalida
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+			}
 		}
 	  });
+	  
 	  fechaDesde.addValueChangeHandler(new ValueChangeHandler<Date>() {
 		
 		@Override
@@ -323,8 +331,10 @@ public class Mailboxes extends Composite {
 		
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			Mailboxes.this.fechaHasta = null;
-			AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+			if (!AppUtils.esFecha(event.getValue().trim())) {
+				Mailboxes.this.fechaHasta = null;//esto es asi porque este evento se dispara cuando es una fecha invalida
+				AppUtils.EVENT_BUS.fireEvent(new RefreshMailEvent(Mailboxes.this.beneficiarioIdFilter, Mailboxes.this.cajaIdFilter, Mailboxes.this.fechaDesde, Mailboxes.this.fechaHasta));
+			}
 		}
 	  });
 	  

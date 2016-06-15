@@ -24,6 +24,7 @@ import py.edu.uca.intercajas.client.caja.ListaCajas;
 import py.edu.uca.intercajas.client.report.UIAuditoria;
 import py.edu.uca.intercajas.client.report.UITramitesMiCaja;
 import py.edu.uca.intercajas.client.report.UITramitesPorCaja;
+import py.edu.uca.intercajas.client.report.UITramitesSolicitud;
 import py.edu.uca.intercajas.client.solicitud.SolicitudTitularEditorWorkFlow;
 import py.edu.uca.intercajas.client.view.login.ListaUsuarios;
 import py.edu.uca.intercajas.shared.entity.Usuario;
@@ -83,7 +84,8 @@ public class Gestion extends Composite {
 			addItemUsuarios(new ItemMenu("Gestión de Usuarios"));
 			addItemBeneficiario(new ItemMenu("Gestión de Beneficiario"));
 			addItemInformeAuditoria(new ItemMenu("Informe Auditoria"));
-			addItemReporteTramitesPorCaja(new ItemMenu("Reporte Trámites"));
+			addItemReporteTramitesPorCaja(new ItemMenu("Reporte Trámites por caja"));
+			addItemReporteTramitesSolicitud(new ItemMenu("Reporte Trámites solicitud"));
 			addItemCaja(new ItemMenu("Gestión Caja de Jubilacion"));
 		} else if (LoginService.Util.currentUser.getTipo() == Usuario.Tipo.Gestor) {
 			addItemSolicitudTitular(new ItemMenu("Nueva Solicitud"));
@@ -205,6 +207,20 @@ public class Gestion extends Composite {
 		});
 	}	
 	
+
+	private void addItemReporteTramitesSolicitud(final ItemMenu itemMenu) {
+		final Anchor link = new Anchor(itemMenu.nombre);
+		link.setStyleName(style.item());
+
+		panel.add(link);
+
+		// Add a click handler that displays a ContactPopup when it is clicked.
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new UITramitesSolicitud().mostrarDialog();
+			}
+		});
+	}		
 	
 	private void addItemCaja(final ItemMenu itemMenu) {
 		final Anchor link = new Anchor(itemMenu.nombre);

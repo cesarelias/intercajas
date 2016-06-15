@@ -36,45 +36,10 @@ public class AppUtils {
 		// predeterminada al crear Mail, de echo, crea problemas al volver a
 		// mostrar
 
-		// test
-		try {
-
-			// ListaCajas l = new ListaCajas(10);
-			// l.mostrarDialog();
-
-			// SolicitudTitularEditorWorkFlow s = new
-			// SolicitudTitularEditorWorkFlow();
-			// s.mostrarDialog();
-			// s.create();
-
-			// UIAuditoria i = new UIAuditoria();
-			// i.mostrarDialog();
-
-			// ListaEmpleadores l = new ListaEmpleadores(10);
-			// l.mostrarDialog();
-
-			// TiempoServicioReconocidoEditor n = new
-			// TiempoServicioReconocidoEditor(null);
-			// n.titulo = "Nuevo quete";
-			// n.mostrarDialog();
-
-			// SolicitudTitularEditorWorkFlow s = new
-			// SolicitudTitularEditorWorkFlow();
-			// s.titulo = "Nueva solicitud";
-			// s.create();
-			// s.mostrarDialog();
-			//
-
-//			UITramitesMiCaja a = new UITramitesMiCaja();
-//			a.mostrarDialog();
-			
-		} catch (Exception e) {
-			Window.alert(e.getMessage());
-		}
-
 	}
 
 	public static void mostrarLogin() {
+		AppUtils.Util.clearMail();
 		RootLayoutPanel.get().clear();
 		UILogin login = new UILogin();
 		RootLayoutPanel.get().add(login);
@@ -105,6 +70,11 @@ public class AppUtils {
 			}
 			return mail;
 		}
+		
+		public static void clearMail() {
+			mail = null;
+		}
+		
 
 		// ESTO NO ANDA AUN jaja.. mejor usar del LoginService
 		public static UserDTO getCurrentUser() {
@@ -127,6 +97,19 @@ public class AppUtils {
 			return false;
 		}
 	}
+	
+	public static boolean esFecha(String fecha) {
+		try {
+			if (fecha == null) {
+				return false;
+			}
+			dateFormat.parseStrict(fecha);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+	
 
 	public native static boolean isValidEmail(String email) /*-{
 		var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid

@@ -91,9 +91,6 @@ public class DestinoRest   {
 
         if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 
-        	if (parametros.fecha_desde != null) System.out.println(parametros.getFecha_desde());
-        	if (parametros.fecha_hasta != null) System.out.println(parametros.getFecha_hasta());
-        	
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
@@ -125,8 +122,7 @@ public class DestinoRest   {
 			
 		} else if (user.getTipo() == Usuario.Tipo.Superior) {
 			
-			System.out.println("entro aqui");
-			
+
 			return em.createQuery("select c "
 					+ "              from Mensaje a, Solicitud b, Destino c"
 					+ "             where a.solicitud.id = b.id "
@@ -148,9 +144,9 @@ public class DestinoRest   {
 					.setParameter("caja_id", user.getCaja().getId())
 					.setParameter("beneficiario_id", parametros.beneficiario_id)
 					.setParameter("remitente_id", parametros.remitente_id)
-					.setParameter("caja_id", user.getCaja().getId())
 					.setParameter("fecha_desde", parametros.fecha_desde)
 					.setParameter("fecha_hasta", parametros.fecha_hasta)
+					.setParameter("caja_id", user.getCaja().getId())
 
 					.getResultList();
 			
@@ -161,20 +157,20 @@ public class DestinoRest   {
 	}
 	
 	@Path("/findMisFiniquitados")
-	@GET
+	@POST
 	@Produces("application/json")
-	public List<Destino> findMisFiniquitados(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults,
+	public List<Destino> findMisFiniquitados(BandejaParam parametros,
 										@Context HttpServletRequest req) {
+		
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
         if (user == null) {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
-       }
-
-		if (maxResults > 500) {
-			maxResults = 500;
-		}
+        }
+        
+        if (parametros.maxResults == null || parametros.maxResults > 500) {
+        	parametros.maxResults = 500;
+        }
 		
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador || user.getTipo() == Usuario.Tipo.Superior) {
 			
@@ -184,6 +180,13 @@ public class DestinoRest   {
 					+ "               and a.id = c.mensaje.id "
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and c.destinatario.id = :caja_id"
+
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"
+
+					
 					+ "               and not exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -194,8 +197,12 @@ public class DestinoRest   {
 					, Destino.class)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
 					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
+					.setParameter("fecha_desde", parametros.fecha_desde)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			
@@ -226,10 +233,9 @@ public class DestinoRest   {
 
 	
 	@Path("/findPendientes")
-	@GET
+	@POST
 	@Produces("application/json")
-	public List<Destino> findPendientes(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults,
+	public List<Destino> findPendientes(BandejaParam parametros,
 										@Context HttpServletRequest req) {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
@@ -237,11 +243,12 @@ public class DestinoRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
-		if (maxResults > 500) {
-			maxResults = 500;
-		}
+        if (parametros.maxResults == null || parametros.maxResults > 500) {
+        	parametros.maxResults = 500;
+        }
 		
-		
+		if (parametros.getFecha_hasta() != null) System.out.println(parametros.getFecha_hasta());
+        
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 			
 			return em.createQuery("select c "
@@ -251,6 +258,12 @@ public class DestinoRest   {
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
+					
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"
+					
 					+ "               and exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -260,8 +273,13 @@ public class DestinoRest   {
 					, Destino.class)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
 					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
+					.setParameter("fecha_desde", parametros.fecha_desde)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
+					
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			
@@ -291,10 +309,9 @@ public class DestinoRest   {
 	}
 	
 	@Path("/findFiniquitados")
-	@GET
+	@POST
 	@Produces("application/json")
-	public List<Destino> findFiniquitados(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults,
+	public List<Destino> findFiniquitados(BandejaParam parametros,
 										@Context HttpServletRequest req) {
 		
 		UserDTO user = userLoign.getValidUser(req.getSession().getId());
@@ -302,9 +319,9 @@ public class DestinoRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
        }
 
-		if (maxResults > 500) {
-			maxResults = 500;
-		}
+        if (parametros.maxResults == null || parametros.maxResults > 500) {
+        	parametros.maxResults = 500;
+        }
 		
 		
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
@@ -316,6 +333,12 @@ public class DestinoRest   {
 					+ "               and a.estado = :estadoMensaje"
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
+
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"					
+					
 					+ "               and not exists "
 					+ "                 (select cd"
 					+ "                    from CajaDeclarada cd "
@@ -325,8 +348,13 @@ public class DestinoRest   {
 					, Destino.class)
 					.setParameter("estadoMensaje", Mensaje.Estado.Enviado)
 					.setParameter("estadoCajaDeclarada", CajaDeclarada.Estado.Finiquitado)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
+					.setParameter("fecha_desde", parametros.fecha_desde)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
+					
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			
@@ -358,8 +386,7 @@ public class DestinoRest   {
 	@Path("/findAnulados")
 	@GET
 	@Produces("application/json")
-	public List<Destino> findAnulados(@QueryParam("startRow") int startRow,
-										@QueryParam("maxResults") int maxResults,
+	public List<Destino> findAnulados(BandejaParam parametros,
 										@Context HttpServletRequest req) {
 		
 
@@ -368,9 +395,9 @@ public class DestinoRest   {
 			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("usuario no valido").build());
 		}
 
-		if (maxResults > 500) {
-			maxResults = 500;
-		}
+        if (parametros.maxResults == null || parametros.maxResults > 500) {
+        	parametros.maxResults = 500;
+        }
 		
 		if (user.getTipo() == Usuario.Tipo.Gestor || user.getTipo() == Usuario.Tipo.Administrador) {
 			
@@ -380,10 +407,21 @@ public class DestinoRest   {
 					+ "               and a.id = c.mensaje.id "
 					+ "               and a.remitente.id = :caja_id "
 					+ "               and c.destinatario.id = :caja_id"
+					
+					+ "               and (a.remitente.id = :remitente_id or :remitente_id is null)"
+					+ "               and (b.cotizante.id = :beneficiario_id  or :beneficiario_id is null)"
+					+ "               and (cast(a.fecha as date) >= :fecha_desde or cast(:fecha_desde as date) is null)"
+					+ "               and (cast(a.fecha as date) <= :fecha_hasta or cast(:fecha_hasta as date) is null)"	
+					
 					+ " order by a.fecha desc "
 					, Destino.class)
-					.setFirstResult(startRow)
-					.setMaxResults(maxResults)
+					.setFirstResult(parametros.startRow)
+					.setMaxResults(parametros.maxResults)
+					.setParameter("beneficiario_id", parametros.beneficiario_id)
+					.setParameter("remitente_id", parametros.remitente_id)
+					.setParameter("fecha_desde", parametros.fecha_desde)
+					.setParameter("fecha_hasta", parametros.fecha_hasta)
+					
 					.setParameter("caja_id", user.getCaja().getId())
 					.getResultList();
 			

@@ -110,24 +110,24 @@ public interface BeneficiarioService extends RestService {
 	public void findMisPendientes(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findMisFiniquitados")
-	@GET
+	@POST
 	@Produces("application/json")
-	public void findMisFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findMisFiniquitados(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findPendientes")
-	@GET
+	@POST
 	@Produces("application/json")
-	public void findPendientes(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findPendientes(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findFiniquitados")
-	@GET
+	@POST
 	@Produces("application/json")
-	public void findFiniquitados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findFiniquitados(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	@Path("destino/findAnulados")
-	@GET
+	@POST
 	@Produces("application/json")
-	public void findAnulados(@QueryParam("startRow") int startRow, @QueryParam("maxResults") int maxResults, MethodCallback<List<Destino>> destinos);
+	public void findAnulados(BandejaParam parametros, MethodCallback<List<Destino>> destinos);
 	
 	//FIN BANDEJA
 
@@ -313,6 +313,17 @@ public interface BeneficiarioService extends RestService {
 			                             @QueryParam(value = "fecha_desde") String fechaDesde,
 			                             @QueryParam(value = "fecha_hasta") String fechaHasta, TextCallback archivo);	
 	
+	
+
+	@Path("report/tramitesSolicitud")
+	@GET
+	@Produces("text/plain")
+	public void reporteTramitesSolicitud(@QueryParam(value = "estado0") Integer estado0,
+			                             @QueryParam(value = "estado1") Integer estado1,
+			                             @QueryParam(value = "estado2") Integer estado2,
+			                             @QueryParam(value = "fecha_desde") String fechaDesde,
+			                             @QueryParam(value = "fecha_hasta") String fechaHasta, TextCallback archivo);	
+
 	
 	//FIN REPORTES
 	

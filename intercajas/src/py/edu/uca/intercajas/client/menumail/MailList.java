@@ -273,11 +273,11 @@ public class MailList extends ResizeComposite {
     navBar.update(startIndex, max);
 
 
+    parametros.setStartRow(startIndex);
+    parametros.setMaxResults(VISIBLE_EMAIL_COUNT);
 
     if (modo == Modo.MisPendientes) {
     	
-    	parametros.setStartRow(startIndex);
-    	parametros.setMaxResults(VISIBLE_EMAIL_COUNT);
     	BeneficiarioService.Util.get().findMisPendientes(parametros, new MethodCallback<List<Destino>>() {
     		
     		@Override
@@ -290,7 +290,8 @@ public class MailList extends ResizeComposite {
     		}
     	});
     } else if (modo == Modo.MisFiniquitados) {
-    	BeneficiarioService.Util.get().findMisFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    	
+    	BeneficiarioService.Util.get().findMisFiniquitados(parametros, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				new UIErrorRestDialog(method, exception);
@@ -301,7 +302,7 @@ public class MailList extends ResizeComposite {
 			}
 		});
     } else if (modo == Modo.Pendientes) {
-    	BeneficiarioService.Util.get().findPendientes(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    	BeneficiarioService.Util.get().findPendientes(parametros, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				new UIErrorRestDialog(method, exception);
@@ -312,7 +313,7 @@ public class MailList extends ResizeComposite {
 			}
 		});
     } else if (modo == Modo.Finquitados) {
-    	BeneficiarioService.Util.get().findFiniquitados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    	BeneficiarioService.Util.get().findFiniquitados(parametros, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				new UIErrorRestDialog(method, exception);
@@ -323,7 +324,7 @@ public class MailList extends ResizeComposite {
 			}
 		});
     } else if (modo == Modo.Anulados) {
-    	BeneficiarioService.Util.get().findAnulados(startIndex, VISIBLE_EMAIL_COUNT, new MethodCallback<List<Destino>>() {
+    	BeneficiarioService.Util.get().findAnulados(parametros, new MethodCallback<List<Destino>>() {
 			@Override
 			public void onFailure(Method method, Throwable exception) {
 				new UIErrorRestDialog(method, exception);
