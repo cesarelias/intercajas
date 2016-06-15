@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-14T20:42:10 -->
+<!-- 2016-06-15T08:19:24 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TramitesMiCaja" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="41c705b9-9feb-4660-8958-0104d55590fb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -66,7 +66,7 @@ order by c.fecha]]>
 				</textElement>
 				<textFieldExpression><![CDATA["TRÁMITES - CAJA DE JUBILACIÓN - " + $F{siglas}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField>
 				<reportElement x="454" y="28" width="95" height="14" uuid="2e674670-bfca-487e-8da3-48612b8e23ad"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>

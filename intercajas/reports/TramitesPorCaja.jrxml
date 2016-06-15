@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-14T18:08:58 -->
+<!-- 2016-06-15T08:11:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TramitesPorCaja" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="41c705b9-9feb-4660-8958-0104d55590fb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="intercajasdb"/>
@@ -60,7 +60,7 @@ order by c.fecha]]>
 				</textElement>
 				<text><![CDATA[TRÁMITES POR CAJA DE JUBILACIÓN]]></text>
 			</staticText>
-			<textField evaluationTime="Report">
+			<textField>
 				<reportElement x="450" y="22" width="95" height="14" uuid="f906f17f-0f01-4c16-9b0f-91dd582c56b3"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>

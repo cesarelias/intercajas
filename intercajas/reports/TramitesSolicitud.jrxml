@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-14T18:03:25 -->
+<!-- 2016-06-15T08:19:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TramitesSolicitud" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="41c705b9-9feb-4660-8958-0104d55590fb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -61,7 +61,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA["TRÁMITES - SOLICITUD"]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField>
 				<reportElement x="445" y="23" width="95" height="14" uuid="820e558c-1ccf-4184-a05b-a95bfc5bb5bc"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>

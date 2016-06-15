@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-14T18:04:22 -->
+<!-- 2016-06-15T08:18:48 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Mensaje" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a36b1b6e-a936-4b35-82dd-975194adb79c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -52,7 +52,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField>
 				<reportElement x="460" y="0" width="95" height="14" uuid="c190db3e-e880-4b21-9abb-eb75d5ec80c9"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
