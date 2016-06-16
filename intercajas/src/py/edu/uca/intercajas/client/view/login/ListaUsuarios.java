@@ -221,8 +221,16 @@ public class ListaUsuarios extends UIBase {
 			Window.alert("Seleccione una fila para editar");
 			return;
 		}
-		
+	
 		UIEditarUsuario e = new UIEditarUsuario(usuario);
+		
+		e.setListener(new UIEditarUsuario.Listener() {
+			@Override
+			public void onSave() {
+				refreshTable();				
+			}
+		});
+		
 		e.mostrarDialog();
 		
   }

@@ -114,9 +114,7 @@ public class Signatures {
 //                out.println(errors);
 //                out.flush();
 //                out.close();
-                System.out.println("Error");
-                ///////////////////////////////////////////////////////////MIENTRAS NO CONTROLA LA FIRMA DIGIAL... debe retornar false
-                return true;
+                return false;
             }
         }
 //        out.flush();

@@ -10,8 +10,10 @@ import py.edu.uca.intercajas.client.AppUtils;
 import py.edu.uca.intercajas.client.BeneficiarioService;
 import py.edu.uca.intercajas.client.UIErrorRestDialog;
 import py.edu.uca.intercajas.client.UIValidarFormulario;
+import py.edu.uca.intercajas.client.solicitud.TiempoServicioDeclaradoEditor.Listener;
 import py.edu.uca.intercajas.shared.UIBase;
 import py.edu.uca.intercajas.shared.entity.Caja;
+import py.edu.uca.intercajas.shared.entity.TiempoServicioDeclarado;
 import py.edu.uca.intercajas.shared.entity.Usuario;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -31,6 +33,14 @@ import com.google.gwt.view.client.SimpleKeyProvider;
 
 public class UIEditarUsuario extends UIBase {
 
+	
+	public interface Listener {
+		void onSave();
+	}
+
+
+	Listener listener;
+	
 	Usuario usuario;
 
 	TextBox nombre = new TextBox();
@@ -43,7 +53,7 @@ public class UIEditarUsuario extends UIBase {
 	ValueListBox<Caja> caja;
 	
 	public UIEditarUsuario(Usuario usuario) {
-		
+
 		initCajaList();
 		initComponents();
 
@@ -157,7 +167,7 @@ public class UIEditarUsuario extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, List<Caja> response) {
-				if (response != null && response.size() > 0) {
+				if (response != null && response.size() > 0 && caja.getValue() == null) {
 					caja.setValue(response.get(0), true);
 				}
 				caja.setAcceptableValues(response);
@@ -187,6 +197,11 @@ public class UIEditarUsuario extends UIBase {
 
 			@Override
 			public void onSuccess(Method method, Void response) {
+				
+				if (listener != null) {
+					listener.onSave();
+				}
+								
 				close();
 			}
 		});
@@ -213,5 +228,9 @@ public class UIEditarUsuario extends UIBase {
 		
 		return vf.esValido();
 		
+	}
+	
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 }

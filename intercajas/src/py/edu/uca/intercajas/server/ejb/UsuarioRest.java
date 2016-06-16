@@ -101,7 +101,7 @@ public class UsuarioRest   {
         	throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity("Usuario no valido").build());
         }
 
-		if (usuario.getId() == null) { //nuevo usuaro
+		if (usuario.getId() == null) { //nuevo usuario
 			
 			//verificamos que no exista el nombreUsuario
 			if (em.createQuery("select u from Usuario u where u.nombre = :nombre", Usuario.class)
@@ -147,6 +147,8 @@ public class UsuarioRest   {
 				}
 			}
 			
+			
+			
 			gwMessage.sendEmail(usuario.getCorreo(), "no-reply", "Cambio en cuenta", "Su cuenta de usuario sufrio un cambio Descripcion: " + usuario.getDescripcion() + " nombre de usuario : " + usuario.getNombre() + " Activo? " + usuario.isActivo());
 			
 			userLogin.registrarAuditoria(user, "Cambio datos usuario (anterior/nuevo) " +
@@ -154,8 +156,9 @@ public class UsuarioRest   {
 					" activo? " + usuarioAnterior.isActivo() + "/" + usuario.isActivo());
 		}
 		
-			
 		em.merge(usuario);
+			
+		
 		
 	}
 
