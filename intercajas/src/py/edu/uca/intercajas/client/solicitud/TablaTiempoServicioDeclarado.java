@@ -119,7 +119,7 @@ public class TablaTiempoServicioDeclarado extends UIBase {
 			@Override
 			public void onChanged(
 					TiempoServicioDeclarado periodoAporteDeclarado) {
-				listaTiempoServicioDeclarado.set(row, periodoAporteDeclarado);
+				listaTiempoServicioDeclarado.set(selectedRow, periodoAporteDeclarado);
 				refreshTable();
 			}
 		});

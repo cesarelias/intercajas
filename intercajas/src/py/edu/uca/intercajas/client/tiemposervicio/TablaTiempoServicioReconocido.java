@@ -98,8 +98,19 @@ public class TablaTiempoServicioReconocido extends UIBase {
 			@Override
 			public void onChanged(
 					TiempoServicioReconocido tiempoServicioReconocido) {
+				
+//				for (TiempoServicioReconocido pp : listaTiempoServicioReconocido) {
+//					Window.alert("antes: " + selectedRow + " " + pp.getFin().toString());
+//				}
+
+				
 				listaTiempoServicioReconocido
-						.set(row, tiempoServicioReconocido);
+						.set(selectedRow, tiempoServicioReconocido);
+				
+//				for (TiempoServicioReconocido pp : listaTiempoServicioReconocido) {
+//					Window.alert("despues: " + selectedRow + " " + pp.getFin().toString());
+//				}
+				
 				refreshTable();
 			}
 		});

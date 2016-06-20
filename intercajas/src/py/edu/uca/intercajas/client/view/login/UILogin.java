@@ -217,7 +217,7 @@ public class UILogin extends Composite implements ClickHandler {
 
 	public boolean formularioValido() {
 		
-		UIValidarFormulario vf = new UIValidarFormulario("Favor complete las siguientes informaciones solicitadas para crear la concesion de beneficio");
+		UIValidarFormulario vf = new UIValidarFormulario("Favor complete los siguientes datos");
 
 	
 		if (txtUsuario.getValue().length() == 0){

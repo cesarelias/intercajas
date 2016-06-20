@@ -32,5 +32,5 @@
   <extend-property name="locale" values="es_PY" />
   <set-property name="locale" value="es_PY" />
   <!-- allow Super Dev Mode -->
-  <add-linker name="xsiframe"/>
+<!--   <add-linker name="xsiframe"/> -->
 </module>
